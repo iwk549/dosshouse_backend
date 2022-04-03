@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "dosshouse_jwtPrivateKey",
+  "db": "dosshouse_db"
+}
