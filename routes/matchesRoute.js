@@ -3,10 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 const { Match } = require("../models/matchModel");
-const { brackets } = require("../utils/allowables");
+const { activeCompetitions } = require("../utils/allowables");
 
 router.get("/:bracketCode", async (req, res) => {
-  const bracket = brackets[req.params.bracketCode];
+  const bracket = activeCompetitions[req.params.bracketCode];
   if (!bracket) return res.status(404).send("Invalid bracket code");
   const matches = await Match.find({
     bracketCode: req.params.bracketCode,

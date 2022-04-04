@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
+const passwordComplexity = require("joi-password-complexity");
+const { pwComplexityOptions } = require("../utils/allowables");
 
 const userMongooseSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -35,5 +37,18 @@ function validateUser(user) {
   return Joi.object(userSchema).validate(user);
 }
 
+function validatePassword(password) {
+  return passwordComplexity(pwComplexityOptions, "Password").validate(password);
+}
+
+function validateLogin(login) {
+  return Joi.object({
+    email: userSchema.email,
+    password: userSchema.password,
+  }).validate(login);
+}
+
 exports.validateUser = validateUser;
+exports.validatePassword = validatePassword;
+exports.validateLogin = validateLogin;
 exports.User = User;

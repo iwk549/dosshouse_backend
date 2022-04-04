@@ -1,6 +1,8 @@
 const error = require("../middleware/errors");
 const express = require("express");
 const matches = require("../routes/matchesRoute");
+const users = require("../routes/usersRoute");
+const predictions = require("../routes/predictionsRoute");
 const cors = require("cors");
 const { highLimiter } = require("../middleware/rateLimiter");
 
@@ -31,6 +33,8 @@ module.exports = function (app) {
 
   // Routers
   app.use("/api/v1/matches", matches);
+  app.use("/api/v1/users", users);
+  app.use("/api/v1/predictions", predictions);
   app.use("/api/v1/healthz", async (req, res) => {
     res.send("Healthy");
   });
