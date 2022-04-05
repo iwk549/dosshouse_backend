@@ -6,8 +6,24 @@ const predictionMongooseSchema = new mongoose.Schema({
   userID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   name: { type: String, required: true },
   bracketCode: { type: String, required: true },
-  groupPredictions: { type: Object, required: true },
-  playoffPredictions: [{ type: Object, required: true }],
+  groupPredictions: [
+    {
+      groupName: { type: String, required: true },
+      teamOrder: [{ type: String, required: true }],
+    },
+  ],
+  playoffPredictions: [
+    {
+      matchNumber: { type: Number, required: true },
+      homeTeam: { type: String, required: true },
+      awayTeam: { type: String, required: true },
+    },
+  ],
+  points: {
+    playoff: { type: Number, required: true },
+    group: { type: Number, required: true },
+    misc: { type: Number, required: true },
+  },
 });
 
 const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
@@ -39,8 +55,8 @@ const predictionSchema = {
     .allow(null),
   points: Joi.object()
     .keys({
-      groups: Joi.number().integer().required().default(0),
-      playoffs: Joi.number().integer().required().default(0),
+      group: Joi.number().integer().required().default(0),
+      playoff: Joi.number().integer().required().default(0),
       misc: Joi.number().integer().required().default(0),
     })
     .optional(),

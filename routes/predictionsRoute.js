@@ -7,8 +7,15 @@ const validateObjectID = require("../middleware/validateObjectID");
 
 router.post("/", [auth], async (req, res) => {
   req.body.userID = req.user._id;
+  req.body.points = {
+    group: 0,
+    playoff: 0,
+    misc: 0,
+  };
+
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
+
   const thisBracket = activeCompetitions[req.body.bracketCode];
   if (!thisBracket) return res.status(404).send("Competition not found");
 
@@ -28,6 +35,7 @@ router.post("/", [auth], async (req, res) => {
       .send(
         `You already have a bracket named ${req.body.name}. Please choose a different name.`
       );
+
   const newPrediction = new Prediction(req.body);
   await newPrediction.save();
 
@@ -58,7 +66,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
 
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
-
+  delete req.body.points;
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 
   res.send(prediction._id);
@@ -71,6 +79,19 @@ router.get("/:id", [auth, validateObjectID], async (req, res) => {
   });
   if (!prediction) res.status(404).send("Bracket not found");
   res.send(prediction);
+});
+
+router.get("/", [auth], async (req, res) => {
+  const predictions = await Prediction.find({ userID: req.user._id }).select(
+    "bracketCode name points"
+  );
+  let namedPredictions = [];
+  predictions.forEach((p) => {
+    let prediction = { ...p };
+    prediction.bracketName = activeCompetitions[prediction.bracketCode]?.name;
+    namedPredictions.push(prediction);
+  });
+  res.send(namedPredictions);
 });
 
 module.exports = router;

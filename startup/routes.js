@@ -1,6 +1,7 @@
 const error = require("../middleware/errors");
 const express = require("express");
 const matches = require("../routes/matchesRoute");
+const competitions = require("../routes/competitionsRoute");
 const users = require("../routes/usersRoute");
 const predictions = require("../routes/predictionsRoute");
 const cors = require("cors");
@@ -32,6 +33,7 @@ module.exports = function (app) {
   app.use("/api/", highLimiter);
 
   // Routers
+  app.use("/api/v1/competitions", competitions);
   app.use("/api/v1/matches", matches);
   app.use("/api/v1/users", users);
   app.use("/api/v1/predictions", predictions);
