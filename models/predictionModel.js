@@ -14,7 +14,7 @@ const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
 
 const predictionSchema = {
   userID: Joi.objectID().required(),
-  name: Joi.string().required(),
+  name: Joi.string().min(3).max(50).required().label("Bracket Name"),
   bracketCode: Joi.string().min(3).max(50).required(),
   groupPredictions: Joi.array()
     .items(
@@ -37,6 +37,13 @@ const predictionSchema = {
     )
     .required()
     .allow(null),
+  points: Joi.object()
+    .keys({
+      groups: Joi.number().integer().required().default(0),
+      playoffs: Joi.number().integer().required().default(0),
+      misc: Joi.number().integer().required().default(0),
+    })
+    .optional(),
 };
 
 function validatePrediction(prediction) {
