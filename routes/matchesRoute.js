@@ -2,16 +2,16 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 
+const validateObjectID = require("../middleware/validateObjectID");
 const { Match } = require("../models/matchModel");
-const { activeCompetitions } = require("../utils/allowables");
+const { Competition } = require("../models/competitionModel");
 
-router.get("/:bracketCode", async (req, res) => {
-  const bracket = activeCompetitions[req.params.bracketCode];
-  if (!bracket) return res.status(404).send("Invalid bracket code");
+router.get("/:id", [validateObjectID], async (req, res) => {
+  const competition = await Competition.findById(req.params.id);
+  if (!competition) return res.status(404).send("Competition not found");
   const matches = await Match.find({
-    bracketCode: req.params.bracketCode,
+    bracketCode: competition.code,
   }).sort("dateTime 1 groupName 1");
-
   res.send(matches);
 });
 

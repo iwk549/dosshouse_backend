@@ -10,3 +10,6 @@
 {"level":"error","message":"Cannot read properties of undefined (reading 'worldCup2022')"}
 {"level":"error","message":"p is not defined"}
 {"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"thisBracket is not defined"}
+{"level":"error","message":"thisBracket is not defined"}
+{"level":"error","message":"prediction.findByIdAndDelete is not a function"}
