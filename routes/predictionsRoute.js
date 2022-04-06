@@ -18,6 +18,10 @@ router.post("/", [auth], async (req, res) => {
 
   const competition = await Competition.findById(req.body.competitionID);
   if (!competition) return res.status(404).send("Competition not found");
+  if (competition.submissionDeadline < new Date())
+    return res
+      .status(400)
+      .send("The submission deadline has passed. No submissions are allowed.");
 
   const predictions = await Prediction.find({
     competitionID: req.body.competitionID,
@@ -45,6 +49,13 @@ router.post("/", [auth], async (req, res) => {
 router.put("/:id", [auth, validateObjectID], async (req, res) => {
   const prediction = await Prediction.findById(req.params.id);
   if (!prediction) return res.status(404).send("Bracket not found");
+
+  const competition = await Competition.findById(req.body.competitionID);
+  if (!competition) return res.status(404).send("Competition not found");
+  if (competition.submissionDeadline < new Date())
+    return res
+      .status(400)
+      .send("The submission deadline has passed. No submissions are allowed.");
 
   req.body.userID = req.user._id;
   const predictions = await Prediction.find({
