@@ -43,7 +43,6 @@ router.post("/", [auth], async (req, res) => {
 });
 
 router.put("/:id", [auth, validateObjectID], async (req, res) => {
-  console.log(req.body);
   const prediction = await Prediction.findById(req.params.id);
   if (!prediction) return res.status(404).send("Bracket not found");
 

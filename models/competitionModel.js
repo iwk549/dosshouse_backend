@@ -9,6 +9,17 @@ const competitionMongooseSchema = new mongoose.Schema({
   competitionStart: { type: Date, required: false },
   competitionEnd: { type: Date, required: false },
   maxSubmissions: { type: Number, required: true },
+  miscPicks: [
+    {
+      type: Object,
+      keys: {
+        winner: { type: String, required: true },
+        thirdPlace: { type: String, required: false },
+        discipline: { type: String, required: false },
+      },
+      required: true,
+    },
+  ],
 });
 
 const Competition = mongoose.model("Competition", competitionMongooseSchema);

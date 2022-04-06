@@ -29,6 +29,7 @@ const predictionMongooseSchema = new mongoose.Schema({
       },
     },
   ],
+  misc: [{ type: String, required: true }],
   points: {
     type: Object,
     keys: {
