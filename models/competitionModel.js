@@ -16,6 +16,7 @@ const competitionMongooseSchema = new mongoose.Schema({
         winner: { type: String, required: true },
         thirdPlace: { type: String, required: false },
         discipline: { type: String, required: false },
+        topScorer: { type: String, required: false },
       },
       required: true,
     },

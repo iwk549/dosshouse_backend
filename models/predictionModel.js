@@ -29,7 +29,16 @@ const predictionMongooseSchema = new mongoose.Schema({
       },
     },
   ],
-  misc: [{ type: String, required: true }],
+  misc: {
+    type: Object,
+    keys: {
+      winner: { type: String, required: true },
+      thirdPlace: { type: String, required: false },
+      discipline: { type: String, required: false },
+      topScorer: { type: String, required: false },
+    },
+    required: true,
+  },
   points: {
     type: Object,
     keys: {
@@ -67,6 +76,14 @@ const predictionSchema = {
     )
     .required()
     .allow(null),
+  misc: Joi.object()
+    .keys({
+      winner: Joi.string().required().allow(""),
+      thirdPlace: Joi.string().optional().allow(""),
+      discipline: Joi.string().optional().allow(""),
+      topScorer: Joi.string().optional().allow(""),
+    })
+    .required(),
   points: Joi.object()
     .keys({
       group: Joi.number().integer().required().default(0),

@@ -67,6 +67,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
   delete req.body.points;
+
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 
   res.send(prediction._id);
