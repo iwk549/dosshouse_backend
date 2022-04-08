@@ -5,16 +5,14 @@ const mongoose = require("mongoose");
 const matchMongooseSchema = new mongoose.Schema({
   dateTime: { type: Date, required: false },
   homeTeamName: { type: String, required: true },
-  homeTeamLogo: { type: String, required: false },
   homeTeamGoals: { type: Number, required: false },
   homeTeamPKs: { type: Number, required: false },
   homeTeamAbbreviation: { type: String, required: false },
   awayTeamName: { type: String, required: true },
   awayTeamGoals: { type: Number, required: false },
-  awayTeamLogo: { type: String, required: false },
   awayTeamPKs: { type: Number, required: false },
   awayTeamAbbreviation: { type: String, required: false },
-  matchComplete: { type: Number, required: true },
+  matchAccepted: { type: Boolean, required: true },
   location: { type: String, required: false },
   type: { type: String, required: true },
   groupName: { type: String, required: false },
@@ -22,7 +20,6 @@ const matchMongooseSchema = new mongoose.Schema({
   matchNumber: { type: Number, required: false },
   sport: { type: String, required: true },
   bracketCode: { type: String, required: true },
-  locked: { type: Boolean, required: false },
   getTeamsFrom: {
     home: {
       position: { type: Number, required: false },

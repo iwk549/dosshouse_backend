@@ -8,15 +8,17 @@ const competitionMongooseSchema = new mongoose.Schema({
   submissionDeadline: { type: Date, required: false },
   competitionStart: { type: Date, required: false },
   competitionEnd: { type: Date, required: false },
+  groupPicks: { tyep: Boolean, required: false },
   maxSubmissions: { type: Number, required: true },
   miscPicks: [
     {
       type: Object,
       keys: {
-        winner: { type: String, required: true },
-        thirdPlace: { type: String, required: false },
-        discipline: { type: String, required: false },
-        topScorer: { type: String, required: false },
+        name: { type: String, required: true },
+        label: { type: String, required: true },
+        description: { type: String, required: true },
+        points: { type: Number, required: false },
+        info: { type: Object, required: false },
       },
       required: true,
     },
