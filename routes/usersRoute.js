@@ -67,8 +67,10 @@ router.get("/", [auth], async (req, res) => {
 });
 
 router.delete("/", [auth], async (req, res) => {
+  // if the user account is not found we cannot delete anything,
+  // but the mission has been accomplished so this is a success route
   const user = await User.findById(req.user._id);
-  if (!user) return res.status(400).send("User account not found");
+  if (!user) return res.send("Account Deleted");
 
   // ! models to delete (have not implemented transactions yet)
   // predictions
