@@ -5,6 +5,16 @@ const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 
+async function nameIsUnique(name, userID) {
+  const predictionWithSameName = await Prediction.findOne({
+    name: name,
+    userID: { $ne: userID },
+  }).select("name");
+  if (predictionWithSameName)
+    return "Bracket names must be unique. This name has been taken by another user. Please try another name.";
+  return null;
+}
+
 router.post("/", [auth], async (req, res) => {
   req.body.userID = req.user._id;
   req.body.points = {
@@ -40,6 +50,10 @@ router.post("/", [auth], async (req, res) => {
         `You already have a bracket named ${req.body.name}. Please choose a different name.`
       );
 
+  // verify that name is unique across enitre site
+  const nameInUse = await nameIsUnique(req.body.name, req.user._id);
+  if (nameInUse) return res.status(400).send(nameInUse);
+
   const newPrediction = new Prediction(req.body);
   await newPrediction.save();
 
@@ -62,7 +76,6 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
     competitionID: req.body.competitionID,
     userID: req.body.userID,
   }).select("name");
-
   if (
     predictions.some(
       (p) =>
@@ -74,6 +87,10 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
       .send(
         `You already have a bracket named ${req.body.name}. Please choose a different name.`
       );
+
+  // verify that name is unique across enitre site
+  const nameInUse = await nameIsUnique(req.body.name, req.user._id);
+  if (nameInUse) return res.status(400).send(nameInUse);
 
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);

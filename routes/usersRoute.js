@@ -3,6 +3,7 @@ const {
   validateUser,
   validatePassword,
   validateLogin,
+  validateEdit,
 } = require("../models/userModel");
 const express = require("express");
 const router = express.Router();
@@ -13,6 +14,7 @@ const {
   comparePasswords,
 } = require("../utils/users");
 const auth = require("../middleware/auth");
+const { Prediction } = require("../models/predictionModel");
 
 router.post("/", [loginLimiter], async (req, res) => {
   req.body.email = trimEmail(req.body.email);
@@ -61,6 +63,41 @@ router.get("/", [auth], async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) return res.status(409).send("Account not found");
   const token = user.generateAuthToken();
+  res.send(token);
+});
+
+router.delete("/", [auth], async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send("User account not found");
+
+  // ! models to delete (have not implemented transactions yet)
+  // predictions
+  // user
+  await Prediction.deleteMany({ userID: req.user._id });
+  const result = await User.deleteOne({ _id: req.user._id });
+  res.send(result);
+});
+
+router.put("/", [auth], async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) return res.status(400).send("User account not found");
+
+  const ex = validateEdit(req.body);
+  if (ex.error) return res.status(400).send(ex.error.details[0].message);
+
+  const update = {
+    name: req.body.name,
+  };
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    {
+      $set: update,
+    },
+    { returnOriginal: false }
+  );
+
+  const token = updatedUser.generateAuthToken();
   res.send(token);
 });
 

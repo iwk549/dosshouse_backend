@@ -7,7 +7,7 @@ const { Competition } = require("../models/competitionModel");
 
 router.get("/active", async (req, res) => {
   const competitions = await Competition.find({
-    submissionDeadline: { $gte: new Date() },
+    competitionEnd: { $gte: new Date() },
   }).sort({
     submissionDeadline: 1,
   });
@@ -16,7 +16,7 @@ router.get("/active", async (req, res) => {
 
 router.get("/expired", async (req, res) => {
   const competitions = await Competition.find({
-    submissionDeadline: { $lt: new Date() },
+    competitionEnd: { $lt: new Date() },
   }).sort({
     submissionDeadline: -1,
   });

@@ -48,7 +48,14 @@ function validateLogin(login) {
   }).validate(login);
 }
 
+function validateEdit(info) {
+  return Joi.object({
+    name: userSchema.name,
+  }).validate(info);
+}
+
 exports.validateUser = validateUser;
 exports.validatePassword = validatePassword;
 exports.validateLogin = validateLogin;
+exports.validateEdit = validateEdit;
 exports.User = User;
