@@ -127,4 +127,14 @@ router.delete("/:id", [auth, validateObjectID], async (req, res) => {
   res.send(result);
 });
 
+router.get("/leaderboard/:id", [validateObjectID], async (req, res) => {
+  const competition = await Competition.findById(req.params.id);
+  if (!competition) return res.status(404).send("Competition not found");
+
+  const predictions = await Prediction.find({ competitionID: req.params.id })
+    .select("name points userID")
+    .populate("userID", "name");
+  res.send(predictions);
+});
+
 module.exports = router;
