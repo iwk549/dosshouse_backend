@@ -2,6 +2,8 @@ const Joi = require("joi");
 Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 
+const { miscKeys } = require("../utils/allowables");
+
 const predictionMongooseSchema = new mongoose.Schema({
   userID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   name: { type: String, required: true },
@@ -26,19 +28,11 @@ const predictionMongooseSchema = new mongoose.Schema({
         matchNumber: { type: Number, required: true },
         homeTeam: { type: String, required: true },
         awayTeam: { type: String, required: true },
+        round: { type: Number, required: true },
       },
     },
   ],
-  misc: {
-    type: Object,
-    keys: {
-      winner: { type: String, required: true },
-      thirdPlace: { type: String, required: false },
-      discipline: { type: String, required: false },
-      topScorer: { type: String, required: false },
-    },
-    required: true,
-  },
+  misc: miscKeys,
   points: {
     type: Object,
     keys: {
@@ -47,6 +41,7 @@ const predictionMongooseSchema = new mongoose.Schema({
       misc: { type: Number, required: true },
     },
   },
+  totalPoints: { type: Number, required: true },
 });
 
 const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
@@ -72,6 +67,7 @@ const predictionSchema = {
         matchNumber: Joi.number().integer().required(),
         homeTeam: Joi.string().required(),
         awayTeam: Joi.string().required(),
+        round: Joi.number().required(),
       })
     )
     .required()
@@ -91,6 +87,7 @@ const predictionSchema = {
       misc: Joi.number().integer().required().default(0),
     })
     .optional(),
+  totalPoints: Joi.number().required().default(0),
 };
 
 function validatePrediction(prediction) {
@@ -99,3 +96,4 @@ function validatePrediction(prediction) {
 
 exports.Prediction = Prediction;
 exports.validatePrediction = validatePrediction;
+exports.miscKeys = miscKeys;

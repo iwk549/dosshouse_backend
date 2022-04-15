@@ -4,6 +4,7 @@ const matches = require("../routes/matchesRoute");
 const competitions = require("../routes/competitionsRoute");
 const users = require("../routes/usersRoute");
 const predictions = require("../routes/predictionsRoute");
+const results = require("../routes/resultsRoute");
 const cors = require("cors");
 const { highLimiter } = require("../middleware/rateLimiter");
 
@@ -37,6 +38,7 @@ module.exports = function (app) {
   app.use("/api/v1/matches", matches);
   app.use("/api/v1/users", users);
   app.use("/api/v1/predictions", predictions);
+  app.use("/api/v1/results", results);
   app.use("/api/v1/healthz", async (req, res) => {
     res.send("Healthy");
   });

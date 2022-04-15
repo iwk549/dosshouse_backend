@@ -18,6 +18,7 @@ const { Prediction } = require("../models/predictionModel");
 
 router.post("/", [loginLimiter], async (req, res) => {
   req.body.email = trimEmail(req.body.email);
+  delete req.body.role;
   const existingAccount = await User.findOne({ email: req.body.email });
   if (existingAccount)
     return res

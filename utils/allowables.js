@@ -7,3 +7,21 @@ module.exports.pwComplexityOptions = {
   symbol: 0,
   requirementCount: 3,
 };
+
+module.exports.miscKeys = {
+  type: Object,
+  keys: {
+    winner: { type: String, required: true },
+    thirdPlace: { type: String, required: false },
+    discipline: { type: String, required: false },
+    topScorer: { type: String, required: false },
+  },
+  required: true,
+};
+
+module.exports.miscPoints = {
+  winner: 32,
+  thirdPlace: 16,
+  discipline: 10,
+  topScorer: 10,
+};

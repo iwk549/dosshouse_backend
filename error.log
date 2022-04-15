@@ -14,3 +14,7 @@
 {"level":"error","message":"thisBracket is not defined"}
 {"level":"error","message":"prediction.findByIdAndDelete is not a function"}
 {"level":"error","message":"req is not defined"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'includes')"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'includes')"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot destructure property 'points' of 'calculatePrediction(...)' as it is undefined."}

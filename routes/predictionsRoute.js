@@ -5,6 +5,15 @@ const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 
+function addPoints(req) {
+  req.body.points = {
+    group: 0,
+    playoff: 0,
+    misc: 0,
+  };
+  req.body.totalPoints = 0;
+}
+
 async function nameIsUnique(name, userID) {
   const predictionWithSameName = await Prediction.findOne({
     name: name,
@@ -17,11 +26,7 @@ async function nameIsUnique(name, userID) {
 
 router.post("/", [auth], async (req, res) => {
   req.body.userID = req.user._id;
-  req.body.points = {
-    group: 0,
-    playoff: 0,
-    misc: 0,
-  };
+  addPoints(req);
 
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
@@ -92,9 +97,12 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   const nameInUse = await nameIsUnique(req.body.name, req.user._id);
   if (nameInUse) return res.status(400).send(nameInUse);
 
+  // add points to body for validation, they cannot be edited here so are deleted
+  addPoints(req);
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
   delete req.body.points;
+  delete req.body.totalPoints;
 
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 
@@ -112,7 +120,7 @@ router.get("/:id", [auth, validateObjectID], async (req, res) => {
 
 router.get("/", [auth], async (req, res) => {
   const predictions = await Prediction.find({ userID: req.user._id })
-    .select("competitionID name points")
+    .select("competitionID name points totalPoints")
     .populate("competitionID");
   res.send(predictions);
 });
@@ -132,7 +140,7 @@ router.get("/leaderboard/:id", [validateObjectID], async (req, res) => {
   if (!competition) return res.status(404).send("Competition not found");
 
   const predictions = await Prediction.find({ competitionID: req.params.id })
-    .select("name points userID")
+    .select("name points totalPoints userID")
     .populate("userID", "name");
   res.send(predictions);
 });
