@@ -41,15 +41,49 @@ const predictionMongooseSchema = new mongoose.Schema({
   points: {
     type: Object,
     keys: {
-      playoff: { type: Number, required: true },
-      group: { type: Number, required: true },
-      misc: { type: Number, required: true },
+      playoff: {
+        type: Object,
+        keys: {
+          points: { type: Number, required: true },
+          correctPicks: { type: Number, required: true },
+        },
+        required: true,
+      },
+      group: {
+        type: Object,
+        keys: {
+          points: { type: Number, required: true },
+          correctPicks: { type: Number, required: true },
+        },
+        required: true,
+      },
+      champion: {
+        type: Object,
+        keys: {
+          points: { type: Number, required: true },
+          correctPicks: { type: Number, required: true },
+        },
+        required: true,
+      },
+      misc: {
+        type: Object,
+        keys: {
+          points: { type: Number, required: true },
+          correctPicks: { type: Number, required: true },
+        },
+        required: true,
+      },
     },
   },
   totalPoints: { type: Number, required: true },
 });
 
 const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
+
+const pointObject = Joi.object().keys({
+  points: Joi.number().integer().required(),
+  correctPicks: Joi.number().integer().required(),
+});
 
 const predictionSchema = {
   userID: Joi.objectID().required(),
@@ -88,10 +122,10 @@ const predictionSchema = {
     .required(),
   points: Joi.object()
     .keys({
-      group: Joi.number().integer().required().default(0),
-      playoff: Joi.number().integer().required().default(0),
-      champion: Joi.number().integer().required().default(0),
-      misc: Joi.number().integer().required().default(0),
+      group: pointObject,
+      playoff: pointObject,
+      champion: pointObject,
+      misc: pointObject,
     })
     .optional(),
   totalPoints: Joi.number().required().default(0),

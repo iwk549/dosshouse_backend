@@ -7,10 +7,10 @@ const { Competition } = require("../models/competitionModel");
 
 function addPoints(req) {
   req.body.points = {
-    group: 0,
-    playoff: 0,
-    champion: 0,
-    misc: 0,
+    group: { points: 0, correctPicks: 0 },
+    playoff: { points: 0, correctPicks: 0 },
+    champion: { points: 0, correctPicks: 0 },
+    misc: { points: 0, correctPicks: 0 },
   };
   req.body.totalPoints = 0;
 }
