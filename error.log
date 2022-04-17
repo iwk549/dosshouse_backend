@@ -18,3 +18,7 @@
 {"level":"error","message":"Cannot read properties of undefined (reading 'includes')"}
 {"level":"error","message":"Cannot set headers after they are sent to the client"}
 {"level":"error","message":"Cannot destructure property 'points' of 'calculatePrediction(...)' as it is undefined."}
+{"level":"error","message":"Cannot read properties of undefined (reading 'filter')"}
+{"level":"error","message":"thisRoundPoints is not defined"}
+{"level":"error","message":"thisRoundPoints is not defined"}
+{"level":"error","message":"Assignment to constant variable."}

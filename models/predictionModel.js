@@ -12,6 +12,11 @@ const predictionMongooseSchema = new mongoose.Schema({
     required: true,
     ref: "Competition",
   },
+  groupID: {
+    type: mongoose.Types.ObjectId,
+    required: false,
+    ref: "Group",
+  },
   groupPredictions: [
     {
       type: Object,
@@ -50,6 +55,7 @@ const predictionSchema = {
   userID: Joi.objectID().required(),
   name: Joi.string().min(3).max(50).required().label("Bracket Name"),
   competitionID: Joi.objectID().required(),
+  groupID: Joi.objectID().optional().allow(""),
   groupPredictions: Joi.array()
     .items(
       Joi.object()
@@ -84,6 +90,7 @@ const predictionSchema = {
     .keys({
       group: Joi.number().integer().required().default(0),
       playoff: Joi.number().integer().required().default(0),
+      champion: Joi.number().integer().required().default(0),
       misc: Joi.number().integer().required().default(0),
     })
     .optional(),

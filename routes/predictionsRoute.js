@@ -9,6 +9,7 @@ function addPoints(req) {
   req.body.points = {
     group: 0,
     playoff: 0,
+    champion: 0,
     misc: 0,
   };
   req.body.totalPoints = 0;
@@ -20,7 +21,7 @@ async function nameIsUnique(name, userID) {
     userID: { $ne: userID },
   }).select("name");
   if (predictionWithSameName)
-    return "Bracket names must be unique. This name has been taken by another user. Please try another name.";
+    return "Bracket names must be unique. This name has been taken by another user. Please try a different name.";
   return null;
 }
 
@@ -36,7 +37,9 @@ router.post("/", [auth], async (req, res) => {
   if (competition.submissionDeadline < new Date())
     return res
       .status(400)
-      .send("The submission deadline has passed. No submissions are allowed.");
+      .send(
+        "The submission deadline has passed. No more submissions are allowed."
+      );
 
   const predictions = await Prediction.find({
     competitionID: req.body.competitionID,
@@ -55,7 +58,7 @@ router.post("/", [auth], async (req, res) => {
         `You already have a bracket named ${req.body.name}. Please choose a different name.`
       );
 
-  // verify that name is unique across enitre site
+  // verify that name is unique across entire site
   const nameInUse = await nameIsUnique(req.body.name, req.user._id);
   if (nameInUse) return res.status(400).send(nameInUse);
 
@@ -74,7 +77,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   if (competition.submissionDeadline < new Date())
     return res
       .status(400)
-      .send("The submission deadline has passed. No submissions are allowed.");
+      .send("The submission deadline has passed. No more edits can be made.");
 
   req.body.userID = req.user._id;
   const predictions = await Prediction.find({
@@ -138,9 +141,10 @@ router.delete("/:id", [auth, validateObjectID], async (req, res) => {
 router.get("/leaderboard/:id", [validateObjectID], async (req, res) => {
   const competition = await Competition.findById(req.params.id);
   if (!competition) return res.status(404).send("Competition not found");
-
+  let selectedFields = "name points totalPoints userID";
+  if (competition.submissionDeadline < new Date()) selectedFields += " misc";
   const predictions = await Prediction.find({ competitionID: req.params.id })
-    .select("name points totalPoints userID")
+    .select(selectedFields)
     .populate("userID", "name");
   res.send(predictions);
 });

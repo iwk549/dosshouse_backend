@@ -8,8 +8,33 @@ const competitionMongooseSchema = new mongoose.Schema({
   submissionDeadline: { type: Date, required: false },
   competitionStart: { type: Date, required: false },
   competitionEnd: { type: Date, required: false },
-  groupPicks: { tyep: Boolean, required: false },
   maxSubmissions: { type: Number, required: true },
+  scoring: {
+    type: Object,
+    keys: {
+      group: {
+        type: Object,
+        keys: {
+          perTeam: { type: Number, required: true },
+          bonus: { type: Number, required: true },
+        },
+        required: false,
+      },
+      playoff: [
+        {
+          type: Object,
+          keys: {
+            roundName: { type: String, required: true },
+            roundNumber: { type: Number, required: true },
+            points: { type: Number, required: true },
+          },
+          required: true,
+        },
+      ],
+      champion: { type: Number, required: true },
+    },
+    required: true,
+  },
   miscPicks: [
     {
       type: Object,
