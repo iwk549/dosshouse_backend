@@ -7,7 +7,11 @@ function calculatePrediction(prediction, result, competition) {
   };
 
   // group positioning
-  if (competition.scoring.group) {
+  if (
+    competition.scoring.group &&
+    result.group &&
+    prediction.groupPredictions
+  ) {
     prediction.groupPredictions.forEach((groupPrediction) => {
       let thisGroupPoints = 0;
       let thisGroupCorrectPicks = 0;
@@ -45,7 +49,11 @@ function calculatePrediction(prediction, result, competition) {
     };
   };
   // playoff picks
-  if (competition.scoring.playoff) {
+  if (
+    competition.scoring.playoff &&
+    result.playoff &&
+    prediction.playoffPredictions
+  ) {
     result.playoff.forEach((playoffResult) => {
       const thisRoundPredictions = prediction.playoffPredictions.filter(
         (playoffPrediction) => playoffPrediction.round === playoffResult.round
@@ -54,24 +62,25 @@ function calculatePrediction(prediction, result, competition) {
         (c) => c.roundNumber === playoffResult.round
       );
       if (thisRoundScoring && thisRoundPredictions) {
-        thisRoundPredictions.forEach((pred) => {
-          if (playoffResult.teams.includes(pred.homeTeam)) {
-            addPointsAndPicks(thisRoundScoring);
-          }
-          if (playoffResult.teams.includes(pred.awayTeam)) {
-            addPointsAndPicks(thisRoundScoring);
-          }
+        // match the result against each team in prediction
+        // this will prevent a user from picking a single team
+        // in multiple spots and getting points for each
+        playoffResult.teams.forEach((t) => {
+          const teamFound = thisRoundPredictions.find(
+            (p) => p.homeTeam === t || p.awayTeam === t
+          );
+          if (teamFound) addPointsAndPicks(thisRoundScoring);
         });
       }
     });
   }
 
   // add winner as separate category
-  if (result.misc.winner && prediction.misc.winner === result.misc.winner)
+  if (result.misc?.winner && prediction.misc?.winner === result.misc.winner)
     points.champion = { points: competition.scoring.champion, correctPicks: 1 };
 
   // misc picks
-  if (competition.miscPicks) {
+  if (competition.miscPicks && result.misc && prediction.misc) {
     competition.miscPicks.forEach((miscPick) => {
       const predictionPick = prediction.misc[miscPick.name];
       if (predictionPick && predictionPick === result.misc[miscPick.name]) {
