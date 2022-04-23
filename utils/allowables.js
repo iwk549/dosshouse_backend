@@ -18,10 +18,3 @@ module.exports.miscKeys = {
   },
   required: true,
 };
-
-module.exports.miscPoints = {
-  winner: 32,
-  thirdPlace: 16,
-  discipline: 10,
-  topScorer: 10,
-};

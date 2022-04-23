@@ -20,14 +20,13 @@ function start() {
   const app = express();
   require("./startup/routes")(app);
   require("./startup/config")();
-  const logger = require("./startup/logging")();
   require("./startup/db")(process.env.NODE_ENV);
-
   if (process.env.NODE_ENV === "production") {
     require("./startup/prod")(app);
   }
 
   if (process.env.NODE_ENV !== "test") {
+    const logger = require("./startup/logging")();
     // require("./startup/scheduler")();
     server = app.listen(PORT, () =>
       logger.log("info", `Listening on port ${PORT}...`)
