@@ -149,4 +149,27 @@ router.get("/leaderboard/:id", [validateObjectID], async (req, res) => {
   res.send(predictions);
 });
 
+router.get("/unowned/:id", [auth, validateObjectID], async (req, res) => {
+  const prediction = await Prediction.findById(req.params.id).select(
+    "competitionID"
+  );
+  if (!prediction) return res.status(404).send("Prediction not found");
+
+  const competition = await Competition.findById(prediction.competitionID);
+  if (!competition) return res.status(404).send("Competition not found");
+
+  let selectedFields;
+  if (competition.submissionDeadline > new Date())
+    selectedFields = "name points totalPoints userID";
+
+  let predictionToSend;
+  if (selectedFields)
+    predictionToSend = await Prediction.findById(req.params.id).select(
+      selectedFields
+    );
+  else predictionToSend = await Prediction.findById(req.params.id);
+
+  res.send(predictionToSend);
+});
+
 module.exports = router;
