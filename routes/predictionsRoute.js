@@ -69,7 +69,10 @@ router.post("/", [auth], async (req, res) => {
 });
 
 router.put("/:id", [auth, validateObjectID], async (req, res) => {
-  const prediction = await Prediction.findById(req.params.id);
+  const prediction = await Prediction.findOne({
+    _id: req.params.id,
+    userID: req.user._id,
+  });
   if (!prediction) return res.status(404).send("Bracket not found");
 
   const competition = await Competition.findById(req.body.competitionID);

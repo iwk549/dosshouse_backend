@@ -23,3 +23,21 @@
 {"level":"error","message":"thisRoundPoints is not defined"}
 {"level":"error","message":"Assignment to constant variable."}
 {"level":"error","message":"Group.insertOne is not a function"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.groups index: name_1 dup key: { name: \"Group 1\" }"}
+{"level":"error","message":"mongodb.connect is not a function"}
+{"level":"error","message":"connection.db is not a function"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}

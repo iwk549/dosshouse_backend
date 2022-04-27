@@ -1,28 +1,30 @@
 const request = require("supertest");
-const { groups, header, users } = require("../../testData");
+const { groups, header, predictions } = require("../../testData");
 const {
   testResponseText,
   getToken,
   testAuth,
+  deleteAllData,
   testObjectID,
+  insertCompetition,
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
-const { User } = require("../../../models/userModel");
+const { Prediction } = require("../../../models/predictionModel");
 const mongoose = require("mongoose");
-const c = require("config");
 
 const endpoint = "/api/v1/groups";
 let server;
 
 describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
+  const competitionID = mongoose.Types.ObjectId();
   beforeEach(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
   });
   afterEach(() => {
     server.close();
-    Group.collection.deleteMany();
+    deleteAllData();
   });
 
   const insertGroups = async (count, ownerID) => {
@@ -33,6 +35,7 @@ describe("groupsRoute", () => {
         ownerID: ownerID || mongoose.Types.ObjectId(),
         name: `Group ${i + 1}`,
         passcode: "passcode",
+        competitionID: mongoose.Types.ObjectId(),
       };
       groups.push(group);
     }
@@ -41,6 +44,9 @@ describe("groupsRoute", () => {
   };
 
   describe("POST /", () => {
+    beforeEach(async () => {
+      await insertCompetition(competitionID);
+    });
     const exec = async (token, group) =>
       await request(server).post(endpoint).set(header, token).send(group);
 
@@ -52,7 +58,10 @@ describe("groupsRoute", () => {
       testResponseText(res.text, "maximum");
     });
     it("should return 400 if group schema is invalid", async () => {
-      const res = await exec(getToken(), { invalidField: "xxx" });
+      const res = await exec(getToken(), {
+        competitionID,
+        invalidField: "xxx",
+      });
       expect(res.status).toBe(400);
       testResponseText(res.text, "required");
     });
@@ -60,11 +69,12 @@ describe("groupsRoute", () => {
       const res = await exec(getToken(), {
         name: "a".repeat(51),
         passcode: "passcode",
+        competitionID,
       });
       expect(res.status).toBe(400);
     });
     it("should insert the group if all valid", async () => {
-      const res = await exec(getToken(), groups[0]);
+      const res = await exec(getToken(), { ...groups[0], competitionID });
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
@@ -141,6 +151,24 @@ describe("groupsRoute", () => {
       const res = await exec(getToken(), groups[0]._id);
       expect(res.status).toBe(403);
       testResponseText(res.text, "group owner");
+    });
+    it("should delete the group and remove groupID form all predictions", async () => {
+      const insertedGroups = await insertGroups(2, userID);
+      let newPredictions = [];
+      predictions.forEach((p) => {
+        let prediction = { ...p };
+        prediction.groups = insertedGroups.map((g) => g._id);
+        newPredictions.push(prediction);
+      });
+      await Prediction.collection.insertMany(newPredictions);
+      const res = await exec(getToken(userID), insertedGroups[0]._id);
+      expect(res.status).toBe(200);
+      const updatedGroups = await Group.find();
+      expect(updatedGroups.length).toBe(insertedGroups.length - 1);
+      const updatedPredictions = await Prediction.find({
+        groups: insertedGroups[0]._id,
+      }).select("groups");
+      expect(updatedPredictions.length).toBe(0);
     });
   });
 });

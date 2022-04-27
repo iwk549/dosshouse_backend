@@ -1,6 +1,10 @@
 const request = require("supertest");
 const { competitions } = require("../../testData");
-const { testResponseText, testObjectID } = require("../../helperFunctions");
+const {
+  testResponseText,
+  testObjectID,
+  deleteAllData,
+} = require("../../helperFunctions");
 const { Competition } = require("../../../models/competitionModel");
 const mongoose = require("mongoose");
 
@@ -14,7 +18,7 @@ describe("competitionsRoute", () => {
   });
   afterEach(() => {
     server.close();
-    Competition.collection.deleteMany({});
+    deleteAllData();
   });
 
   const insertCompetitions = async (activeCount) => {
