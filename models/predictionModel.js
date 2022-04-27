@@ -1,21 +1,17 @@
 const Joi = require("joi");
 Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
+const { max } = require("../utils/allowables");
 
 const { miscKeys } = require("../utils/allowables");
 
 const predictionMongooseSchema = new mongoose.Schema({
   userID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   competitionID: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Competition",
-  },
-  groupID: {
-    type: mongoose.Types.ObjectId,
-    required: false,
-    ref: "Group",
   },
   groupPredictions: [
     {
@@ -76,6 +72,17 @@ const predictionMongooseSchema = new mongoose.Schema({
     },
   },
   totalPoints: { type: Number, required: true },
+  groups: [
+    {
+      type: mongoose.Types.ObjectId,
+      required: false,
+      ref: "Group",
+      validate: [
+        (val) => val.length <= max.groupsPerPrediction,
+        `{PATH} exceeds the limit of ${max.groupsPerPrediction}`,
+      ],
+    },
+  ],
 });
 
 const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
@@ -89,7 +96,6 @@ const predictionSchema = {
   userID: Joi.objectID().required(),
   name: Joi.string().min(3).max(50).required().label("Bracket Name"),
   competitionID: Joi.objectID().required(),
-  groupID: Joi.objectID().optional().allow(""),
   groupPredictions: Joi.array()
     .items(
       Joi.object()
@@ -129,6 +135,12 @@ const predictionSchema = {
     })
     .optional(),
   totalPoints: Joi.number().required().default(0),
+  groups: Joi.array()
+    .items(Joi.objectID())
+    .unique()
+    .optional()
+    .allow(null)
+    .max(max.groupsPerPrediction),
 };
 
 function validatePrediction(prediction) {

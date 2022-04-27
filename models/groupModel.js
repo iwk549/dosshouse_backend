@@ -1,0 +1,24 @@
+const Joi = require("joi");
+Joi.objectID = require("joi-objectid")(Joi);
+const mongoose = require("mongoose");
+
+const groupMongooseSchema = new mongoose.Schema({
+  ownerID: { type: mongoose.Types.ObjectId, required: true },
+  name: { type: String, required: true, unique: true },
+  passcode: { type: String, required: true },
+});
+
+const Group = mongoose.model("Group", groupMongooseSchema);
+
+const groupSchema = {
+  ownerID: Joi.objectID().required(),
+  name: Joi.string().required().min(3).max(50),
+  passcode: Joi.string().required().min(5).max(50),
+};
+
+function validateGroup(group) {
+  return Joi.object(groupSchema).validate(group);
+}
+
+exports.Group = Group;
+exports.validateGroup = validateGroup;

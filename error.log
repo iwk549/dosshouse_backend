@@ -22,3 +22,4 @@
 {"level":"error","message":"thisRoundPoints is not defined"}
 {"level":"error","message":"thisRoundPoints is not defined"}
 {"level":"error","message":"Assignment to constant variable."}
+{"level":"error","message":"Group.insertOne is not a function"}

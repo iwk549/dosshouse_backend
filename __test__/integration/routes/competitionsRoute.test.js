@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { competitions } = require("../../testData");
-const { testResponseText } = require("../../helperFunctions");
+const { testResponseText, testObjectID } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competitionModel");
 const mongoose = require("mongoose");
 
@@ -67,11 +67,7 @@ describe("competitionsRoute", () => {
     const exec = async (id) => {
       return await request(server).get(endpoint + "/single/" + id);
     };
-    it("should return 400 if invalid id is passed", async () => {
-      const res = await exec("xxx");
-      expect(res.status).toBe(400);
-      testResponseText(res.text, "id");
-    });
+    testObjectID(exec);
     it("should return 404 if the competition is not found", async () => {
       const res = await exec(new mongoose.Types.ObjectId());
       expect(res.status).toBe(404);

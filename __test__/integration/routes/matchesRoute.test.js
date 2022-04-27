@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { matches, competitions } = require("../../testData");
-const { testResponseText } = require("../../helperFunctions");
+const { testResponseText, testObjectID } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competitionModel");
 const { Match } = require("../../../models/matchModel");
 const mongoose = require("mongoose");
@@ -25,11 +25,7 @@ describe("matchesRoute", () => {
     const exec = async (id) => {
       return await request(server).get(endpoint + "/" + id);
     };
-    it("should return 400 if invalid id is sent", async () => {
-      const res = await exec("xxx");
-      expect(res.status).toBe(400);
-      testResponseText(res.text, "id");
-    });
+    testObjectID(exec);
     it("should return 404 if the competition is not found", async () => {
       const res = await exec(mongoose.Types.ObjectId());
       expect(res.status).toBe(404);

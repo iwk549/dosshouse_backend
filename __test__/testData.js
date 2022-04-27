@@ -603,7 +603,30 @@ const predictions = [
   },
 ];
 
+const groups = [
+  { ownerID: mongoose.Types.ObjectId(), name: "Group 1", passcode: "passcode" },
+  { ownerID: mongoose.Types.ObjectId(), name: "Group 2", passcode: "passcode" },
+];
+
+const users = [
+  {
+    _id: mongoose.Types.ObjectId(),
+    name: "User 1",
+    password: "Password1",
+    email: "user1@dosshouse.us",
+  },
+  {
+    _id: mongoose.Types.ObjectId(),
+    name: "User 2",
+    password: "Password1",
+    email: "user1@dosshouse.us",
+  },
+];
+
 module.exports.competitions = competitions;
 module.exports.matches = matches;
 module.exports.results = results;
 module.exports.predictions = predictions;
+module.exports.groups = groups;
+module.exports.users = users;
+module.exports.header = "x-auth-token";

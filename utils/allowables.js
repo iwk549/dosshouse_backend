@@ -18,3 +18,8 @@ module.exports.miscKeys = {
   },
   required: true,
 };
+
+module.exports.max = {
+  groupsPerUser: 2,
+  groupsPerPrediction: 5,
+};
