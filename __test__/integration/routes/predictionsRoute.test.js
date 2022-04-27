@@ -179,4 +179,15 @@ describe("predictionsRoute", () => {
       expect(updatedPrediction.name).toBe("Updated Name");
     });
   });
+
+  describe("GET /", () => {
+    const exec = async (token) =>
+      await request(server).get(endpoint).set(header, token);
+    testAuth(exec);
+    it("should return all predictions belonging to user", async () => {
+      await insertPredictions(5);
+      const res = await exec(getToken(userID));
+      expect(res.body.length).toBe(5);
+    });
+  });
 });
