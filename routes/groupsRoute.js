@@ -42,8 +42,9 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   if (String(group.ownerID) !== String(req.user._id))
     return res.status(403).send("Only the group owner can edit the group");
 
+  // add ownerID to request for validation
+  // removed after, can never be updated
   req.body.ownerID = req.user._id;
-  // req.body.competitionID = String(group.competitionID);
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
 
