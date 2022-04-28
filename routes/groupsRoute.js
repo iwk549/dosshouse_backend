@@ -17,8 +17,8 @@ router.post("/", [auth], async (req, res) => {
       .send(
         `You have already created the maximum number of groups allowed (${max.groupsPerUser})`
       );
-  const competition = await Competition.findById(req.body.competitionID);
-  if (!competition) return res.status(404).send("Competition not found");
+  // const competition = await Competition.findById(req.body.competitionID);
+  // if (!competition) return res.status(404).send("Competition not found");
 
   req.body.ownerID = req.user._id;
   const ex = validateGroup(req.body);
@@ -43,7 +43,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
     return res.status(403).send("Only the group owner can edit the group");
 
   req.body.ownerID = req.user._id;
-  req.body.competitionID = String(group.competitionID);
+  // req.body.competitionID = String(group.competitionID);
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
 

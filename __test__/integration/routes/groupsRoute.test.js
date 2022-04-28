@@ -17,7 +17,7 @@ let server;
 
 describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
-  const competitionID = mongoose.Types.ObjectId();
+  // const competitionID = mongoose.Types.ObjectId();
   beforeEach(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
@@ -35,7 +35,7 @@ describe("groupsRoute", () => {
         ownerID: ownerID || mongoose.Types.ObjectId(),
         name: `Group ${i + 1}`,
         passcode: "passcode",
-        competitionID: mongoose.Types.ObjectId(),
+        // competitionID: mongoose.Types.ObjectId(),
       };
       groups.push(group);
     }
@@ -44,9 +44,9 @@ describe("groupsRoute", () => {
   };
 
   describe("POST /", () => {
-    beforeEach(async () => {
-      await insertCompetition(competitionID);
-    });
+    // beforeEach(async () => {
+    //   await insertCompetition(competitionID);
+    // });
     const exec = async (token, group) =>
       await request(server).post(endpoint).set(header, token).send(group);
 
@@ -59,7 +59,7 @@ describe("groupsRoute", () => {
     });
     it("should return 400 if group schema is invalid", async () => {
       const res = await exec(getToken(), {
-        competitionID,
+        // competitionID,
         invalidField: "xxx",
       });
       expect(res.status).toBe(400);
@@ -69,12 +69,16 @@ describe("groupsRoute", () => {
       const res = await exec(getToken(), {
         name: "a".repeat(51),
         passcode: "passcode",
-        competitionID,
+        // competitionID,
       });
       expect(res.status).toBe(400);
     });
     it("should insert the group if all valid", async () => {
-      const res = await exec(getToken(), { ...groups[0], competitionID });
+      const res = await exec(getToken(), {
+        ...groups[0],
+        // competitionID
+      });
+      console.log(res.text);
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
