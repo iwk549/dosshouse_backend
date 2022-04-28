@@ -282,4 +282,28 @@ router.put(
   }
 );
 
+router.put(
+  "/forceremovefromgroup/:id",
+  [auth, validateObjectID],
+  async (req, res) => {
+    const prediction = await Prediction.findById(req.params.id);
+    if (!prediction) return res.status(404).send("Prediction not found");
+    const group = await Group.findById(req.body._id);
+    if (!group) return res.status(404).send("Group not found");
+
+    if (String(group.ownerID) !== String(req.user._id))
+      return res
+        .status(403)
+        .send("Only the owner can force remove a prediction from a group");
+
+    const result = await Prediction.updateOne(
+      {
+        _id: req.params.id,
+      },
+      { $pull: { groups: req.body._id } }
+    );
+    res.send(result);
+  }
+);
+
 module.exports = router;

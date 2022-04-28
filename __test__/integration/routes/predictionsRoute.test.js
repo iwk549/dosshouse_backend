@@ -440,4 +440,61 @@ describe("predictionsRoute", () => {
       );
     });
   });
+
+  describe("PUT /forceremovefromgroup/:id", () => {
+    const exec = async (token, predictionID, group) =>
+      await request(server)
+        .put(endpoint + "/forceremovefromgroup/" + predictionID)
+        .set(header, token)
+        .send(group);
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if prediction not found", async () => {
+      const res = await exec(getToken(), mongoose.Types.ObjectId());
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "prediction not found");
+    });
+    it("should return 404 if group not found", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const res = await exec(getToken(), insertedPredictions[0]._id);
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "group not found");
+    });
+    it("should return 403 if user is not owner of group", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const group = await Group.collection.insertOne({
+        name: "aaa",
+        passcode: "passcode",
+        ownerID: userID,
+      });
+      const res = await exec(getToken(), insertedPredictions[0]._id, {
+        _id: group.insertedId,
+      });
+      expect(res.status).toBe(403);
+      testResponseText(res.text, "only the owner");
+    });
+    it("should remove the prediction from the group", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const group = await Group.collection.insertOne({
+        name: "aaa",
+        passcode: "passcode",
+        ownerID: userID,
+      });
+      await Prediction.updateOne(
+        { _id: insertedPredictions[0]._id },
+        { $set: { groups: [group.insertedId, mongoose.Types.ObjectId()] } }
+      );
+      const res = await exec(getToken(userID), insertedPredictions[0]._id, {
+        _id: group.insertedId,
+      });
+      expect(res.status).toBe(200);
+      const updatedPrediction = await Prediction.findById(
+        insertedPredictions[0]._id
+      );
+      expect(updatedPrediction.groups.length).toBe(1);
+      expect(updatedPrediction.groups).not.toEqual(
+        expect.arrayContaining([group.insertedId])
+      );
+    });
+  });
 });
