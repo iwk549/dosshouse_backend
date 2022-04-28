@@ -10,6 +10,7 @@ const {
   insertCompetition,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/predictionModel");
+const { Group } = require("../../../models/groupModel");
 const mongoose = require("mongoose");
 
 const endpoint = "/api/v1/predictions";
@@ -22,14 +23,14 @@ describe("predictionsRoute", () => {
   beforeEach(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
-  });
-  afterEach(() => {
-    server.close();
-    deleteAllData();
     prediction = { ...predictions[0] };
     prediction.competitionID = competitionID;
     prediction.userID = userID;
     prediction.name = "New Bracket";
+  });
+  afterEach(() => {
+    server.close();
+    deleteAllData();
   });
 
   const insertPredictions = async (count) => {
@@ -310,6 +311,89 @@ describe("predictionsRoute", () => {
       expect(res.body).toHaveProperty("groupPredictions");
       expect(res.body).toHaveProperty("playoffPredictions");
       expect(res.body).toHaveProperty("misc");
+    });
+  });
+
+  describe("POST /addtogroup/:id", () => {
+    const exec = async (token, predictionID, group) =>
+      await request(server)
+        .put(endpoint + "/addtogroup/" + predictionID)
+        .set(header, token)
+        .send(group);
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if prediction does not exist", async () => {
+      const res = await exec(getToken(), mongoose.Types.ObjectId());
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "prediction not found");
+    });
+    it("should return 404 if group does not exist", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const res = await exec(getToken(userID), insertedPredictions[0]._id);
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "group not found");
+    });
+    it("should add the group to the prediction", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const group = {
+        name: "group1",
+        passcode: "passcode",
+        ownerID: mongoose.Types.ObjectId(),
+        competitionID: insertedPredictions[0].competitionID,
+      };
+      await Group.collection.insertOne(group);
+      const res = await exec(
+        getToken(userID),
+        insertedPredictions[0]._id,
+        group
+      );
+      expect(res.status).toBe(200);
+      const updatedPrediction = await Prediction.findById(
+        insertedPredictions[0]._id
+      );
+      expect(updatedPrediction).toHaveProperty("groups");
+      expect(updatedPrediction.groups).toEqual(
+        expect.arrayContaining([group._id])
+      );
+    });
+  });
+
+  describe("PUT /removefromgroup/:id", () => {
+    const exec = async (token, predictionID, group) =>
+      await request(server)
+        .put(endpoint + "/removefromgroup/" + predictionID)
+        .set(header, token)
+        .send(group);
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if prediction does not exist", async () => {
+      const res = await exec(getToken(), mongoose.Types.ObjectId());
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "prediction not found");
+    });
+    it("should return 200 but do nothing if no/invalid group id is sent", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const res = await exec(getToken(userID), insertedPredictions[0]._id);
+      expect(res.status).toBe(200);
+    });
+    it("should remove the groupid from the prediction", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      const groupID = mongoose.Types.ObjectId();
+      await Prediction.updateOne(
+        { _id: insertedPredictions[0]._id },
+        { $set: { groups: [groupID, mongoose.Types.ObjectId()] } }
+      );
+      const res = await exec(getToken(userID), insertedPredictions[0]._id, {
+        _id: groupID,
+      });
+      expect(res.status).toBe(200);
+      const updatedPrediction = await Prediction.findById(
+        insertedPredictions[0]._id
+      );
+      expect(updatedPrediction.groups.length).toBe(1);
+      expect(updatedPrediction.groups).not.toEqual(
+        expect.arrayContaining([groupID])
+      );
     });
   });
 });

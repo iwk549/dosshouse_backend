@@ -126,3 +126,19 @@
 {"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
 {"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
 {"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"mongoose is not defined"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}

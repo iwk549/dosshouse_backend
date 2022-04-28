@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const { Prediction, validatePrediction } = require("../models/predictionModel");
 const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
@@ -170,9 +171,9 @@ router.get(
     const predictions = await Prediction.find({ competitionID: req.params.id })
       .select(selectedFields)
       .populate("userID", "name")
-      .sort("totalPoints")
-      .limit(limit)
-      .skip(skip);
+      .sort({ totalPoints: -1 })
+      .skip(skip)
+      .limit(limit);
     const count = await Prediction.count({ competitionID: req.params.id });
     res.send({ predictions, count });
   }
@@ -201,16 +202,44 @@ router.get("/unowned/:id", [auth, validateObjectID], async (req, res) => {
   res.send(predictionToSend);
 });
 
-router.put("/addToGroup/:id", [auth, validateObjectID], async (req, res) => {
-  const prediction = await Prediction.find({
+router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
+  const prediction = await Prediction.findOne({
     _id: req.params.id,
     userID: req.user._id,
   });
   if (!prediction) return res.status(404).send("Prediction not found");
-  const group = await Group.find({
+  const group = await Group.findOne({
     name: req.body.name,
     passcode: req.body.passcode,
   });
+  if (!group)
+    return res
+      .status(404)
+      .send("Group not found. Please double check the name and passcode");
+
+  const result = await Prediction.updateOne(
+    { _id: req.params.id },
+    { $push: { groups: group._id } }
+  );
+  res.send(result);
 });
+
+router.put(
+  "/removefromgroup/:id",
+  [auth, validateObjectID],
+  async (req, res) => {
+    const prediction = await Prediction.findOne({
+      _id: req.params.id,
+      userID: req.user._id,
+    });
+    if (!prediction) return res.status(404).send("Prediction not found");
+
+    const result = await Prediction.updateOne(
+      { _id: req.params.id },
+      { $pull: { groups: req.body._id } }
+    );
+    res.send(result);
+  }
+);
 
 module.exports = router;
