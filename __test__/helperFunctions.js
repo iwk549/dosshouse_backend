@@ -60,11 +60,13 @@ function testAuth(exec, role) {
   }
 }
 
-function testObjectID(exec) {
+function testObjectID(exec, needsToken) {
   it("should return 400 if invalid object id sent", async () => {
-    const res = await exec("xxx");
+    let res;
+    if (needsToken) res = await exec(getToken(), "xxx");
+    else res = await exec("xxx");
     expect(res.status).toBe(400);
-    testResponseText(res.text, "invalid");
+    testResponseText(res.text, "invalid id");
   });
 }
 

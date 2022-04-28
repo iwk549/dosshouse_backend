@@ -105,7 +105,7 @@ describe("groupsRoute", () => {
         .send(group);
 
     testAuth(exec);
-    testObjectID(exec);
+    testObjectID(exec, true);
     it("should return 404 if group not found", async () => {
       const res = await exec(getToken(), mongoose.Types.ObjectId());
       expect(res.status).toBe(404);
@@ -145,7 +145,7 @@ describe("groupsRoute", () => {
         .set(header, token);
 
     testAuth(exec);
-    testObjectID(exec);
+    testObjectID(exec, true);
     it("should return 403 if group does not belong to user", async () => {
       const groups = await insertGroups(1);
       const res = await exec(getToken(), groups[0]._id);

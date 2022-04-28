@@ -4,6 +4,7 @@ const { Prediction, validatePrediction } = require("../models/predictionModel");
 const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
+const { Group } = require("../models/groupModel");
 
 function addPoints(req) {
   req.body.points = {
@@ -15,13 +16,14 @@ function addPoints(req) {
   req.body.totalPoints = 0;
 }
 
-async function nameIsUnique(name, userID) {
+async function nameIsUnique(name, userID, competitionID) {
   const predictionWithSameName = await Prediction.findOne({
     name: name,
     userID: { $ne: userID },
+    competitionID,
   }).select("name");
   if (predictionWithSameName)
-    return "Bracket names must be unique. This name has been taken by another user. Please try a different name.";
+    return "Prediction names must be unique. This name has been taken by another user. Please try a different name.";
   return null;
 }
 
@@ -49,17 +51,21 @@ router.post("/", [auth], async (req, res) => {
     return res
       .status(400)
       .send(
-        `You have already submitted the maximum allowed brackets for this competition (${competition.maxSubmissions})`
+        `You have already submitted the maximum allowed predictions for this competition (${competition.maxSubmissions})`
       );
   if (predictions.some((p) => p.name === req.body.name))
     return res
       .status(400)
       .send(
-        `You already have a bracket named ${req.body.name}. Please choose a different name.`
+        `You already have a prediction named ${req.body.name} in this competition. Please choose a different name.`
       );
 
   // verify that name is unique across entire site
-  const nameInUse = await nameIsUnique(req.body.name, req.user._id);
+  const nameInUse = await nameIsUnique(
+    req.body.name,
+    req.user._id,
+    req.body.competitionID
+  );
   if (nameInUse) return res.status(400).send(nameInUse);
 
   const newPrediction = new Prediction(req.body);
@@ -73,7 +79,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
     _id: req.params.id,
     userID: req.user._id,
   });
-  if (!prediction) return res.status(404).send("Bracket not found");
+  if (!prediction) return res.status(404).send("Prediction not found");
 
   const competition = await Competition.findById(req.body.competitionID);
   if (!competition) return res.status(404).send("Competition not found");
@@ -96,11 +102,15 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
     return res
       .status(400)
       .send(
-        `You already have a bracket named ${req.body.name}. Please choose a different name.`
+        `You already have a prediction named ${req.body.name}. Please choose a different name.`
       );
 
-  // verify that name is unique across enitre site
-  const nameInUse = await nameIsUnique(req.body.name, req.user._id);
+  // verify that name is unique across entire site
+  const nameInUse = await nameIsUnique(
+    req.body.name,
+    req.user._id,
+    req.body.competitionID
+  );
   if (nameInUse) return res.status(400).send(nameInUse);
 
   // add points to body for validation, they cannot be edited here so are deleted
@@ -120,7 +130,7 @@ router.get("/:id", [auth, validateObjectID], async (req, res) => {
     _id: req.params.id,
     userID: req.user._id,
   });
-  if (!prediction) res.status(404).send("Bracket not found");
+  if (!prediction) return res.status(404).send("Prediction not found");
   res.send(prediction);
 });
 
@@ -132,7 +142,7 @@ router.get("/", [auth], async (req, res) => {
 });
 
 router.delete("/:id", [auth, validateObjectID], async (req, res) => {
-  const prediction = await Prediction.find({
+  const prediction = await Prediction.findOne({
     userID: req.user._id,
     _id: req.params.id,
   });
@@ -141,16 +151,31 @@ router.delete("/:id", [auth, validateObjectID], async (req, res) => {
   res.send(result);
 });
 
-router.get("/leaderboard/:id", [validateObjectID], async (req, res) => {
-  const competition = await Competition.findById(req.params.id);
-  if (!competition) return res.status(404).send("Competition not found");
-  let selectedFields = "name points totalPoints userID";
-  if (competition.submissionDeadline < new Date()) selectedFields += " misc";
-  const predictions = await Prediction.find({ competitionID: req.params.id })
-    .select(selectedFields)
-    .populate("userID", "name");
-  res.send(predictions);
-});
+router.get(
+  "/leaderboard/:id/:resultsPerPage/:pageNumber",
+  [validateObjectID],
+  async (req, res) => {
+    const competition = await Competition.findById(req.params.id);
+    if (!competition) return res.status(404).send("Competition not found");
+    let selectedFields = "name points totalPoints userID";
+    if (competition.submissionDeadline < new Date()) selectedFields += " misc";
+
+    const limit = !isNaN(Number(req.params.resultsPerPage))
+      ? Number(req.params.resultsPerPage)
+      : 25;
+    const pageNumber = !isNaN(Number(req.params.pageNumber))
+      ? Number(req.params.pageNumber)
+      : 1;
+    const skip = limit * (pageNumber - 1);
+    const predictions = await Prediction.find({ competitionID: req.params.id })
+      .select(selectedFields)
+      .populate("userID", "name")
+      .sort("totalPoints")
+      .limit(limit)
+      .skip(skip);
+    res.send(predictions);
+  }
+);
 
 router.get("/unowned/:id", [auth, validateObjectID], async (req, res) => {
   const prediction = await Prediction.findById(req.params.id).select(
@@ -173,6 +198,18 @@ router.get("/unowned/:id", [auth, validateObjectID], async (req, res) => {
   else predictionToSend = await Prediction.findById(req.params.id);
 
   res.send(predictionToSend);
+});
+
+router.put("/addToGroup/:id", [auth, validateObjectID], async (req, res) => {
+  const prediction = await Prediction.find({
+    _id: req.params.id,
+    userID: req.user._id,
+  });
+  if (!prediction) return res.status(404).send("Prediction not found");
+  const group = await Group.find({
+    name: req.body.name,
+    passcode: req.body.passcode,
+  });
 });
 
 module.exports = router;

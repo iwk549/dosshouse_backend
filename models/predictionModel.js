@@ -7,7 +7,7 @@ const { miscKeys } = require("../utils/allowables");
 
 const predictionMongooseSchema = new mongoose.Schema({
   userID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   competitionID: {
     type: mongoose.Types.ObjectId,
     required: true,
