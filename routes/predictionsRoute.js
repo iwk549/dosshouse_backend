@@ -140,7 +140,11 @@ router.get("/", [auth], async (req, res) => {
   const predictions = await Prediction.find({ userID: req.user._id })
     .select("competitionID name points totalPoints")
     .populate("competitionID")
-    .populate("groups", "name");
+    .populate({
+      path: "groups",
+      select: "name ownerID",
+      populate: { path: "ownerID", select: "name" },
+    });
   res.send(predictions);
 });
 
@@ -201,9 +205,9 @@ router.get(
     const groupInfo =
       req.params.groupID !== "all"
         ? await Group.findById(req.params.groupID)
-            .select("name, ownerID")
+            .select("name ownerID")
             .populate("ownerID", "name")
-        : {};
+        : null;
     res.send({ predictions, count, groupInfo });
   }
 );

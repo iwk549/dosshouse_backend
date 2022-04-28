@@ -51,7 +51,12 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   try {
     const response = await Group.updateOne(
       { _id: req.params.id },
-      { $set: { name: req.body.name, passcode: req.body.passcode } }
+      {
+        $set: {
+          name: req.body.name || group.name,
+          passcode: req.body.passcode || group.passcode,
+        },
+      }
     );
     res.send(response);
   } catch (ex) {
