@@ -6,6 +6,7 @@ const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
+const { max } = require("../utils/allowables");
 
 function addPoints(req) {
   req.body.points = {
@@ -208,6 +209,13 @@ router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
     userID: req.user._id,
   });
   if (!prediction) return res.status(404).send("Prediction not found");
+  if (prediction.groups.length >= max.groupsPerPrediction)
+    return res
+      .status(400)
+      .send(
+        `You have added the maximum number of groups for this prediction (${max.groupsPerPrediction}. Please make a new prediction or remove a group from this one to be able to add a new group.)`
+      );
+
   const group = await Group.findOne({
     name: req.body.name,
     passcode: req.body.passcode,

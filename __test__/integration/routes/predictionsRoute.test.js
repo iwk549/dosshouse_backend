@@ -12,6 +12,7 @@ const {
 const { Prediction } = require("../../../models/predictionModel");
 const { Group } = require("../../../models/groupModel");
 const mongoose = require("mongoose");
+const { max } = require("../../../utils/allowables");
 
 const endpoint = "/api/v1/predictions";
 let server;
@@ -332,6 +333,27 @@ describe("predictionsRoute", () => {
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
       testResponseText(res.text, "group not found");
+    });
+    it("should return 400 if user has reached limit of groups per prediction", async () => {
+      const insertedPredictions = await insertPredictions(1);
+      await Prediction.updateOne(
+        { _id: insertedPredictions[0]._id },
+        {
+          $set: {
+            groups: new Array(max.groupsPerPrediction).fill(
+              mongoose.Types.ObjectId()
+            ),
+          },
+        }
+      );
+      const res = await exec(getToken(userID), insertedPredictions[0]._id, {
+        name: "group1",
+        passcode: "passcode",
+        ownerID: mongoose.Types.ObjectId(),
+        competitionID: insertedPredictions[0].competitionID,
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "maximum");
     });
     it("should add the group to the prediction", async () => {
       const insertedPredictions = await insertPredictions(1);
