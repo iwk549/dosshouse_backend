@@ -235,3 +235,6 @@
 {"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
 {"level":"error","message":"Found non-callable @@iterator"}
 {"level":"error","message":"Cannot access 'skip' before initialization"}
+{"level":"error","message":"Cannot populate path `group` because it is not in your schema. Set the `strictPopulate` option to false to override."}
+{"level":"error","message":"Cast to ObjectId failed for value \"all\" (type string) at path \"_id\" for model \"Group\""}
+{"level":"error","message":"groupID is not defined"}

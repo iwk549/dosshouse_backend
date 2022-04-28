@@ -160,7 +160,8 @@ router.get(
   async (req, res) => {
     const competition = await Competition.findById(req.params.id);
     if (!competition) return res.status(404).send("Competition not found");
-    let selectedFields = "name points totalPoints userID groups";
+
+    let selectedFields = "name points totalPoints userID";
     if (competition.submissionDeadline < new Date()) selectedFields += " misc";
 
     if (
@@ -197,7 +198,13 @@ router.get(
       competitionID: req.params.id,
       ...groupsQuery,
     });
-    res.send({ predictions, count });
+    const groupInfo =
+      req.params.groupID !== "all"
+        ? await Group.findById(req.params.groupID)
+            .select("name, ownerID")
+            .populate("ownerID", "name")
+        : {};
+    res.send({ predictions, count, groupInfo });
   }
 );
 
