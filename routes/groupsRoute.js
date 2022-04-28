@@ -1,11 +1,9 @@
 const express = require("express");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
-const { Competition } = require("../models/competitionModel");
 const { Group, validateGroup } = require("../models/groupModel");
-const { Prediction } = require("../models/predictionModel");
 const { max } = require("../utils/allowables");
 const transactions = require("../utils/transactions");
 
@@ -17,12 +15,11 @@ router.post("/", [auth], async (req, res) => {
       .send(
         `You have already created the maximum number of groups allowed (${max.groupsPerUser})`
       );
-  // const competition = await Competition.findById(req.body.competitionID);
-  // if (!competition) return res.status(404).send("Competition not found");
-
-  req.body.ownerID = req.user._id;
+  const ownerID = mongoose.Types.ObjectId(req.user._id);
+  req.body.ownerID = String(ownerID);
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  req.body.ownerID = ownerID;
   try {
     const response = await Group.collection.insertOne(req.body);
     res.send(response);

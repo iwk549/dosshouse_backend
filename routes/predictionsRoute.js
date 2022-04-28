@@ -140,7 +140,7 @@ router.get("/", [auth], async (req, res) => {
   const predictions = await Prediction.find({ userID: req.user._id })
     .select("competitionID name points totalPoints")
     .populate("competitionID")
-    .populate("groups");
+    .populate("groups", "name");
   res.send(predictions);
 });
 

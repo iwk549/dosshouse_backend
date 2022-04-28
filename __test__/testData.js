@@ -604,13 +604,13 @@ const predictions = [
 
 const groups = [
   {
-    ownerID: mongoose.Types.ObjectId(),
+    // ownerID: mongoose.Types.ObjectId(),
     name: "Group 1",
     passcode: "passcode",
     // competitionID: mongoose.Types.ObjectId(),
   },
   {
-    ownerID: mongoose.Types.ObjectId(),
+    // ownerID: mongoose.Types.ObjectId(),
     name: "Group 2",
     passcode: "passcode",
     // competitionID: mongoose.Types.ObjectId(),

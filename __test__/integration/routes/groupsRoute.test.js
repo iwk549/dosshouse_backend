@@ -44,9 +44,6 @@ describe("groupsRoute", () => {
   };
 
   describe("POST /", () => {
-    // beforeEach(async () => {
-    //   await insertCompetition(competitionID);
-    // });
     const exec = async (token, group) =>
       await request(server).post(endpoint).set(header, token).send(group);
 
@@ -89,8 +86,8 @@ describe("groupsRoute", () => {
     it("should insert the group if all valid", async () => {
       const res = await exec(getToken(), {
         ...groups[0],
-        // competitionID
       });
+      const all = await Group.find();
       console.log(res.text);
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
