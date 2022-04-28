@@ -235,8 +235,8 @@ describe("predictionsRoute", () => {
     });
   });
 
-  describe("GET /leaderboard/:id", () => {
-    const exec = async (competitionID, pageNumber, perPage) =>
+  describe("GET /leaderboard/:id/:resultsPerPage/:pageNumber/:groupID", () => {
+    const exec = async (competitionID, pageNumber, perPage, groupID = "all") =>
       await request(server).get(
         endpoint +
           "/leaderboard/" +
@@ -244,13 +244,23 @@ describe("predictionsRoute", () => {
           "/" +
           perPage +
           "/" +
-          pageNumber
+          pageNumber +
+          "/" +
+          groupID
       );
     testObjectID(exec);
     it("should return 404 if competition not found", async () => {
       const res = await exec(mongoose.Types.ObjectId());
       expect(res.status).toBe(404);
       testResponseText(res.text, "competition");
+    });
+    it('should return 400 if group id is not "all" or valid object id', async () => {
+      await raiseInsertCompetition(1);
+      await insertPredictions(1);
+      const res = await exec(competitionID, 1, 25, "xxx");
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "group");
+      testResponseText(res.text, "valid object");
     });
     it("should paginate correctly", async () => {
       await raiseInsertCompetition(1);
@@ -270,10 +280,22 @@ describe("predictionsRoute", () => {
       expect(res.body.predictions[0]).not.toHaveProperty("misc");
     });
     it("should return the misc property if submission deadline has passed", async () => {
-      await raiseInsertCompetition(-11);
+      await raiseInsertCompetition(-1);
       await insertPredictions(49);
       const res = await exec(competitionID, 1, 25);
       expect(res.body.predictions[0]).toHaveProperty("misc");
+    });
+    it("should only return predictions that are part of the group", async () => {
+      await raiseInsertCompetition(-1);
+      const insertedPredictions = await insertPredictions(2);
+      const groupID = mongoose.Types.ObjectId();
+      await Prediction.updateOne(
+        { _id: insertedPredictions[0]._id },
+        { $set: { groups: groupID } }
+      );
+      const res = await exec(competitionID, 1, 25, groupID);
+      expect(res.status).toBe(200);
+      expect(res.body.count).toBe(1);
     });
   });
 

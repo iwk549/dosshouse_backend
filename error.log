@@ -227,3 +227,11 @@
 {"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
 {"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
 {"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Found non-callable @@iterator"}
+{"level":"error","message":"Cannot access 'skip' before initialization"}

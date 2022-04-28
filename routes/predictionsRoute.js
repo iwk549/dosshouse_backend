@@ -155,13 +155,27 @@ router.delete("/:id", [auth, validateObjectID], async (req, res) => {
 });
 
 router.get(
-  "/leaderboard/:id/:resultsPerPage/:pageNumber",
+  "/leaderboard/:id/:resultsPerPage/:pageNumber/:groupID",
   [validateObjectID],
   async (req, res) => {
     const competition = await Competition.findById(req.params.id);
     if (!competition) return res.status(404).send("Competition not found");
-    let selectedFields = "name points totalPoints userID";
+    let selectedFields = "name points totalPoints userID groups";
     if (competition.submissionDeadline < new Date()) selectedFields += " misc";
+
+    if (
+      req.params.groupID !== "all" &&
+      !mongoose.Types.ObjectId.isValid(req.params.groupID)
+    )
+      return res
+        .status(400)
+        .send(`Group ID parameter must be "all" or a valid objectID`);
+
+    // group query will only be set if groupID is passed
+    const groupsQuery =
+      req.params.groupID.toLowerCase() === "all"
+        ? {}
+        : { groups: mongoose.Types.ObjectId(req.params.groupID) };
 
     const limit = !isNaN(Number(req.params.resultsPerPage))
       ? Number(req.params.resultsPerPage)
@@ -170,13 +184,19 @@ router.get(
       ? Number(req.params.pageNumber)
       : 1;
     const skip = limit * (pageNumber - 1);
-    const predictions = await Prediction.find({ competitionID: req.params.id })
+    const predictions = await Prediction.find({
+      competitionID: req.params.id,
+      ...groupsQuery,
+    })
       .select(selectedFields)
       .populate("userID", "name")
       .sort({ totalPoints: -1 })
       .skip(skip)
       .limit(limit);
-    const count = await Prediction.count({ competitionID: req.params.id });
+    const count = await Prediction.count({
+      competitionID: req.params.id,
+      ...groupsQuery,
+    });
     res.send({ predictions, count });
   }
 );
