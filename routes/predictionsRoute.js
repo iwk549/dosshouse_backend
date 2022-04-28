@@ -173,7 +173,8 @@ router.get(
       .sort("totalPoints")
       .limit(limit)
       .skip(skip);
-    res.send(predictions);
+    const count = await Prediction.count({ competitionID: req.params.id });
+    res.send({ predictions, count });
   }
 );
 

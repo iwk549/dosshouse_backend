@@ -254,22 +254,24 @@ describe("predictionsRoute", () => {
       await raiseInsertCompetition(1);
       await insertPredictions(49);
       const res = await exec(competitionID, 1, 25);
-      expect(res.body.length).toBe(25);
+      expect(res.body.predictions.length).toBe(25);
       const res2 = await exec(competitionID, 2, 25);
-      expect(res2.body.length).toBe(24);
-      expect(res2.body[0].name).not.toBe(res.body[0].name);
+      expect(res2.body.predictions.length).toBe(24);
+      expect(res2.body.predictions[0].name).not.toBe(
+        res.body.predictions[0].name
+      );
     });
     it("should not return the misc field if submission deadline has not passed", async () => {
       await raiseInsertCompetition(1);
       await insertPredictions(49);
       const res = await exec(competitionID, 1, 25);
-      expect(res.body[0]).not.toHaveProperty("misc");
+      expect(res.body.predictions[0]).not.toHaveProperty("misc");
     });
     it("should return the misc property if submission deadline has passed", async () => {
       await raiseInsertCompetition(-11);
       await insertPredictions(49);
       const res = await exec(competitionID, 1, 25);
-      expect(res.body[0]).toHaveProperty("misc");
+      expect(res.body.predictions[0]).toHaveProperty("misc");
     });
   });
 
