@@ -73,6 +73,19 @@ describe("groupsRoute", () => {
       });
       expect(res.status).toBe(400);
     });
+    it("should return 400 if name is not unique", async () => {
+      await Group.collection.insertOne({
+        name: "name",
+        passcode: "passcode",
+        ownerID: userID,
+      });
+      const res = await exec(getToken(), {
+        name: "name",
+        passcode: "newpasscode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "unique");
+    });
     it("should insert the group if all valid", async () => {
       const res = await exec(getToken(), {
         ...groups[0],
@@ -128,6 +141,20 @@ describe("groupsRoute", () => {
       });
       expect(res.status).toBe(400);
       testResponseText(res.text, "required");
+    });
+    it("should return 400 if name is not unique", async () => {
+      await Group.collection.insertOne({
+        name: "name",
+        passcode: "passcode1",
+        ownerID: userID,
+      });
+      const groups = await insertGroups(1, userID);
+      const res = await exec(getToken(userID), groups[0]._id, {
+        name: "name",
+        passcode: "newpasscode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "unique");
     });
     it("should update the group", async () => {
       const groups = await insertGroups(1, userID);

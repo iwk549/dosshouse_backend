@@ -23,9 +23,12 @@ router.post("/", [auth], async (req, res) => {
   req.body.ownerID = req.user._id;
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
-
-  const response = await Group.collection.insertOne(req.body);
-  res.send(response);
+  try {
+    const response = await Group.collection.insertOne(req.body);
+    res.send(response);
+  } catch (ex) {
+    return res.status(400).send("Group names must be unique");
+  }
 });
 
 // this route to return all groups created by the user
@@ -47,11 +50,15 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
 
-  const response = await Group.updateOne(
-    { _id: req.params.id },
-    { $set: { name: req.body.name, passcode: req.body.passcode } }
-  );
-  res.send(response);
+  try {
+    const response = await Group.updateOne(
+      { _id: req.params.id },
+      { $set: { name: req.body.name, passcode: req.body.passcode } }
+    );
+    res.send(response);
+  } catch (ex) {
+    return res.status(400).send("Group names must be unique");
+  }
 });
 
 // this route needs to also remove the groups from all predictions
