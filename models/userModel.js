@@ -8,7 +8,13 @@ const { pwComplexityOptions } = require("../utils/allowables");
 
 const userMongooseSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, minLength: 5, maxLength: 255 },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    minLength: 5,
+    maxLength: 255,
+  },
   password: { type: String, required: true, minLength: 8, maxLength: 1024 },
   role: { type: String, required: false },
 });

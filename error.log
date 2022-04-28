@@ -22,3 +22,219 @@
 {"level":"error","message":"thisRoundPoints is not defined"}
 {"level":"error","message":"thisRoundPoints is not defined"}
 {"level":"error","message":"Assignment to constant variable."}
+{"level":"error","message":"Group.insertOne is not a function"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.groups index: name_1 dup key: { name: \"Group 1\" }"}
+{"level":"error","message":"mongodb.connect is not a function"}
+{"level":"error","message":"connection.db is not a function"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"Cannot set headers after they are sent to the client"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Ian's Bracket\" }"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"mongoose is not defined"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}
+{"level":"error","message":"The \"chunk\" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Array"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse.groups index: name_1 dup key: { name: \"aaa\" }"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"Cannot assign to read only property '_bsontype' of object '[object Object]'"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"unknown operator: $or"}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Cast to ObjectId failed for value \"true\" (type boolean) at path \"groups\" for model \"Prediction\""}
+{"level":"error","message":"Found non-callable @@iterator"}
+{"level":"error","message":"Cannot access 'skip' before initialization"}
+{"level":"error","message":"Cannot populate path `group` because it is not in your schema. Set the `strictPopulate` option to false to override."}
+{"level":"error","message":"Cast to ObjectId failed for value \"all\" (type string) at path \"_id\" for model \"Group\""}
+{"level":"error","message":"groupID is not defined"}

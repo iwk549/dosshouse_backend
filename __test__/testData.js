@@ -161,7 +161,7 @@ const results = [
 
 const predictions = [
   {
-    _id: mongoose.Types.ObjectId("625c5d445b889141af0a1180"),
+    // _id: mongoose.Types.ObjectId("625c5d445b889141af0a1180"),
     userID: mongoose.Types.ObjectId("6258255944fc63e5c20f212f"),
     name: "Ian's Bracket 2",
     competitionID: mongoose.Types.ObjectId("6252ebe1d595c7d6a7a76ded"),
@@ -279,10 +279,9 @@ const predictions = [
       misc: { points: 20, correctPicks: 2 },
     },
     totalPoints: 35,
-    __v: 0,
   },
   {
-    _id: mongoose.Types.ObjectId("625c986e97cd69687c60f155"),
+    // _id: mongoose.Types.ObjectId("625c986e97cd69687c60f155"),
     userID: mongoose.Types.ObjectId("6258255944fc63e5c20f212f"),
     name: "Ian's Bracket",
     competitionID: mongoose.Types.ObjectId("6252ebe1d595c7d6a7a76ded"),
@@ -603,7 +602,40 @@ const predictions = [
   },
 ];
 
+const groups = [
+  {
+    // ownerID: mongoose.Types.ObjectId(),
+    name: "Group 1",
+    passcode: "passcode",
+    // competitionID: mongoose.Types.ObjectId(),
+  },
+  {
+    // ownerID: mongoose.Types.ObjectId(),
+    name: "Group 2",
+    passcode: "passcode",
+    // competitionID: mongoose.Types.ObjectId(),
+  },
+];
+
+const users = [
+  {
+    _id: mongoose.Types.ObjectId(),
+    name: "User 1",
+    password: "Password1",
+    email: "user1@dosshouse.us",
+  },
+  {
+    _id: mongoose.Types.ObjectId(),
+    name: "User 2",
+    password: "Password1",
+    email: "user1@dosshouse.us",
+  },
+];
+
 module.exports.competitions = competitions;
 module.exports.matches = matches;
 module.exports.results = results;
 module.exports.predictions = predictions;
+module.exports.groups = groups;
+module.exports.users = users;
+module.exports.header = "x-auth-token";
