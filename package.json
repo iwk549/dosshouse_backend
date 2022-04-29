@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose --runInBand --watch",
+    "test:coverage": "jest --runInBand --coverage",
     "dev": "nodemon -L index.js"
   },
   "author": "",

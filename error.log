@@ -248,3 +248,6 @@
 {"level":"error","message":"Configuration property \"resetEmail\" is not defined"}
 {"level":"error","message":"Configuration property \"resetEmail\" is not defined"}
 {"level":"error","message":"password is not defined"}
+{"level":"error","message":"data and hash arguments required"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Bracket 1\" }"}
+{"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Bracket 1\" }"}

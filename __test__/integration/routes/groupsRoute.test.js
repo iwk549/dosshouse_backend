@@ -6,7 +6,7 @@ const {
   testAuth,
   deleteAllData,
   testObjectID,
-  insertCompetition,
+  insertGroups,
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
@@ -17,7 +17,6 @@ let server;
 
 describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
-  // const competitionID = mongoose.Types.ObjectId();
   beforeEach(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
@@ -26,22 +25,6 @@ describe("groupsRoute", () => {
     server.close();
     deleteAllData();
   });
-
-  const insertGroups = async (count, ownerID) => {
-    let groups = [];
-    for (let i = 0; i < count; i++) {
-      let group = {
-        _id: mongoose.Types.ObjectId(),
-        ownerID: ownerID || mongoose.Types.ObjectId(),
-        name: `Group ${i + 1}`,
-        passcode: "passcode",
-        // competitionID: mongoose.Types.ObjectId(),
-      };
-      groups.push(group);
-    }
-    await Group.collection.insertMany(groups);
-    return groups;
-  };
 
   describe("POST /", () => {
     const exec = async (token, group) =>

@@ -4,7 +4,8 @@ const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
 const { Match } = require("../models/matchModel");
 const { Result } = require("../models/resultModel");
-const { users, competitions } = require("./testData");
+const { users, competitions, predictions } = require("./testData");
+const mongoose = require("mongoose");
 
 function deleteAllData() {
   User.collection.deleteMany();
@@ -34,25 +35,62 @@ async function insertCompetition(competitionID, competition) {
   await Competition.collection.insertOne(competitionToInsert);
 }
 
+async function insertPredictions(count, userID, competitionID, differentUsers) {
+  let predictionsToInsert = [];
+  for (let i = 0; i < count; i++) {
+    let prediction = { ...predictions[0] };
+    prediction._id = mongoose.Types.ObjectId();
+    prediction.name = "Bracket " + (i + 1);
+    prediction.userID = differentUsers
+      ? i % 2 === 0
+        ? userID
+        : mongoose.Types.ObjectId()
+      : userID || mongoose.Types.ObjectId();
+    prediction.competitionID = competitionID || mongoose.Types.ObjectId();
+    predictionsToInsert.push(prediction);
+  }
+  await Prediction.insertMany(predictionsToInsert);
+  return predictionsToInsert;
+}
+
+async function insertGroups(count, ownerID, differentUsers) {
+  let groups = [];
+  for (let i = 0; i < count; i++) {
+    let group = {
+      _id: mongoose.Types.ObjectId(),
+      ownerID: differentUsers
+        ? i % 2 === 0
+          ? ownerID
+          : mongoose.Types.ObjectId()
+        : ownerID || mongoose.Types.ObjectId(),
+      name: `Group ${i + 1}`,
+      passcode: "passcode",
+    };
+    groups.push(group);
+  }
+  await Group.collection.insertMany(groups);
+  return groups;
+}
+
 function pickADate(daysAhead) {
   return new Date().setDate(new Date().getDate() + daysAhead);
 }
 
-function testAuth(exec, role) {
+function testAuth(executionFunction, role) {
   it("should return 400 if invalid token passed", async () => {
-    const res = await exec("xxx");
+    const res = await executionFunction("xxx");
     expect(res.status).toBe(400);
     testResponseText(res.text, "invalid");
   });
   it("should return 401 if no token sent", async () => {
-    const res = await exec("");
+    const res = await executionFunction("");
     expect(res.status).toBe(401);
     testResponseText(res.text, "provided");
   });
   if (role) {
     if (role.includes("admin")) {
       it("should return 403 if user is not admin", async () => {
-        const res = await exec(getToken());
+        const res = await executionFunction(getToken());
         expect(res.status).toBe(403);
         testResponseText(res.text, "access denied");
       });
@@ -60,11 +98,11 @@ function testAuth(exec, role) {
   }
 }
 
-function testObjectID(exec, needsToken) {
+function testObjectID(executionFunction, needsToken) {
   it("should return 400 if invalid object id sent", async () => {
     let res;
-    if (needsToken) res = await exec(getToken(), "xxx");
-    else res = await exec("xxx");
+    if (needsToken) res = await executionFunction(getToken(), "xxx");
+    else res = await executionFunction("xxx");
     expect(res.status).toBe(400);
     testResponseText(res.text, "invalid id");
   });
@@ -73,6 +111,8 @@ function testObjectID(exec, needsToken) {
 module.exports.testResponseText = testResponseText;
 module.exports.getToken = getToken;
 module.exports.insertCompetition = insertCompetition;
+module.exports.insertPredictions = insertPredictions;
+module.exports.insertGroups = insertGroups;
 module.exports.pickADate = pickADate;
 module.exports.testAuth = testAuth;
 module.exports.testObjectID = testObjectID;

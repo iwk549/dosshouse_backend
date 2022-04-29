@@ -19,8 +19,14 @@ const { Prediction } = require("../models/predictionModel");
 const mongoose = require("mongoose");
 const { sendPasswordReset } = require("../utils/emailing");
 const { pickADate } = require("../utils/allowables");
+const transactions = require("../utils/transactions");
+const { Group } = require("../models/groupModel");
 
-router.post("/", [loginLimiter], async (req, res) => {
+// do not implement rate limiter during testing
+const nonTestingRatelimiter =
+  process.env.NODE_ENV !== "test" ? [loginLimiter] : [];
+
+router.post("/", nonTestingRatelimiter, async (req, res) => {
   req.body.email = trimEmail(req.body.email);
   delete req.body.role;
   const existingAccount = await User.findOne({ email: req.body.email });
@@ -49,18 +55,24 @@ router.post("/", [loginLimiter], async (req, res) => {
   res.send(token);
 });
 
-router.post("/login", [loginLimiter], async (req, res) => {
+router.post("/login", nonTestingRatelimiter, async (req, res) => {
   req.body.email = trimEmail(req.body.email);
+  const message = "Invalid email or password";
+
   const ex = validateLogin({
     email: req.body.email,
     password: req.body.password,
   });
-  if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  if (ex.error) return res.status(400).send(message);
 
   const user = await User.findOne({ email: req.body.email });
-  const validPassword = comparePasswords(req.body.password, user?.password);
-  if (!validPassword || !user)
-    return res.status(400).send("Invalid email or password");
+  if (!user) return res.status(400).send(message);
+  const matchingPassword = await comparePasswords(
+    req.body.password,
+    user?.password
+  );
+
+  if (!matchingPassword) return res.status(400).send(message);
   const token = user.generateAuthToken();
   res.send(token);
 });
@@ -82,12 +94,49 @@ router.delete("/", [auth], async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) return res.send("Account Deleted");
 
-  // ! models to delete (have not implemented transactions yet)
-  // predictions
-  // user
-  await Prediction.deleteMany({ userID: req.user._id });
-  const result = await User.deleteOne({ _id: req.user._id });
-  res.send(result);
+  // ! models to delete
+  // * predictions
+  // * user
+  // * groups
+  // * pull deleted groups from all other users predictions
+  const userID = mongoose.Types.ObjectId(req.user._id);
+  const thisUserGroupIDs = await (
+    await Group.find({ ownerID: userID })
+  ).map((g) => g._id);
+
+  const queries = {
+    user: {
+      collection: "users",
+      query: "deleteOne",
+      data: { _id: userID },
+    },
+    predictions: {
+      collection: "predictions",
+      query: "deleteMany",
+      data: { userID },
+    },
+    groups: {
+      collection: "groups",
+      query: "deleteMany",
+      data: { _id: { $in: thisUserGroupIDs } },
+    },
+    groupsFromPredictions: {
+      collection: "predictions",
+      query: "updateMany",
+      data: {
+        filter: { groups: { $in: thisUserGroupIDs } },
+        update: { $pull: { groups: { $in: thisUserGroupIDs } } },
+      },
+    },
+  };
+
+  const results = await transactions.executeTransactionRepSet(queries);
+  if (results.name)
+    return res
+      .status(400)
+      .send("Something went wrong, account was not deleted. Please try again.");
+
+  res.send(results);
 });
 
 router.put("/", [auth], async (req, res) => {
@@ -151,7 +200,7 @@ router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
   );
 });
 
-router.put("/updatepassword", [loginLimiter], async (req, res) => {
+router.put("/updatepassword", nonTestingRatelimiter, async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
     "passwordResetToken.token": req.body.token,
@@ -172,7 +221,7 @@ router.put("/updatepassword", [loginLimiter], async (req, res) => {
   }
 
   const shPassword = await saltAndHashPassword(req.body.password);
-  const result = await User.updateOne(
+  const updatedUser = await User.findOneAndUpdate(
     {
       _id: user._id,
     },
@@ -185,7 +234,8 @@ router.put("/updatepassword", [loginLimiter], async (req, res) => {
     }
   );
 
-  res.send(result);
+  const token = updatedUser.generateAuthToken();
+  res.send(token);
 });
 
 module.exports = router;

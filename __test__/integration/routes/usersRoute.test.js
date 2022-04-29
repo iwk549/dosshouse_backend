@@ -1,13 +1,20 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
+const { Group } = require("../../../models/groupModel");
+const { Prediction } = require("../../../models/predictionModel");
 const { User } = require("../../../models/userModel");
 const { pickADate } = require("../../../utils/allowables");
+const { saltAndHashPassword, decodeJwt } = require("../../../utils/users");
 const {
   testResponseText,
   testObjectID,
   deleteAllData,
+  testAuth,
+  getToken,
+  insertPredictions,
+  insertGroups,
 } = require("../../helperFunctions");
-const { users } = require("../../testData");
+const { users, header } = require("../../testData");
 
 const endpoint = "/api/v1/users";
 let server;
@@ -24,17 +31,49 @@ describe("usersRoute", () => {
 
   const insertUsers = async () => {
     let insertedUsers = [];
-    users.forEach((u) => {
-      let user = { ...u };
+    for (let i = 0; i < users.length; i++) {
+      let user = { ...users[i] };
+      user.password = await saltAndHashPassword(user.password);
       insertedUsers.push(user);
-    });
-    await User.collection.insertMany(users);
+    }
+    await User.collection.insertMany(insertedUsers);
     return insertedUsers;
   };
 
   const updateUser = async (_id, set) => {
     await User.updateOne({ _id: _id }, { $set: set });
   };
+
+  describe("POST /", () => {
+    const exec = async (user) =>
+      await request(server).post(endpoint).send(user);
+
+    it("should return 400 if account exists using the email", async () => {
+      const insertedUsers = await insertUsers();
+      const res = await exec({ email: insertedUsers[0].email });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "already");
+    });
+    it("should return 400 if body is invalid", async () => {
+      const res = await exec({ invalidField: "xxx" });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "required");
+    });
+    it("should return 400 if password is invalid", async () => {
+      let user = { ...users[0] };
+      user.password = "short";
+      const res = await exec(user);
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "password");
+    });
+    it("should save the user with a hashed password", async () => {
+      const res = await exec(users[0]);
+      expect(res.status).toBe(200);
+      const insertedUser = await User.findOne({ email: users[0].email });
+      expect(insertedUser).not.toBeNull();
+      expect(insertedUser.password).not.toBe(users[0].password);
+    });
+  });
 
   describe("POST /login", () => {
     const exec = async (login) =>
@@ -45,6 +84,121 @@ describe("usersRoute", () => {
       const res = await exec({ invalidField: "xxx" });
       expect(res.status).toBe(400);
       testResponseText(res.text, "email");
+    });
+    it("should return 400 if user is not found", async () => {
+      let user = { ...users[0] };
+      delete user.name;
+      const res = await exec(user);
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "invalid");
+    });
+    it("should return 400 if password does not match", async () => {
+      const insertedUsers = await insertUsers();
+      let user = { ...insertedUsers[0] };
+      delete user.name;
+      user.password = "nonmatchingpassword";
+      const res = await exec(user);
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "invalid");
+    });
+    it("should return a jwt", async () => {
+      const insertedUsers = await insertUsers();
+      let user = { ...insertedUsers[0] };
+      delete user.name;
+      user.password = users[0].password;
+      const res = await exec(user);
+      expect(res.status).toBe(200);
+      const { decoded } = decodeJwt(res.text);
+      expect(decoded).toHaveProperty("name", insertedUsers[0].name);
+      expect(decoded).toHaveProperty("email", user.email);
+    });
+  });
+
+  describe("GET /", () => {
+    const exec = async (token) =>
+      await request(server).get(endpoint).set(header, token);
+    testAuth(exec);
+    it("should return 409 if account not found", async () => {
+      const res = await exec(getToken());
+      expect(res.status).toBe(409);
+      testResponseText(res.text, "account not found");
+    });
+    it("should return a new jwt", async () => {
+      const insertedUsers = await insertUsers();
+      const res = await exec(getToken(insertedUsers[0]._id));
+      expect(res.status).toBe(200);
+      const { decoded } = decodeJwt(res.text);
+      expect(decoded).toHaveProperty("name", insertedUsers[0].name);
+      expect(decoded).toHaveProperty("email", insertedUsers[0].email);
+    });
+  });
+
+  describe("DELETE /", () => {
+    const exec = async (token) =>
+      await request(server).delete(endpoint).set(header, token);
+    testAuth(exec);
+    it("should return success if account is not found", async () => {
+      const res = await exec(getToken());
+      expect(res.status).toBe(200);
+      testResponseText(res.text, "deleted");
+    });
+    it("should delete the user and any predictions and groups belonging to that user", async () => {
+      const insertedUsers = await insertUsers();
+      await insertPredictions(5, insertedUsers[0]._id, null, true);
+      const insertedGroups = await insertGroups(4, insertedUsers[0]._id, true);
+      // now add groups to all the predictions to test for gorup pull
+      await Prediction.updateMany(
+        {},
+        {
+          $set: {
+            groups: insertedGroups.map((g) => mongoose.Types.ObjectId(g._id)),
+          },
+        }
+      );
+
+      const res = await exec(getToken(insertedUsers[0]._id));
+      expect(res.status).toBe(200);
+      expect(res.body.user.deletedCount).toBe(1);
+      expect(res.body.predictions.deletedCount).toBe(3);
+      expect(res.body.groups.deletedCount).toBe(2);
+      expect(res.body.groupsFromPredictions.modifiedCount).toBe(2);
+      const allUsers = await User.find();
+      expect(allUsers.length).toBe(1);
+      const allPredictions = await Prediction.find();
+      expect(allPredictions.length).toBe(2);
+      const allGroups = await Group.find();
+      expect(allGroups.length).toBe(2);
+    });
+  });
+
+  describe("PUT /", () => {
+    const exec = async (token, info) =>
+      await request(server).put(endpoint).set(header, token).send(info);
+    testAuth(exec);
+    it("should return 400 if account not found", async () => {
+      const res = await exec(getToken());
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "account not found");
+    });
+    it("should return 400 if info sent is invalid", async () => {
+      const insertedUsers = await insertUsers();
+      const res = await exec(getToken(insertedUsers[0]._id), {
+        invalidField: "xxx",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "required");
+    });
+    it("should update the user and return a new token", async () => {
+      const insertedUsers = await insertUsers();
+      const newName = "Updated Name";
+      const res = await exec(getToken(insertedUsers[0]._id), {
+        name: newName,
+      });
+      expect(res.status).toBe(200);
+      const { decoded } = decodeJwt(res.text);
+      expect(decoded.name).toBe(newName);
+      const updatedUser = await User.findById(insertedUsers[0]._id);
+      expect(updatedUser.name).toBe(newName);
     });
   });
 

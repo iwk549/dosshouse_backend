@@ -7,6 +7,7 @@ const {
   deleteAllData,
   testObjectID,
   insertCompetition,
+  insertPredictions,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/predictionModel");
 const { Group } = require("../../../models/groupModel");
@@ -32,20 +33,6 @@ describe("predictionsRoute", () => {
     server.close();
     deleteAllData();
   });
-
-  const insertPredictions = async (count) => {
-    let predictionsToInsert = [];
-    for (let i = 0; i < count; i++) {
-      let prediction = { ...predictions[0] };
-      prediction._id = mongoose.Types.ObjectId();
-      prediction.name = "Bracket " + (i + 1);
-      prediction.userID = userID;
-      prediction.competitionID = competitionID;
-      predictionsToInsert.push(prediction);
-    }
-    await Prediction.insertMany(predictionsToInsert);
-    return predictionsToInsert;
-  };
 
   const raiseInsertCompetition = async (daysUntilSubmissionDeadline) => {
     await insertCompetition(competitionID, {
@@ -76,14 +63,22 @@ describe("predictionsRoute", () => {
     });
     it("should return 400 if user has already submitted too many brackets", async () => {
       await raiseInsertCompetition(1);
-      await insertPredictions(competitions[0].maxSubmissions);
+      await insertPredictions(
+        competitions[0].maxSubmissions,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), prediction);
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
     });
     it("should return 400 if user has bracket with same name", async () => {
       await raiseInsertCompetition(1);
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       prediction.name = insertedPredictions[0].name;
       const res = await exec(getToken(userID), prediction);
       expect(res.status).toBe(400);
@@ -91,7 +86,11 @@ describe("predictionsRoute", () => {
     });
     it("should return 400 if bracket name exists globally", async () => {
       await raiseInsertCompetition(1);
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       prediction.name = insertedPredictions[0].name;
       const res = await exec(getToken(), prediction);
       expect(res.status).toBe(400);
@@ -120,14 +119,22 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "prediction not found");
     });
     it("should return 404 if competition not found", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
       testResponseText(res.text, "competition not found");
     });
     it("should return 400 if submission deadline has passed", async () => {
       await raiseInsertCompetition(-1);
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(
         getToken(userID),
         insertedPredictions[0]._id,
@@ -138,7 +145,11 @@ describe("predictionsRoute", () => {
     });
     it("should return 400 if user has bracket with same name", async () => {
       await raiseInsertCompetition(1);
-      let insertedPredictions = await insertPredictions(2);
+      let insertedPredictions = await insertPredictions(
+        2,
+        userID,
+        competitionID
+      );
       insertedPredictions[0].name = insertedPredictions[1].name;
       const res = await exec(
         getToken(userID),
@@ -150,7 +161,11 @@ describe("predictionsRoute", () => {
     });
     it("should return 400 if bracket name exists globally", async () => {
       await raiseInsertCompetition(1);
-      let insertedPredictions = await insertPredictions(1);
+      let insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       let otherPrediction = { ...predictions[1] };
       otherPrediction.competitionID = competitionID;
       await Prediction.collection.insertOne(otherPrediction);
@@ -163,7 +178,11 @@ describe("predictionsRoute", () => {
     });
     it("should update the prediction but not allow points to be updated", async () => {
       await raiseInsertCompetition(1);
-      let insertedPredictions = await insertPredictions(1);
+      let insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       insertedPredictions[0].points = {
         group: { points: 100, correctPicks: 100 },
       };
@@ -193,7 +212,11 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "not found");
     });
     it("should return the prediction", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("name");
@@ -205,7 +228,7 @@ describe("predictionsRoute", () => {
       await request(server).get(endpoint).set(header, token);
     testAuth(exec);
     it("should return all predictions belonging to user", async () => {
-      await insertPredictions(5);
+      await insertPredictions(5, userID, competitionID);
       const res = await exec(getToken(userID));
       expect(res.body.length).toBe(5);
     });
@@ -224,7 +247,11 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "not found");
     });
     it("should delete the prediction", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
       const deletedPrediction = await Prediction.findById(
@@ -255,7 +282,7 @@ describe("predictionsRoute", () => {
     });
     it('should return 400 if group id is not "all" or valid object id', async () => {
       await raiseInsertCompetition(1);
-      await insertPredictions(1);
+      await insertPredictions(1, userID, competitionID);
       const res = await exec(competitionID, 1, 25, "xxx");
       expect(res.status).toBe(400);
       testResponseText(res.text, "group");
@@ -263,7 +290,7 @@ describe("predictionsRoute", () => {
     });
     it("should paginate correctly", async () => {
       await raiseInsertCompetition(1);
-      await insertPredictions(49);
+      await insertPredictions(49, userID, competitionID);
       const res = await exec(competitionID, 1, 25);
       expect(res.body.predictions.length).toBe(25);
       const res2 = await exec(competitionID, 2, 25);
@@ -274,19 +301,23 @@ describe("predictionsRoute", () => {
     });
     it("should not return the misc field if submission deadline has not passed", async () => {
       await raiseInsertCompetition(1);
-      await insertPredictions(49);
+      await insertPredictions(49, userID, competitionID);
       const res = await exec(competitionID, 1, 25);
       expect(res.body.predictions[0]).not.toHaveProperty("misc");
     });
     it("should return the misc property if submission deadline has passed", async () => {
       await raiseInsertCompetition(-1);
-      await insertPredictions(49);
+      await insertPredictions(49, userID, competitionID);
       const res = await exec(competitionID, 1, 25);
       expect(res.body.predictions[0]).toHaveProperty("misc");
     });
     it("should only return predictions that are part of the group", async () => {
       await raiseInsertCompetition(-1);
-      const insertedPredictions = await insertPredictions(2);
+      const insertedPredictions = await insertPredictions(
+        2,
+        userID,
+        competitionID
+      );
       const groupID = mongoose.Types.ObjectId();
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
@@ -311,14 +342,22 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "prediction not found");
     });
     it("should return 404 if the competition is not found", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
       testResponseText(res.text, "competition not found");
     });
     it("should return only info fields if submission deadline is not passed", async () => {
       await raiseInsertCompetition(1);
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
       expect(res.body).not.toHaveProperty("groupPredictions");
@@ -327,7 +366,11 @@ describe("predictionsRoute", () => {
     });
     it("should return all prediction fields if submission deadline has passed", async () => {
       await raiseInsertCompetition(-1);
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("groupPredictions");
@@ -350,13 +393,21 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "prediction not found");
     });
     it("should return 404 if group does not exist", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
       testResponseText(res.text, "group not found");
     });
     it("should return 400 if user has reached limit of groups per prediction", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
         {
@@ -377,7 +428,11 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "maximum");
     });
     it("should add the group to the prediction", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const group = {
         name: "group1",
         passcode: "passcode",
@@ -415,12 +470,20 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "prediction not found");
     });
     it("should return 200 but do nothing if no/invalid group id is sent", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
     });
     it("should remove the groupid from the prediction", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const groupID = mongoose.Types.ObjectId();
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
@@ -454,13 +517,21 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "prediction not found");
     });
     it("should return 404 if group not found", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
       testResponseText(res.text, "group not found");
     });
     it("should return 403 if user is not owner of group", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const group = await Group.collection.insertOne({
         name: "aaa",
         passcode: "passcode",
@@ -473,7 +544,11 @@ describe("predictionsRoute", () => {
       testResponseText(res.text, "only the owner");
     });
     it("should remove the prediction from the group", async () => {
-      const insertedPredictions = await insertPredictions(1);
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
       const group = await Group.collection.insertOne({
         name: "aaa",
         passcode: "passcode",
