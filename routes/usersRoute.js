@@ -18,6 +18,7 @@ const auth = require("../middleware/auth");
 const { Prediction } = require("../models/predictionModel");
 const mongoose = require("mongoose");
 const { sendPasswordReset } = require("../utils/emailing");
+const { pickADate } = require("../utils/allowables");
 
 router.post("/", [loginLimiter], async (req, res) => {
   req.body.email = trimEmail(req.body.email);
@@ -41,6 +42,7 @@ router.post("/", [loginLimiter], async (req, res) => {
       );
   }
   req.body.password = await saltAndHashPassword(req.body.password);
+  req.body.lastActive = new Date();
   const user = new User(req.body);
   await user.save();
   const token = user.generateAuthToken();
@@ -66,6 +68,10 @@ router.post("/login", [loginLimiter], async (req, res) => {
 router.get("/", [auth], async (req, res) => {
   const user = await User.findById(req.user._id);
   if (!user) return res.status(409).send("Account not found");
+  await User.updateOne(
+    { _id: req.user._id },
+    { $set: { lastActive: new Date() } }
+  );
   const token = user.generateAuthToken();
   res.send(token);
 });
@@ -115,29 +121,71 @@ router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
   const user = await User.findOne({ email });
   if (user) {
     const now = new Date();
-    const passwordResetToken =
-      String(mongoose.Types.ObjectId()) +
-      "_" +
-      now.getFullYear() +
-      "-" +
-      (now.getMonth() + 1) +
-      "-" +
-      now.getDate();
-    const emailSentSuccessfully = await sendPasswordReset(
-      user,
-      passwordResetToken
+    const passwordResetToken = String(mongoose.Types.ObjectId());
+    if (process.env.NODE_ENV !== "test") {
+      const emailSentSuccessfully = await sendPasswordReset(
+        user,
+        passwordResetToken
+      );
+      if (!emailSentSuccessfully)
+        return res
+          .status(400)
+          .send(
+            "Something went wrong. Reset email was not sent. Please try again."
+          );
+    }
+    await User.updateOne(
+      { email },
+      {
+        $set: {
+          passwordReset: {
+            token: passwordResetToken,
+            expiration: pickADate(7),
+          },
+        },
+      }
     );
-    if (!emailSentSuccessfully)
-      return res
-        .status(400)
-        .send(
-          "Something went wrong. Reset email was not sent. Please try again."
-        );
-    await User.updateOne({ email }, { $set: { passwordResetToken } });
   }
   res.send(
     "An email will be sent to the address if an account is registered under it."
   );
+});
+
+router.put("/updatepassword", [loginLimiter], async (req, res) => {
+  const user = await User.findOne({
+    email: req.body.email,
+    "passwordResetToken.token": req.body.token,
+  });
+  if (!user) return res.status(400).send("Password reset not requested");
+  if (user.passwordReset?.expiration < pickADate(-1))
+    return res
+      .status(400)
+      .send("Reset token has expired, please request another reset");
+
+  const pw = validatePassword(req.body.password);
+  if (pw.error) {
+    return res
+      .status(400)
+      .send(
+        "Password must contain at least one lower case, one upper case and one number."
+      );
+  }
+
+  const shPassword = await saltAndHashPassword(req.body.password);
+  const result = await User.updateOne(
+    {
+      _id: user._id,
+    },
+    {
+      $set: {
+        password: shPassword,
+        passwordReset: null,
+        lastActive: new Date(),
+      },
+    }
+  );
+
+  res.send(result);
 });
 
 module.exports = router;

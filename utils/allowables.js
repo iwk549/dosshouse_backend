@@ -28,3 +28,7 @@ module.exports.url =
   process.env.NODE_ENV === "production"
     ? "https://dosshouse.us"
     : "http://localhost:3000";
+
+module.exports.pickADate = function pickADate(daysAhead) {
+  return new Date(new Date().setDate(new Date().getDate() + daysAhead));
+};

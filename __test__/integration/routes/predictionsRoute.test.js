@@ -6,13 +6,12 @@ const {
   testAuth,
   deleteAllData,
   testObjectID,
-  pickADate,
   insertCompetition,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/predictionModel");
 const { Group } = require("../../../models/groupModel");
 const mongoose = require("mongoose");
-const { max } = require("../../../utils/allowables");
+const { max, pickADate } = require("../../../utils/allowables");
 
 const endpoint = "/api/v1/predictions";
 let server;

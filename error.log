@@ -247,3 +247,4 @@
 {"level":"error","message":"Configuration property \"passwordResetEmail\" is not defined"}
 {"level":"error","message":"Configuration property \"resetEmail\" is not defined"}
 {"level":"error","message":"Configuration property \"resetEmail\" is not defined"}
+{"level":"error","message":"password is not defined"}

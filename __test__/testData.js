@@ -622,13 +622,13 @@ const users = [
     _id: mongoose.Types.ObjectId(),
     name: "User 1",
     password: "Password1",
-    email: "user1@dosshouse.us",
+    email: "user1@dosshouse.test.us",
   },
   {
     _id: mongoose.Types.ObjectId(),
     name: "User 2",
     password: "Password1",
-    email: "user2@dosshouse.us",
+    email: "user2@dosshouse.test.us",
   },
 ];
 
