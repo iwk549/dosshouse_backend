@@ -17,6 +17,7 @@ const userMongooseSchema = new mongoose.Schema({
   },
   password: { type: String, required: true, minLength: 8, maxLength: 1024 },
   role: { type: String, required: false },
+  passwordResetToken: { type: String, required: false },
 });
 
 userMongooseSchema.methods.generateAuthToken = function () {
@@ -39,6 +40,7 @@ const userSchema = {
   email: Joi.string().min(5).max(255).required().email(),
   password: Joi.string().min(8).max(50).required(),
   role: Joi.string().optional().allow(""),
+  passwordResetToken: Joi.objectID().optional().allow(null),
 };
 
 function validateUser(user) {
@@ -62,8 +64,13 @@ function validateEdit(info) {
   }).validate(info);
 }
 
+function validateEmail(email) {
+  return Joi.object({ email: userSchema.email }).validate({ email });
+}
+
 exports.validateUser = validateUser;
 exports.validatePassword = validatePassword;
 exports.validateLogin = validateLogin;
 exports.validateEdit = validateEdit;
+exports.validateEmail = validateEmail;
 exports.User = User;

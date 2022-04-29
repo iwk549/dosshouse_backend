@@ -23,3 +23,8 @@ module.exports.max = {
   groupsPerUser: 2,
   groupsPerPrediction: 5,
 };
+
+module.exports.url =
+  process.env.NODE_ENV === "production"
+    ? "https://dosshouse.us"
+    : "http://localhost:3000";

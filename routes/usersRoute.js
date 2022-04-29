@@ -4,10 +4,11 @@ const {
   validatePassword,
   validateLogin,
   validateEdit,
+  validateEmail,
 } = require("../models/userModel");
 const express = require("express");
 const router = express.Router();
-const { loginLimiter } = require("../middleware/rateLimiter");
+const { loginLimiter, lowLimiter } = require("../middleware/rateLimiter");
 const {
   saltAndHashPassword,
   trimEmail,
@@ -15,6 +16,8 @@ const {
 } = require("../utils/users");
 const auth = require("../middleware/auth");
 const { Prediction } = require("../models/predictionModel");
+const mongoose = require("mongoose");
+const { sendPasswordReset } = require("../utils/emailing");
 
 router.post("/", [loginLimiter], async (req, res) => {
   req.body.email = trimEmail(req.body.email);
@@ -102,6 +105,39 @@ router.put("/", [auth], async (req, res) => {
 
   const token = updatedUser.generateAuthToken();
   res.send(token);
+});
+
+router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
+  const email = trimEmail(req.params.email);
+  const ex = validateEmail(email);
+  if (ex.error) return res.status(400).send("Not a valid email");
+
+  const user = await User.findOne({ email });
+  if (user) {
+    const now = new Date();
+    const passwordResetToken =
+      String(mongoose.Types.ObjectId()) +
+      "_" +
+      now.getFullYear() +
+      "-" +
+      (now.getMonth() + 1) +
+      "-" +
+      now.getDate();
+    const emailSentSuccessfully = await sendPasswordReset(
+      user,
+      passwordResetToken
+    );
+    if (!emailSentSuccessfully)
+      return res
+        .status(400)
+        .send(
+          "Something went wrong. Reset email was not sent. Please try again."
+        );
+    await User.updateOne({ email }, { $set: { passwordResetToken } });
+  }
+  res.send(
+    "An email will be sent to the address if an account is registered under it."
+  );
 });
 
 module.exports = router;

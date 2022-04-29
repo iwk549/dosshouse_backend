@@ -628,7 +628,7 @@ const users = [
     _id: mongoose.Types.ObjectId(),
     name: "User 2",
     password: "Password1",
-    email: "user1@dosshouse.us",
+    email: "user2@dosshouse.us",
   },
 ];
 

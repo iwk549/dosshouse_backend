@@ -23,6 +23,7 @@
     "joi-password-complexity": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.9",
+    "nodemailer": "^6.7.4",
     "throng": "^5.0.0",
     "winston": "^3.6.0",
     "winston-mongodb": "^5.0.7"
