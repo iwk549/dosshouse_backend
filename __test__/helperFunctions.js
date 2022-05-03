@@ -33,6 +33,7 @@ async function insertCompetition(competitionID, competition) {
   let competitionToInsert = competition || { ...competitions[0] };
   competitionToInsert._id = competitionID;
   await Competition.collection.insertOne(competitionToInsert);
+  return competitionToInsert;
 }
 
 async function insertPredictions(count, userID, competitionID, differentUsers) {

@@ -10,6 +10,16 @@ const { Result } = require("../models/resultModel");
 const { Prediction } = require("../models/predictionModel");
 const { Competition } = require("../models/competitionModel");
 
+router.get("/:id", [auth, validateObjectID], async (req, res) => {
+  const competition = await Competition.findById(req.params.id);
+  if (!competition) return res.status(404).send("Competition not found");
+
+  const results = await Result.findOne({ code: competition.code });
+  if (!results) return res.status(404).send("Results not found");
+
+  res.send(results);
+});
+
 router.post("/calculate/:code", [auth, adminCheck], async (req, res) => {
   const result = await Result.findOne({ code: req.params.code });
   const competition = await Competition.findOne({ code: req.params.code });
