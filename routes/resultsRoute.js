@@ -39,14 +39,28 @@ router.post("/calculate/:code", [auth, adminCheck], async (req, res) => {
     });
   });
 
+  // sort the predictions to give overall ranking
+  updatedPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+  let nextRanking = 0;
+  const addRanking = updatedPoints.map((u, idx, updatedPoints) => {
+    if (
+      !updatedPoints[idx - 1] ||
+      updatedPoints[idx - 1].totalPoints !== u.totalPoints
+    )
+      nextRanking = idx + 1;
+
+    return { ...u, ranking: nextRanking };
+  });
+
   Prediction.bulkWrite(
-    updatedPoints.map((u) => ({
+    addRanking.map((u) => ({
       updateOne: {
         filter: { _id: mongoose.Types.ObjectId(u._id) },
         update: {
           $set: {
             points: u.points,
             totalPoints: u.totalPoints,
+            ranking: u.ranking,
           },
         },
       },

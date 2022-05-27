@@ -32,3 +32,6 @@ module.exports.url =
 module.exports.pickADate = function pickADate(daysAhead) {
   return new Date(new Date().setDate(new Date().getDate() + daysAhead));
 };
+
+module.exports.removeFieldsFromPopulatedUser =
+  "-_id -password -passwordResetToken -email -role -__v -lastActive";

@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
-const { max } = require("../utils/allowables");
+const { max, removeFieldsFromPopulatedUser } = require("../utils/allowables");
 
 function addPoints(req) {
   req.body.points = {
@@ -16,6 +16,13 @@ function addPoints(req) {
     misc: { points: 0, correctPicks: 0 },
   };
   req.body.totalPoints = 0;
+  req.body.ranking = 0;
+}
+
+function removePoints(req) {
+  delete req.body.points;
+  delete req.body.totalPoints;
+  delete req.body.ranking;
 }
 
 async function nameIsUnique(name, userID, competitionID) {
@@ -115,12 +122,11 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
   );
   if (nameInUse) return res.status(400).send(nameInUse);
 
-  // add points to body for validation, they cannot be edited here so are deleted
+  // add points and ranking to body for validation, they cannot be edited here so are removed after
   addPoints(req);
   const ex = validatePrediction(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
-  delete req.body.points;
-  delete req.body.totalPoints;
+  removePoints(req);
 
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 
@@ -143,7 +149,7 @@ router.get("/", [auth], async (req, res) => {
     .populate({
       path: "groups",
       select: "name ownerID",
-      populate: { path: "ownerID", select: "name" },
+      populate: { path: "ownerID", select: removeFieldsFromPopulatedUser },
     });
   res.send(predictions);
 });
@@ -165,7 +171,7 @@ router.get(
     const competition = await Competition.findById(req.params.id);
     if (!competition) return res.status(404).send("Competition not found");
 
-    let selectedFields = "name points totalPoints userID";
+    let selectedFields = "name points totalPoints ranking userID";
     if (competition.submissionDeadline < new Date()) selectedFields += " misc";
 
     if (
@@ -194,7 +200,7 @@ router.get(
       ...groupsQuery,
     })
       .select(selectedFields)
-      .populate("userID", "name")
+      .populate("userID", removeFieldsFromPopulatedUser)
       .sort({ totalPoints: -1 })
       .skip(skip)
       .limit(limit);
@@ -206,7 +212,7 @@ router.get(
       req.params.groupID !== "all"
         ? await Group.findById(req.params.groupID)
             .select("name ownerID")
-            .populate("ownerID", "name")
+            .populate("ownerID", removeFieldsFromPopulatedUser)
         : null;
     res.send({ predictions, count, groupInfo });
   }
