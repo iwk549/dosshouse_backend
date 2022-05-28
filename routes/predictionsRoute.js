@@ -16,7 +16,7 @@ function addPoints(req) {
     misc: { points: 0, correctPicks: 0 },
   };
   req.body.totalPoints = 0;
-  req.body.ranking = 0;
+  req.body.ranking = null;
 }
 
 function removePoints(req) {

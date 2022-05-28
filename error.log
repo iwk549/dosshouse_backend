@@ -253,3 +253,5 @@
 {"level":"error","message":"E11000 duplicate key error collection: dosshouse_tests.predictions index: name_1 dup key: { name: \"Bracket 1\" }"}
 {"level":"error","message":"i is not defined"}
 {"level":"error","message":"ranking is not defined"}
+{"level":"error","message":"Prediction validation failed: ranking: Path `ranking` is required."}
+{"level":"error","message":"Prediction validation failed: ranking: Path `ranking` is required."}

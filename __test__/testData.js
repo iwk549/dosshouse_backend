@@ -279,6 +279,7 @@ const predictions = [
       misc: { points: 20, correctPicks: 2 },
     },
     totalPoints: 35,
+    ranking: null,
   },
   {
     // _id: mongoose.Types.ObjectId("625c986e97cd69687c60f155"),
@@ -374,6 +375,7 @@ const predictions = [
       misc: { points: 0, correctPicks: 0 },
     },
     totalPoints: 59,
+    ranking: 1,
   },
   {
     _id: mongoose.Types.ObjectId("625ca0f07dff1d62f3945ced"),
@@ -494,6 +496,7 @@ const predictions = [
       misc: { points: 0, correctPicks: 0 },
     },
     totalPoints: 9,
+    ranking: 2,
   },
   {
     _id: mongoose.Types.ObjectId("625ca0fd7dff1d62f3945cfb"),
@@ -599,6 +602,7 @@ const predictions = [
       misc: { points: 0, correctPicks: 0 },
     },
     totalPoints: 0,
+    ranking: 3,
   },
 ];
 
