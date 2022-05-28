@@ -41,4 +41,6 @@ module.exports.reservedGroupNames = [
   "leaderboard",
   "overall",
   "all",
+  "sitewide",
+  "entire",
 ];
