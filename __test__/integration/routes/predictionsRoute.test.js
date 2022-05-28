@@ -367,7 +367,7 @@ describe("predictionsRoute", () => {
       const filter = "First";
       const res = await exec(competitionID, "all", filter);
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(
+      expect(res.body.predictions.length).toBe(
         predictions.filter((p) => p.userID === userID).length
       );
     });
@@ -393,7 +393,7 @@ describe("predictionsRoute", () => {
       const filter = "First";
       const res = await exec(competitionID, groupID, filter);
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(2);
+      expect(res.body.predictions.length).toBe(2);
     });
   });
 

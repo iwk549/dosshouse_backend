@@ -287,7 +287,14 @@ router.get(
       },
     ]);
 
-    res.send(predictions);
+    const groupInfo =
+      req.params.groupID !== "all"
+        ? await Group.findById(req.params.groupID)
+            .select("name ownerID")
+            .populate("ownerID", removeFieldsFromPopulatedUser)
+        : null;
+
+    res.send({ predictions, count: predictions.length, groupInfo });
   }
 );
 
