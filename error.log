@@ -255,3 +255,10 @@
 {"level":"error","message":"ranking is not defined"}
 {"level":"error","message":"Prediction validation failed: ranking: Path `ranking` is required."}
 {"level":"error","message":"Prediction validation failed: ranking: Path `ranking` is required."}
+{"level":"error","message":"Cast to ObjectId failed for value \"xxx\" (type string) at path \"_id\" for model \"Competition\""}
+{"level":"error","message":"path option to $unwind stage should be prefixed with a '$': user"}
+{"level":"error","message":"Arguments must be aggregate pipeline operators"}
+{"level":"error","message":"$lookup argument '$project' must be a string, found $project: { $name: 1 }: object"}
+{"level":"error","message":"$lookup argument 'select' must be a string, found select: { name: 1 }: object"}
+{"level":"error","message":"unknown argument to $lookup: select"}
+{"level":"error","message":"_id is not defined"}

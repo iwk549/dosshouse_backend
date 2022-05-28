@@ -7,6 +7,7 @@ const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
 const { max, removeFieldsFromPopulatedUser } = require("../utils/allowables");
+const { User } = require("../models/userModel");
 
 function addPoints(req) {
   req.body.points = {
@@ -201,7 +202,7 @@ router.get(
     })
       .select(selectedFields)
       .populate("userID", removeFieldsFromPopulatedUser)
-      .sort({ totalPoints: -1 })
+      .sort({ ranking: 1, name: 1 })
       .skip(skip)
       .limit(limit);
     const count = await Prediction.count({
@@ -215,6 +216,78 @@ router.get(
             .populate("ownerID", removeFieldsFromPopulatedUser)
         : null;
     res.send({ predictions, count, groupInfo });
+  }
+);
+
+router.get(
+  "/leaderboard/:id/:groupID/:search",
+  [validateObjectID],
+  async (req, res) => {
+    const competition = await Competition.findById(req.params.id);
+    if (!competition) return res.status(404).send("Competition not found");
+
+    let projectedFields = {
+      userID: { name: "$user.name" },
+      _id: "$_id",
+      name: "$name",
+      points: "$points",
+      totalPoints: "$totalPoints",
+      ranking: "$ranking",
+    };
+    if (competition.submissionDeadline < new Date())
+      projectedFields.misc = "$misc";
+
+    if (
+      req.params.groupID !== "all" &&
+      !mongoose.Types.ObjectId.isValid(req.params.groupID)
+    )
+      return res
+        .status(400)
+        .send(`Group ID parameter must be "all" or a valid objectID`);
+
+    // group query will only be set if groupID is passed
+    const groupsQuery =
+      req.params.groupID.toLowerCase() === "all"
+        ? {}
+        : { groups: mongoose.Types.ObjectId(req.params.groupID) };
+    const searchParamRegex = new RegExp(req.params.search, "i");
+
+    // this pipeline will:
+    // 1. search by competitionID and groupID
+    // 2. populate the userID field (only with name)
+    // 3. search by case insensitive search param in bracket name and user name
+    const predictions = await Prediction.aggregate([
+      {
+        $match: {
+          competitionID: mongoose.Types.ObjectId(req.params.id),
+          ...groupsQuery,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userID",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: projectedFields,
+      },
+      {
+        $match: {
+          $or: [
+            { name: { $regex: searchParamRegex } },
+            { "userID.name": { $regex: searchParamRegex } },
+          ],
+        },
+      },
+    ]);
+
+    res.send(predictions);
   }
 );
 

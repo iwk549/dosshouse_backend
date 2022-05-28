@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { header, predictions, competitions } = require("../../testData");
+const { header, predictions, competitions, users } = require("../../testData");
 const {
   testResponseText,
   getToken,
@@ -13,6 +13,7 @@ const { Prediction } = require("../../../models/predictionModel");
 const { Group } = require("../../../models/groupModel");
 const mongoose = require("mongoose");
 const { max, pickADate } = require("../../../utils/allowables");
+const { User } = require("../../../models/userModel");
 
 const endpoint = "/api/v1/predictions";
 let server;
@@ -321,11 +322,78 @@ describe("predictionsRoute", () => {
       const groupID = mongoose.Types.ObjectId();
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
-        { $set: { groups: groupID } }
+        { $set: { groups: [groupID] } }
       );
       const res = await exec(competitionID, 1, 25, groupID);
       expect(res.status).toBe(200);
       expect(res.body.count).toBe(1);
+    });
+  });
+
+  describe("GET /leaderboard/:id/:search", () => {
+    const exec = async (competitionID, groupID = "all", search) =>
+      await request(server).get(
+        endpoint +
+          "/leaderboard/" +
+          competitionID +
+          "/" +
+          groupID +
+          "/" +
+          search
+      );
+    testObjectID(exec);
+    it("should return 404 if competition not found", async () => {
+      const res = await exec(mongoose.Types.ObjectId());
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition");
+    });
+    it('should return 400 if group id is not "all" or valid object id', async () => {
+      await raiseInsertCompetition(1);
+      await insertPredictions(1, userID, competitionID);
+      const res = await exec(competitionID, "xxx");
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "group");
+      testResponseText(res.text, "valid object");
+    });
+    it("should return predictions matching the search", async () => {
+      await User.insertMany({ ...users[0], _id: userID, name: "First" });
+      await raiseInsertCompetition(-1);
+      const predictions = await insertPredictions(
+        20,
+        userID,
+        competitionID,
+        true
+      );
+      const filter = "First";
+      const res = await exec(competitionID, "all", filter);
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(
+        predictions.filter((p) => p.userID === userID).length
+      );
+    });
+    it("should return predictions matching the search in the group", async () => {
+      await User.insertMany({ ...users[0], _id: userID, name: "First" });
+      await raiseInsertCompetition(-1);
+      const predictions = await insertPredictions(
+        20,
+        userID,
+        competitionID,
+        true
+      );
+
+      const groupID = mongoose.Types.ObjectId();
+      await Prediction.updateMany(
+        {
+          _id: {
+            $in: [predictions[0]._id, predictions[1]._id, predictions[2]._id],
+          },
+        },
+        { $set: { groups: [groupID] } }
+      );
+      const filter = "First";
+      const res = await exec(competitionID, groupID, filter);
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(2);
     });
   });
 

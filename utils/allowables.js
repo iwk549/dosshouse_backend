@@ -40,4 +40,5 @@ module.exports.reservedGroupNames = [
   "overall leaderboard",
   "leaderboard",
   "overall",
+  "all",
 ];
