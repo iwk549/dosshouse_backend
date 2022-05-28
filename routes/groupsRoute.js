@@ -4,8 +4,12 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Group, validateGroup } = require("../models/groupModel");
-const { max } = require("../utils/allowables");
+const { max, reservedGroupNames } = require("../utils/allowables");
 const transactions = require("../utils/transactions");
+
+const groupNameIsReserved = (groupName) => {
+  if (reservedGroupNames.includes(groupName.toLowerCase())) return true;
+};
 
 router.post("/", [auth], async (req, res) => {
   const thisUserGroups = await Group.find({ ownerID: req.user._id });
@@ -19,6 +23,8 @@ router.post("/", [auth], async (req, res) => {
   req.body.ownerID = String(ownerID);
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  if (groupNameIsReserved(req.body.name))
+    return res.status(400).send("That group name is reserved");
   req.body.ownerID = ownerID;
   try {
     const response = await Group.collection.insertOne(req.body);
@@ -43,10 +49,12 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
     return res.status(403).send("Only the group owner can edit the group");
 
   // add ownerID to request for validation
-  // removed after, can never be updated
   req.body.ownerID = req.user._id;
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
+
+  if (groupNameIsReserved(req.body.name))
+    return res.status(400).send("That group name is reserved");
 
   try {
     const response = await Group.updateOne(

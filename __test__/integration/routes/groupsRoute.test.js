@@ -11,6 +11,7 @@ const {
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
 const mongoose = require("mongoose");
+const { reservedGroupNames } = require("../../../utils/allowables");
 
 const endpoint = "/api/v1/groups";
 let server;
@@ -65,6 +66,14 @@ describe("groupsRoute", () => {
       });
       expect(res.status).toBe(400);
       testResponseText(res.text, "unique");
+    });
+    it("should return 400 if group name is in reserved list", async () => {
+      const res = await exec(getToken(userID), {
+        name: reservedGroupNames[0],
+        passcode: "newpasscode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "reserved");
     });
     it("should insert the group if all valid", async () => {
       const res = await exec(getToken(), {
@@ -135,6 +144,15 @@ describe("groupsRoute", () => {
       });
       expect(res.status).toBe(400);
       testResponseText(res.text, "unique");
+    });
+    it("should return 400 if group name is in reserved list", async () => {
+      const groups = await insertGroups(1, userID);
+      const res = await exec(getToken(userID), groups[0]._id, {
+        name: reservedGroupNames[0],
+        passcode: "newpasscode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "reserved");
     });
     it("should update the group", async () => {
       const groups = await insertGroups(1, userID);

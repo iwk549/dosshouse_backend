@@ -35,3 +35,9 @@ module.exports.pickADate = function pickADate(daysAhead) {
 
 module.exports.removeFieldsFromPopulatedUser =
   "-_id -password -passwordResetToken -email -role -__v -lastActive";
+
+module.exports.reservedGroupNames = [
+  "overall leaderboard",
+  "leaderboard",
+  "overall",
+];
