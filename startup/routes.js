@@ -13,12 +13,6 @@ const uploadLimit = "5mb";
 
 module.exports = function (app) {
   // Middleware
-  if (process.env.NODE_ENV === "development")
-    app.use(
-      require("express-status-monitor")({
-        title: "Ultimate Scoreboard API Status",
-      })
-    );
   app.use(
     express.json({
       verify: (req, res, buf) => {
