@@ -83,7 +83,10 @@ function calculatePrediction(prediction, result, competition) {
   if (competition.miscPicks && result.misc && prediction.misc) {
     competition.miscPicks.forEach((miscPick) => {
       const predictionPick = prediction.misc[miscPick.name];
-      if (predictionPick && predictionPick === result.misc[miscPick.name]) {
+      if (
+        predictionPick &&
+        result.misc[miscPick.name].includes(predictionPick)
+      ) {
         points.misc = {
           points: points.misc.points + miscPick.points,
           correctPicks: points.misc.correctPicks + 1,

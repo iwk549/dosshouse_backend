@@ -80,7 +80,6 @@ describe("groupsRoute", () => {
         ...groups[0],
       });
       const all = await Group.find();
-      console.log(res.text);
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
