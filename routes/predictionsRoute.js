@@ -145,7 +145,7 @@ router.get("/:id", [auth, validateObjectID], async (req, res) => {
 
 router.get("/", [auth], async (req, res) => {
   const predictions = await Prediction.find({ userID: req.user._id })
-    .select("competitionID name points totalPoints")
+    .select("competitionID name points totalPoints misc")
     .populate("competitionID")
     .populate({
       path: "groups",
