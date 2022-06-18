@@ -27,7 +27,6 @@ function start() {
 
   if (process.env.NODE_ENV !== "test") {
     const logger = require("./startup/logging")();
-    // require("./startup/scheduler")();
     server = app.listen(PORT, () =>
       logger.log("info", `Listening on port ${PORT}...`)
     );
