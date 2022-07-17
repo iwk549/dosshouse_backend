@@ -7,7 +7,6 @@ const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
 const { max, removeFieldsFromPopulatedUser } = require("../utils/allowables");
-const { User } = require("../models/userModel");
 
 function addPoints(req) {
   req.body.points = {
@@ -150,7 +149,7 @@ router.get("/", [auth], async (req, res) => {
     .populate({
       path: "groups",
       select: "name ownerID",
-      populate: { path: "ownerID", select: removeFieldsFromPopulatedUser },
+      populate: { path: "ownerID", select: "name" },
     });
   res.send(predictions);
 });
@@ -209,11 +208,13 @@ router.get(
       competitionID: req.params.id,
       ...groupsQuery,
     });
+
+    // do not remove _id from groupInfo ownerID, this is used client side to display remove button
     const groupInfo =
       req.params.groupID !== "all"
         ? await Group.findById(req.params.groupID)
             .select("name ownerID")
-            .populate("ownerID", removeFieldsFromPopulatedUser)
+            .populate("ownerID", "name")
         : null;
     res.send({ predictions, count, groupInfo });
   }
