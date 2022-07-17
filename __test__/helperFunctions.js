@@ -4,6 +4,7 @@ const { Competition } = require("../models/competitionModel");
 const { Group } = require("../models/groupModel");
 const { Match } = require("../models/matchModel");
 const { Result } = require("../models/resultModel");
+const { Version } = require("../models/versionModel");
 const { users, competitions, predictions } = require("./testData");
 const mongoose = require("mongoose");
 
@@ -14,6 +15,7 @@ function deleteAllData() {
   Group.collection.deleteMany();
   Match.collection.deleteMany();
   Result.collection.deleteMany();
+  Version.collection.deleteMany();
 }
 
 function testResponseText(responseText, expectedToContain) {
@@ -99,11 +101,16 @@ function testAuth(executionFunction, role) {
   }
 }
 
-function testObjectID(executionFunction, needsToken) {
+function testObjectID(executionFunction, needsToken, tokenRole, user) {
   it("should return 400 if invalid object id sent", async () => {
     let res;
-    if (needsToken) res = await executionFunction(getToken(), "xxx");
+    if (needsToken)
+      res = await executionFunction(
+        getToken(null, user || null, tokenRole),
+        "xxx"
+      );
     else res = await executionFunction("xxx");
+
     expect(res.status).toBe(400);
     testResponseText(res.text, "invalid id");
   });

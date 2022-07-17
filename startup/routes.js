@@ -6,6 +6,7 @@ const users = require("../routes/usersRoute");
 const predictions = require("../routes/predictionsRoute");
 const results = require("../routes/resultsRoute");
 const groups = require("../routes/groupsRoute");
+const versions = require("../routes/versionsRoute");
 const cors = require("cors");
 const { highLimiter } = require("../middleware/rateLimiter");
 
@@ -35,6 +36,7 @@ module.exports = function (app) {
   app.use("/api/v1/predictions", predictions);
   app.use("/api/v1/results", results);
   app.use("/api/v1/groups", groups);
+  app.use("/api/v1/versions", versions);
   app.use("/api/v1/healthz", async (req, res) => {
     res.send("Healthy");
   });

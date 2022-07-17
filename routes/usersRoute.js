@@ -15,7 +15,6 @@ const {
   comparePasswords,
 } = require("../utils/users");
 const auth = require("../middleware/auth");
-const { Prediction } = require("../models/predictionModel");
 const mongoose = require("mongoose");
 const { sendPasswordReset } = require("../utils/emailing");
 const { pickADate } = require("../utils/allowables");
