@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose --runInBand --watch",
-    "test:coverage": "jest --runInBand --coverage",
-    "dev": "nodemon -L index.js"
+    "test": "./node_modules/.bin/jest --verbose --runInBand --watch",
+    "test:coverage": "./node_modules/.bin/jest --runInBand --coverage",
+    "dev": "nodemon -L index.js",
+    "lint": "./node_modules/.bin/eslint *.js"
   },
   "author": "",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "winston-mongodb": "^5.0.7"
   },
   "devDependencies": {
+    "eslint": "^8.23.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"

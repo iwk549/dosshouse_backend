@@ -71,6 +71,7 @@ async function insertGroups(count, ownerID, differentUsers) {
     };
     groups.push(group);
   }
+
   await Group.collection.insertMany(groups);
   return groups;
 }

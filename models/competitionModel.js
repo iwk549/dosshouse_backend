@@ -48,6 +48,11 @@ const competitionMongooseSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  prize: {
+    type: Object,
+    required: false,
+    keys: { text: { type: String }, link: { type: String } },
+  },
 });
 
 const Competition = mongoose.model("Competition", competitionMongooseSchema);

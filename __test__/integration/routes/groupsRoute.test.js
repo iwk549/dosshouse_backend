@@ -32,27 +32,28 @@ describe("groupsRoute", () => {
       await request(server).post(endpoint).set(header, token).send(group);
 
     testAuth(exec);
-    it("should return 400 if user has alread created too many groups", async () => {
-      await insertGroups(5, userID);
-      const res = await exec(getToken(userID));
-      expect(res.status).toBe(400);
-      testResponseText(res.text, "maximum");
-    });
     it("should return 400 if group schema is invalid", async () => {
       const res = await exec(getToken(), {
-        // competitionID,
         invalidField: "xxx",
       });
       expect(res.status).toBe(400);
       testResponseText(res.text, "required");
     });
+    it("should return 400 if user has alread created too many groups", async () => {
+      await insertGroups(5, userID);
+      const inserted = await Group.find();
+      console.log("inserted", inserted, userID);
+      const res = await exec(getToken(userID));
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "maximum");
+    });
     it("should return 400 if name is too long", async () => {
       const res = await exec(getToken(), {
         name: "a".repeat(51),
         passcode: "passcode",
-        // competitionID,
       });
       expect(res.status).toBe(400);
+      testResponseText(res.text, "length");
     });
     it("should return 400 if name is not unique", async () => {
       await Group.collection.insertOne({
@@ -79,7 +80,6 @@ describe("groupsRoute", () => {
       const res = await exec(getToken(), {
         ...groups[0],
       });
-      const all = await Group.find();
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
@@ -88,7 +88,7 @@ describe("groupsRoute", () => {
   });
 
   describe("GET /", () => {
-    // this route to retrieve groups owner by the user
+    // this route to retrieve groups owned by the user
     const exec = async (token) =>
       await request(server).get(endpoint).set(header, token);
     testAuth(exec);
