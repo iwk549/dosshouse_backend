@@ -30,9 +30,9 @@ function start() {
 
   if (process.env.NODE_ENV !== "test") {
     const logger = require("./startup/logging")();
-    server = app.listen(PORT, () =>
-      logger.log("info", `Listening on port ${PORT}...`)
-    );
+    server = app.listen(PORT, () => {
+      logger.log("info", `Listening on port ${PORT}...`);
+    });
   } else server = app.listen();
   module.exports = server;
 }

@@ -67,6 +67,6 @@ jobs:
           mongodb-version: ${{ matrix.mongodb-version }}
 
       - run: npm ci
-      - run: npm run test
+      - run: npm run test:pull_request
         env:
           NODE_ENV: test

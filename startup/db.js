@@ -1,7 +1,7 @@
 const config = require("config");
 const mongoose = require("mongoose");
 
-module.exports = function (env) {
+module.exports = async function (env) {
   let db;
   if (env !== "test") db = config.get("db");
   else db = "mongodb://localhost/dosshouse_tests";

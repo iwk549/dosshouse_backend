@@ -42,7 +42,6 @@ describe("groupsRoute", () => {
     it("should return 400 if user has alread created too many groups", async () => {
       await insertGroups(5, userID);
       const inserted = await Group.find();
-      console.log("inserted", inserted, userID);
       const res = await exec(getToken(userID));
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
