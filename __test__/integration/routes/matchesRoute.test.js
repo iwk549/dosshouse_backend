@@ -1,3 +1,9 @@
+/* 
+The competitions route does not allow for updating or deleting
+Tests can get finicky when trying to manually insert and delete data quickly with multiple tests
+beforeAll and afterAll are best to use to ensure the data is where it is expected to be
+*/
+
 const request = require("supertest");
 const { matches, competitions } = require("../../testData");
 const {
@@ -13,13 +19,13 @@ const endpoint = "/api/v1/matches";
 let server;
 
 describe("matchesRoute", () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
     await Competition.collection.insertMany(competitions);
     await Match.collection.insertMany(matches);
   });
-  afterEach(() => {
+  afterAll(() => {
     server.close();
     deleteAllData();
   });

@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { matches, competitions, header, results } = require("../../testData");
+const { header, results } = require("../../testData");
 const {
   testResponseText,
   testObjectID,
@@ -8,8 +8,6 @@ const {
   getToken,
   insertCompetition,
 } = require("../../helperFunctions");
-const { Competition } = require("../../../models/competitionModel");
-const { Match } = require("../../../models/matchModel");
 const mongoose = require("mongoose");
 const { Result } = require("../../../models/resultModel");
 
@@ -21,8 +19,6 @@ describe("resultsRoute", () => {
   beforeEach(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
-    await Competition.collection.insertMany(competitions);
-    await Match.collection.insertMany(matches);
   });
   afterEach(() => {
     server.close();
