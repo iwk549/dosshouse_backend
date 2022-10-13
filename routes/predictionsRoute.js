@@ -322,6 +322,7 @@ router.get("/unowned/:id", [auth, validateObjectID], async (req, res) => {
   res.send(predictionToSend);
 });
 
+// add a prediction to a group
 router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
   const prediction = await Prediction.findOne({
     _id: req.params.id,
@@ -343,6 +344,12 @@ router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
     return res
       .status(404)
       .send("Group not found. Please double check the name and passcode");
+
+  // check if this prediction already belongs to this group
+  if (prediction.groups.includes(group._id))
+    return res
+      .status(400)
+      .send("This prediction is already a member of the requested group");
 
   const result = await Prediction.updateOne(
     { _id: req.params.id },

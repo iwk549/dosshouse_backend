@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest --verbose --runInBand --watch",
+    "test": "./node_modules/.bin/jest --verbose --runInBand --watchAll",
     "test:coverage": "./node_modules/.bin/jest --runInBand --coverage",
     "test:pull_request": "./node_modules/.bin/jest --runInBand --detectOpenHandles",
     "dev": "nodemon -L index.js",

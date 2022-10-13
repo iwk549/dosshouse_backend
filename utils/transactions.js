@@ -64,7 +64,6 @@ transactions.executeTransactionRepSet = async (queries) => {
           .collection(thisQ.collection)
           .replaceOne(thisQ.data.filter, thisQ.data.update);
       } else if (thisQ.query === "bulkWrite") {
-      } else if (thisQ.query === "bulkWrite") {
         result = await db
           .collection(thisQ.collection)
           .bulkWrite(thisQ.data, options);
