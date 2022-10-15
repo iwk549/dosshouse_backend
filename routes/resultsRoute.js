@@ -4,7 +4,7 @@ const router = express.Router();
 const validateObjectID = require("../middleware/validateObjectID");
 const auth = require("../middleware/auth");
 const { adminCheck } = require("../middleware/admin");
-const { calculatePrediction } = require("../utils/calculations");
+const { calculatePrediction, addRanking } = require("../utils/calculations");
 
 const { Result } = require("../models/resultModel");
 const { Prediction } = require("../models/predictionModel");
@@ -39,21 +39,10 @@ router.post("/calculate/:code", [auth, adminCheck], async (req, res) => {
     });
   });
 
-  // sort the predictions to give overall ranking
-  updatedPoints.sort((a, b) => b.totalPoints - a.totalPoints);
-  let nextRanking = 0;
-  const addRanking = updatedPoints.map((u, idx, updatedPoints) => {
-    if (
-      !updatedPoints[idx - 1] ||
-      updatedPoints[idx - 1].totalPoints !== u.totalPoints
-    )
-      nextRanking = idx + 1;
-
-    return { ...u, ranking: nextRanking };
-  });
+  const predictionsWithRanking = addRanking(updatedPoints);
 
   Prediction.bulkWrite(
-    addRanking.map((u) => ({
+    predictionsWithRanking.map((u) => ({
       updateOne: {
         filter: { _id: mongoose.Types.ObjectId(u._id) },
         update: {

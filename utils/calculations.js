@@ -106,4 +106,20 @@ function calculatePrediction(prediction, result, competition) {
   return { points, totalPoints };
 }
 
+function addRanking(predictions) {
+  predictions.sort((a, b) => b.totalPoints - a.totalPoints);
+  let nextRanking = 0;
+  const addRanking = predictions.map((p, idx) => {
+    if (
+      !predictions[idx - 1] ||
+      predictions[idx - 1].totalPoints !== p.totalPoints
+    )
+      nextRanking = idx + 1;
+
+    return { ...p, ranking: nextRanking };
+  });
+  return addRanking;
+}
+
 module.exports.calculatePrediction = calculatePrediction;
+module.exports.addRanking = addRanking;

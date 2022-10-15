@@ -1,4 +1,7 @@
-const { calculatePrediction } = require("../../../utils/calculations");
+const {
+  calculatePrediction,
+  addRanking,
+} = require("../../../utils/calculations");
 const { predictions, results, competitions } = require("../../testData");
 
 describe("calculations", () => {
@@ -286,6 +289,48 @@ describe("calculations", () => {
         expect(res.points.playoff.points).toBe(6);
         // just 2 correct picks made, one in each round
         expect(res.points.playoff.correctPicks).toBe(2);
+      });
+    });
+  });
+
+  describe("addRanking", () => {
+    it("should give all the teams the same ranking if their points are the same", () => {
+      const predictions = [
+        { totalPoints: 5 },
+        { totalPoints: 5 },
+        { totalPoints: 5 },
+        { totalPoints: 5 },
+        { totalPoints: 5 },
+      ];
+      const res = addRanking(predictions);
+      res.forEach((r) => {
+        expect(r.ranking).toBe(1);
+      });
+    });
+    it("should give ascending rankings for each prediction", () => {
+      const predictions = [
+        { expectedRanking: 3, totalPoints: 5 },
+        { expectedRanking: 1, totalPoints: 25 },
+        { expectedRanking: 5, totalPoints: 0 },
+        { expectedRanking: 4, totalPoints: 3 },
+        { expectedRanking: 2, totalPoints: 10 },
+      ];
+      const res = addRanking(predictions);
+      res.forEach((r) => {
+        expect(r.expectedRanking).toBe(r.ranking);
+      });
+    });
+    it("should rank correctly when some predictions have same points but others do not", () => {
+      const predictions = [
+        { expectedRanking: 2, totalPoints: 10 },
+        { expectedRanking: 1, totalPoints: 25 },
+        { expectedRanking: 5, totalPoints: 0 },
+        { expectedRanking: 4, totalPoints: 3 },
+        { expectedRanking: 2, totalPoints: 10 },
+      ];
+      const res = addRanking(predictions);
+      res.forEach((r) => {
+        expect(r.expectedRanking).toBe(r.ranking);
       });
     });
   });
