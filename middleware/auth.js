@@ -1,5 +1,3 @@
-const config = require("config");
-const jwt = require("jsonwebtoken");
 const { decodeJwt } = require("../utils/users");
 
 async function auth(req, res, next) {
