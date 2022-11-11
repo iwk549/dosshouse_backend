@@ -495,24 +495,23 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
     });
-    it("should add the group to the prediction", async () => {
+    it("should add the group to the prediction (case insensitive on group name", async () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
         competitionID
       );
       const group = {
-        name: "group1",
+        name: "Group1",
         passcode: "passcode",
         ownerID: mongoose.Types.ObjectId(),
         competitionID: insertedPredictions[0].competitionID,
       };
       await Group.collection.insertOne(group);
-      const res = await exec(
-        getToken(userID),
-        insertedPredictions[0]._id,
-        group
-      );
+      const res = await exec(getToken(userID), insertedPredictions[0]._id, {
+        ...group,
+        name: "group1",
+      });
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(
         insertedPredictions[0]._id

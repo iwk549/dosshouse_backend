@@ -337,7 +337,7 @@ router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
       );
 
   const group = await Group.findOne({
-    name: req.body.name,
+    name: new RegExp(req.body.name, "i"),
     passcode: req.body.passcode,
   });
   if (!group)
