@@ -7,12 +7,9 @@ const {
 } = require("../../../models/versionModel");
 const {
   testResponseText,
-  testObjectID,
   deleteAllData,
   testAuth,
   getToken,
-  insertPredictions,
-  insertGroups,
 } = require("../../helperFunctions");
 const { users, header, versions } = require("../../testData");
 
@@ -20,12 +17,14 @@ const endpoint = "/api/v1/versions";
 let server;
 
 describe("usersRoute", () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
   });
-  afterEach(() => {
+  afterAll(() => {
     server.close();
+  });
+  afterEach(() => {
     deleteAllData();
   });
 

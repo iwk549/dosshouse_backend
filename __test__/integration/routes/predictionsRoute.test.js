@@ -22,16 +22,20 @@ describe("predictionsRoute", () => {
   const userID = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
   let prediction;
-  beforeEach(async () => {
+  beforeAll(() => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
+  });
+  afterAll(() => {
+    server.close();
+  });
+  beforeEach(async () => {
     prediction = { ...predictions[0] };
     prediction.competitionID = competitionID;
     prediction.userID = userID;
     prediction.name = "New Bracket";
   });
   afterEach(() => {
-    server.close();
     deleteAllData();
   });
 
@@ -495,24 +499,23 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
     });
-    it("should add the group to the prediction", async () => {
+    it("should add the group to the prediction (case insensitive on group name", async () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
         competitionID
       );
       const group = {
-        name: "group1",
+        name: "Group1",
         passcode: "passcode",
         ownerID: mongoose.Types.ObjectId(),
         competitionID: insertedPredictions[0].competitionID,
       };
       await Group.collection.insertOne(group);
-      const res = await exec(
-        getToken(userID),
-        insertedPredictions[0]._id,
-        group
-      );
+      const res = await exec(getToken(userID), insertedPredictions[0]._id, {
+        ...group,
+        name: "group1",
+      });
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(
         insertedPredictions[0]._id
@@ -637,6 +640,33 @@ describe("predictionsRoute", () => {
       expect(updatedPrediction.groups).not.toEqual(
         expect.arrayContaining([group.insertedId])
       );
+    });
+  });
+
+  describe("GET /competitions/:id", () => {
+    const exec = async (token, competitionID) =>
+      await request(server)
+        .get(endpoint + "/competitions/" + competitionID)
+        .set(header, token);
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if the competition is not found", async () => {
+      const res = await exec(getToken(userID), competitionID);
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition not found");
+    });
+    it("should return the predictions for the user in the provided competition", async () => {
+      await insertCompetition(competitionID);
+      const insertedPredictions = await insertPredictions(
+        3,
+        userID,
+        competitionID
+      );
+      await insertPredictions(2, userID, mongoose.Types.ObjectId(), null, 3);
+
+      const res = await exec(getToken(userID), competitionID);
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(insertedPredictions.length);
     });
   });
 });

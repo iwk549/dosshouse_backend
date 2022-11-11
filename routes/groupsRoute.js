@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
+const { Competition } = require("../models/competitionModel");
 const { Group, validateGroup } = require("../models/groupModel");
-const { max, reservedGroupNames } = require("../utils/allowables");
+const { max, reservedGroupNames, url } = require("../utils/allowables");
 const transactions = require("../utils/transactions");
 
 const groupNameIsReserved = (groupName) => {
@@ -41,6 +42,41 @@ router.get("/", [auth], async (req, res) => {
   );
   res.send(groups);
 });
+
+function createGroupLink(group, competitionID) {
+  return (
+    url +
+    "/predictions?type=groupLink&groupID=" +
+    group._id +
+    "&groupPasscode=" +
+    group.passcode +
+    "&groupName=" +
+    group.name +
+    "&competitionID=" +
+    competitionID
+  );
+}
+
+router.get(
+  "/link/:id/:competitionID",
+  [auth, validateObjectID],
+  async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.competitionID))
+      return res.status(400).send("Invalid Competition ID");
+
+    const group = await Group.findOne({
+      ownerID: req.user._id,
+      _id: req.params.id,
+    });
+    if (!group) return res.status(404).send("Group not found");
+
+    const competition = await Competition.findById(req.params.competitionID);
+    if (!competition) return res.status(404).send("Competition not found");
+
+    const link = createGroupLink(group, req.params.competitionID);
+    res.send({ link });
+  }
+);
 
 router.put("/:id", [auth, validateObjectID], async (req, res) => {
   const group = await Group.findById(req.params.id);

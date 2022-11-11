@@ -7,6 +7,7 @@ const {
   deleteAllData,
   testObjectID,
   insertGroups,
+  insertCompetition,
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
@@ -18,12 +19,15 @@ let server;
 
 describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
-  beforeEach(async () => {
+  const competitionID = mongoose.Types.ObjectId();
+  beforeAll(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
   });
-  afterEach(() => {
+  afterAll(() => {
     server.close();
+  });
+  afterEach(() => {
     deleteAllData();
   });
 
@@ -41,7 +45,6 @@ describe("groupsRoute", () => {
     });
     it("should return 400 if user has alread created too many groups", async () => {
       await insertGroups(5, userID);
-      const inserted = await Group.find();
       const res = await exec(getToken(userID));
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
@@ -196,6 +199,49 @@ describe("groupsRoute", () => {
         groups: insertedGroups[0]._id,
       }).select("groups");
       expect(updatedPredictions.length).toBe(0);
+    });
+  });
+
+  describe("GET /link/:id/:competitionID", () => {
+    const exec = async (token, groupID, competitionID) =>
+      await request(server)
+        .get(endpoint + "/link/" + groupID + "/" + competitionID)
+        .set(header, token);
+
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if the group is not found by owner id and group id", async () => {
+      const res = await exec(
+        getToken(userID),
+        mongoose.Types.ObjectId(),
+        mongoose.Types.ObjectId()
+      );
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "not found");
+    });
+    it("should return a compiled link", async () => {
+      const insertedGroups = await insertGroups(1, userID);
+      await insertCompetition(competitionID);
+      const res = await exec(
+        getToken(userID),
+        insertedGroups[0]._id,
+        competitionID
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.link).toEqual(
+        expect.stringContaining(String(insertedGroups[0]._id))
+      );
+      expect(res.body.link).toEqual(
+        expect.stringContaining(String(competitionID))
+      );
+      expect(res.body.link).toEqual(expect.stringContaining("groupLink"));
+      expect(res.body.link).toEqual(
+        expect.stringContaining(insertedGroups[0].name)
+      );
+      expect(res.body.link).toEqual(
+        expect.stringContaining(insertedGroups[0].passcode)
+      );
     });
   });
 });
