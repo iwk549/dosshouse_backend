@@ -343,7 +343,11 @@ router.put("/addtogroup/:id", [auth, validateObjectID], async (req, res) => {
   if (!group)
     return res
       .status(404)
-      .send("Group not found. Please double check the name and passcode");
+      .send(
+        `Group not found. Please double check ${
+          req.body.fromUrl ? "your link" : "the name and passcode"
+        }`
+      );
 
   // check if this prediction already belongs to this group
   if (prediction.groups.includes(group._id))
@@ -399,5 +403,16 @@ router.put(
     res.send(result);
   }
 );
+
+router.get("/competitions/:id", [auth, validateObjectID], async (req, res) => {
+  const competition = await Competition.findById(req.params.id);
+  if (!competition) return res.status(404).send("Competition not found");
+
+  const predictions = await Prediction.find({
+    userID: req.user._id,
+    competitionID: req.params.id,
+  });
+  res.send(predictions);
+});
 
 module.exports = router;

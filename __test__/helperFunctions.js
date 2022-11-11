@@ -38,9 +38,15 @@ async function insertCompetition(competitionID, competition) {
   return competitionToInsert;
 }
 
-async function insertPredictions(count, userID, competitionID, differentUsers) {
+async function insertPredictions(
+  count,
+  userID,
+  competitionID,
+  differentUsers,
+  startNameOffset = 0
+) {
   let predictionsToInsert = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0 + startNameOffset; i < count + startNameOffset; i++) {
     let prediction = { ...predictions[0] };
     prediction._id = mongoose.Types.ObjectId();
     prediction.name = "Bracket " + (i + 1);

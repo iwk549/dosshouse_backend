@@ -638,4 +638,31 @@ describe("predictionsRoute", () => {
       );
     });
   });
+
+  describe("GET /competitions/:id", () => {
+    const exec = async (token, competitionID) =>
+      await request(server)
+        .get(endpoint + "/competitions/" + competitionID)
+        .set(header, token);
+    testAuth(exec);
+    testObjectID(exec, true);
+    it("should return 404 if the competition is not found", async () => {
+      const res = await exec(getToken(userID), competitionID);
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition not found");
+    });
+    it("should return the predictions for the user in the provided competition", async () => {
+      await insertCompetition(competitionID);
+      const insertedPredictions = await insertPredictions(
+        3,
+        userID,
+        competitionID
+      );
+      await insertPredictions(2, userID, mongoose.Types.ObjectId(), null, 3);
+
+      const res = await exec(getToken(userID), competitionID);
+      expect(res.status).toBe(200);
+      expect(res.body.length).toBe(insertedPredictions.length);
+    });
+  });
 });
