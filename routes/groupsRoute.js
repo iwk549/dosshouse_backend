@@ -22,10 +22,16 @@ router.post("/", [auth], async (req, res) => {
       );
   const ownerID = mongoose.Types.ObjectId(req.user._id);
   req.body.ownerID = String(ownerID);
+  req.body.lowercaseName = req.body.name?.toLowerCase();
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
+
   if (groupNameIsReserved(req.body.name))
     return res.status(400).send("That group name is reserved");
+
+  if (req.body.passcode.includes(" "))
+    return res.status(400).send("Group passcode cannot contain a space");
+
   req.body.ownerID = ownerID;
   try {
     const response = await Group.collection.insertOne(req.body);
@@ -51,7 +57,7 @@ function createGroupLink(group, competitionID) {
     "&groupPasscode=" +
     group.passcode +
     "&groupName=" +
-    group.name +
+    group.name.replace(" ", "%20") +
     "&competitionID=" +
     competitionID
   );
@@ -86,12 +92,15 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
 
   // add ownerID to request for validation
   req.body.ownerID = req.user._id;
+  req.body.lowercaseName = req.body.name?.toLowerCase();
   const ex = validateGroup(req.body);
   if (ex.error) return res.status(400).send(ex.error.details[0].message);
 
   if (groupNameIsReserved(req.body.name))
     return res.status(400).send("That group name is reserved");
 
+  if (req.body.passcode.includes(" "))
+    return res.status(400).send("Your group passcode cannot contain a space");
   try {
     const response = await Group.updateOne(
       { _id: req.params.id },
@@ -99,6 +108,7 @@ router.put("/:id", [auth, validateObjectID], async (req, res) => {
         $set: {
           name: req.body.name || group.name,
           passcode: req.body.passcode || group.passcode,
+          lowercaseName: req.body.lowercaseName || group.lowercaseName,
         },
       }
     );

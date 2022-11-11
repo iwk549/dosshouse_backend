@@ -62,9 +62,10 @@ describe("groupsRoute", () => {
         name: "name",
         passcode: "passcode",
         ownerID: userID,
+        lowercaseName: "name",
       });
       const res = await exec(getToken(), {
-        name: "name",
+        name: "Name",
         passcode: "newpasscode",
       });
       expect(res.status).toBe(400);
@@ -77,6 +78,14 @@ describe("groupsRoute", () => {
       });
       expect(res.status).toBe(400);
       testResponseText(res.text, "reserved");
+    });
+    it("should return 400 if the group passcode contains a space", async () => {
+      const res = await exec(getToken(), {
+        name: "valid name",
+        passcode: "invalid passcode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "space");
     });
     it("should insert the group if all valid", async () => {
       const res = await exec(getToken(), {
@@ -137,10 +146,11 @@ describe("groupsRoute", () => {
         name: "name",
         passcode: "passcode1",
         ownerID: userID,
+        lowercaseName: "name",
       });
       const groups = await insertGroups(1, userID);
       const res = await exec(getToken(userID), groups[0]._id, {
-        name: "name",
+        name: "Name",
         passcode: "newpasscode",
       });
       expect(res.status).toBe(400);
@@ -155,16 +165,25 @@ describe("groupsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "reserved");
     });
+    it("should return 400 if the group passcode contains a space", async () => {
+      const groups = await insertGroups(1, userID);
+      const res = await exec(getToken(userID), groups[0]._id, {
+        name: "Valid Name",
+        passcode: "invalid passcode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "space");
+    });
     it("should update the group", async () => {
       const groups = await insertGroups(1, userID);
       const res = await exec(getToken(userID), groups[0]._id, {
         name: "New Name",
-        passcode: "new passcode",
+        passcode: "newpasscode",
       });
       expect(res.status).toBe(200);
       const updatedGroup = await Group.findById(groups[0]._id);
       expect(updatedGroup.name).toBe("New Name");
-      expect(updatedGroup.passcode).toBe("new passcode");
+      expect(updatedGroup.passcode).toBe("newpasscode");
     });
   });
 
