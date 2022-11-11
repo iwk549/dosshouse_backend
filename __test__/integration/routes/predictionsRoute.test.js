@@ -22,16 +22,20 @@ describe("predictionsRoute", () => {
   const userID = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
   let prediction;
-  beforeEach(async () => {
+  beforeAll(() => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
+  });
+  afterAll(() => {
+    server.close();
+  });
+  beforeEach(async () => {
     prediction = { ...predictions[0] };
     prediction.competitionID = competitionID;
     prediction.userID = userID;
     prediction.name = "New Bracket";
   });
   afterEach(() => {
-    server.close();
     deleteAllData();
   });
 

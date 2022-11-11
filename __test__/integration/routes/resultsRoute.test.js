@@ -19,12 +19,14 @@ let server;
 
 describe("resultsRoute", () => {
   const competitionID = mongoose.Types.ObjectId();
-  beforeEach(async () => {
+  beforeAll(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
   });
-  afterEach(() => {
+  afterAll(() => {
     server.close();
+  });
+  afterEach(() => {
     deleteAllData();
   });
 
@@ -48,7 +50,7 @@ describe("resultsRoute", () => {
     delete prediction1.totalPoints;
     prediction1.competitionID = competitionID;
     if (allTheSame) {
-      for (i = 0; i < count; i++) {
+      for (let i = 0; i < count; i++) {
         const prediction = { ...prediction1 };
         prediction._id = mongoose.Types.ObjectId();
         prediction.name = "Name" + i;

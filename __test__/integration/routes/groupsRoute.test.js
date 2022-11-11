@@ -20,12 +20,14 @@ let server;
 describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
-  beforeEach(async () => {
+  beforeAll(async () => {
     if (process.env.NODE_ENV === "test") server = require("../../../index");
     else throw "Not in test environment";
   });
-  afterEach(() => {
+  afterAll(() => {
     server.close();
+  });
+  afterEach(() => {
     deleteAllData();
   });
 
