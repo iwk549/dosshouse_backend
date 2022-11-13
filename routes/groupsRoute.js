@@ -5,6 +5,7 @@ const auth = require("../middleware/auth");
 const validateObjectID = require("../middleware/validateObjectID");
 const { Competition } = require("../models/competitionModel");
 const { Group, validateGroup } = require("../models/groupModel");
+const { User } = require("../models/userModel");
 const { max, reservedGroupNames, url } = require("../utils/allowables");
 const transactions = require("../utils/transactions");
 
@@ -14,11 +15,15 @@ const groupNameIsReserved = (groupName) => {
 
 router.post("/", [auth], async (req, res) => {
   const thisUserGroups = await Group.find({ ownerID: req.user._id });
-  if (thisUserGroups.length >= max.groupsPerUser)
+  // find user to see if they have special settings which would allow for extra groups to be created
+  const user = await User.findById(req.user._id);
+  const maxGroups = user?.settings?.max?.groupsPerUser || max.groupsPerUser;
+
+  if (thisUserGroups.length >= maxGroups)
     return res
       .status(400)
       .send(
-        `You have already created the maximum number of groups allowed (${max.groupsPerUser})`
+        `You have already created the maximum number of groups allowed (${maxGroups})`
       );
   const ownerID = mongoose.Types.ObjectId(req.user._id);
   req.body.ownerID = String(ownerID);

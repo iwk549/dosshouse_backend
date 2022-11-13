@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { groups, header, predictions } = require("../../testData");
+const { groups, header, predictions, users } = require("../../testData");
 const {
   testResponseText,
   getToken,
@@ -11,8 +11,9 @@ const {
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
+const { User } = require("../../../models/userModel");
 const mongoose = require("mongoose");
-const { reservedGroupNames } = require("../../../utils/allowables");
+const { reservedGroupNames, max } = require("../../../utils/allowables");
 
 const endpoint = "/api/v1/groups";
 let server;
@@ -44,7 +45,7 @@ describe("groupsRoute", () => {
       testResponseText(res.text, "required");
     });
     it("should return 400 if user has alread created too many groups", async () => {
-      await insertGroups(5, userID);
+      await insertGroups(max.groupsPerUser, userID);
       const res = await exec(getToken(userID));
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
@@ -95,6 +96,20 @@ describe("groupsRoute", () => {
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
       expect(insertedGroup).not.toBeNull();
+    });
+    it("should allow the user to create more groups than normal if they have the correct settings", async () => {
+      const user = { ...users[0] };
+      user.settings = {
+        max: { groupsPerUser: max.groupsPerUser + 3 },
+      };
+      user._id = userID;
+      await User.insertMany([user]);
+      await insertGroups(max.groupsPerUser, userID);
+      const res = await exec(getToken(userID), {
+        ...groups[0],
+        name: "Unique Name",
+      });
+      expect(res.status).toBe(200);
     });
   });
 
@@ -256,7 +271,7 @@ describe("groupsRoute", () => {
       );
       expect(res.body.link).toEqual(expect.stringContaining("groupLink"));
       expect(res.body.link).toEqual(
-        expect.stringContaining(insertedGroups[0].name)
+        expect.stringContaining(insertedGroups[0].name.replace(" ", "%20"))
       );
       expect(res.body.link).toEqual(
         expect.stringContaining(insertedGroups[0].passcode)

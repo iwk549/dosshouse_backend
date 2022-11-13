@@ -20,7 +20,7 @@ module.exports.miscKeys = {
 };
 
 module.exports.max = {
-  groupsPerUser: 5,
+  groupsPerUser: 2,
   groupsPerPrediction: 5,
 };
 
