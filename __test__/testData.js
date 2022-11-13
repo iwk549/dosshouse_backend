@@ -611,12 +611,14 @@ const groups = [
     // ownerID: mongoose.Types.ObjectId(),
     name: "Group 1",
     passcode: "passcode",
+    lowercaseName: "group 1",
     // competitionID: mongoose.Types.ObjectId(),
   },
   {
     // ownerID: mongoose.Types.ObjectId(),
     name: "Group 2",
     passcode: "passcode",
+    lowercaseName: "group 2",
     // competitionID: mongoose.Types.ObjectId(),
   },
 ];

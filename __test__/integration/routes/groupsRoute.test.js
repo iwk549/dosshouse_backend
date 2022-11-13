@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { groups, header, predictions } = require("../../testData");
+const { groups, header, predictions, users } = require("../../testData");
 const {
   testResponseText,
   getToken,
@@ -11,8 +11,9 @@ const {
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
+const { User } = require("../../../models/userModel");
 const mongoose = require("mongoose");
-const { reservedGroupNames } = require("../../../utils/allowables");
+const { reservedGroupNames, max } = require("../../../utils/allowables");
 
 const endpoint = "/api/v1/groups";
 let server;
@@ -44,7 +45,7 @@ describe("groupsRoute", () => {
       testResponseText(res.text, "required");
     });
     it("should return 400 if user has alread created too many groups", async () => {
-      await insertGroups(5, userID);
+      await insertGroups(max.groupsPerUser, userID);
       const res = await exec(getToken(userID));
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
@@ -62,9 +63,10 @@ describe("groupsRoute", () => {
         name: "name",
         passcode: "passcode",
         ownerID: userID,
+        lowercaseName: "name",
       });
       const res = await exec(getToken(), {
-        name: "name",
+        name: "Name",
         passcode: "newpasscode",
       });
       expect(res.status).toBe(400);
@@ -78,6 +80,14 @@ describe("groupsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "reserved");
     });
+    it("should return 400 if the group passcode contains a space", async () => {
+      const res = await exec(getToken(), {
+        name: "valid name",
+        passcode: "invalid passcode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "space");
+    });
     it("should insert the group if all valid", async () => {
       const res = await exec(getToken(), {
         ...groups[0],
@@ -86,6 +96,20 @@ describe("groupsRoute", () => {
       expect(res.body).toMatchObject({ insertedId: expect.any(String) });
       const insertedGroup = await Group.findById(res.body.insertedId);
       expect(insertedGroup).not.toBeNull();
+    });
+    it("should allow the user to create more groups than normal if they have the correct settings", async () => {
+      const user = { ...users[0] };
+      user.settings = {
+        max: { groupsPerUser: max.groupsPerUser + 3 },
+      };
+      user._id = userID;
+      await User.insertMany([user]);
+      await insertGroups(max.groupsPerUser, userID);
+      const res = await exec(getToken(userID), {
+        ...groups[0],
+        name: "Unique Name",
+      });
+      expect(res.status).toBe(200);
     });
   });
 
@@ -137,10 +161,11 @@ describe("groupsRoute", () => {
         name: "name",
         passcode: "passcode1",
         ownerID: userID,
+        lowercaseName: "name",
       });
       const groups = await insertGroups(1, userID);
       const res = await exec(getToken(userID), groups[0]._id, {
-        name: "name",
+        name: "Name",
         passcode: "newpasscode",
       });
       expect(res.status).toBe(400);
@@ -155,16 +180,25 @@ describe("groupsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "reserved");
     });
+    it("should return 400 if the group passcode contains a space", async () => {
+      const groups = await insertGroups(1, userID);
+      const res = await exec(getToken(userID), groups[0]._id, {
+        name: "Valid Name",
+        passcode: "invalid passcode",
+      });
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "space");
+    });
     it("should update the group", async () => {
       const groups = await insertGroups(1, userID);
       const res = await exec(getToken(userID), groups[0]._id, {
         name: "New Name",
-        passcode: "new passcode",
+        passcode: "newpasscode",
       });
       expect(res.status).toBe(200);
       const updatedGroup = await Group.findById(groups[0]._id);
       expect(updatedGroup.name).toBe("New Name");
-      expect(updatedGroup.passcode).toBe("new passcode");
+      expect(updatedGroup.passcode).toBe("newpasscode");
     });
   });
 
@@ -237,7 +271,7 @@ describe("groupsRoute", () => {
       );
       expect(res.body.link).toEqual(expect.stringContaining("groupLink"));
       expect(res.body.link).toEqual(
-        expect.stringContaining(insertedGroups[0].name)
+        expect.stringContaining(insertedGroups[0].name.replace(" ", "%20"))
       );
       expect(res.body.link).toEqual(
         expect.stringContaining(insertedGroups[0].passcode)

@@ -5,7 +5,6 @@ Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 const passwordComplexity = require("joi-password-complexity");
 const { pwComplexityOptions } = require("../utils/allowables");
-const { string } = require("joi");
 
 const userMongooseSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -18,6 +17,7 @@ const userMongooseSchema = new mongoose.Schema({
   },
   password: { type: String, required: true, minLength: 8, maxLength: 1024 },
   role: { type: String, required: false },
+  settings: { type: Object, required: false },
   lastActive: { type: Date, required: false },
   passwordReset: {
     type: Object,
@@ -49,7 +49,6 @@ const userSchema = {
   name: Joi.string().min(3).max(100).required(),
   email: Joi.string().min(5).max(255).required().email(),
   password: Joi.string().min(8).max(50).required(),
-  role: Joi.string().optional().allow(""),
   lastActive: Joi.date().optional().allow("", null),
   passwordResetToken: Joi.object()
     .keys({

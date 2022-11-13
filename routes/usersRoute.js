@@ -28,6 +28,7 @@ const nonTestingRatelimiter =
 router.post("/", nonTestingRatelimiter, async (req, res) => {
   req.body.email = trimEmail(req.body.email);
   delete req.body.role;
+  delete req.body.settings;
   const existingAccount = await User.findOne({ email: req.body.email });
   if (existingAccount)
     return res
@@ -168,7 +169,6 @@ router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
 
   const user = await User.findOne({ email });
   if (user) {
-    const now = new Date();
     const passwordResetToken = String(mongoose.Types.ObjectId());
     if (process.env.NODE_ENV !== "test") {
       const emailSentSuccessfully = await sendPasswordReset(

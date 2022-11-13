@@ -75,6 +75,7 @@ async function insertGroups(count, ownerID, differentUsers) {
       name: `Group ${i + 1}`,
       passcode: "passcode",
     };
+    group.lowercaseName = group.name.toLowerCase();
     groups.push(group);
   }
 
