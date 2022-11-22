@@ -41,7 +41,7 @@ router.post("/calculate/:code", [auth, adminCheck], async (req, res) => {
 
   const predictionsWithRanking = addRanking(updatedPoints);
 
-  Prediction.bulkWrite(
+  await Prediction.bulkWrite(
     predictionsWithRanking.map((u) => ({
       updateOne: {
         filter: { _id: mongoose.Types.ObjectId(u._id) },
