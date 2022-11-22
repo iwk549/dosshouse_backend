@@ -26,6 +26,8 @@ router.put("/", [auth, adminCheck], async (req, res) => {
           homeTeamName: match.homeTeamName,
           awayTeamName: match.awayTeamName,
           bracketCode: match.bracketCode,
+          matchNumber: match.matchNumber,
+          round: match.round,
         },
         update: {
           $set: {
