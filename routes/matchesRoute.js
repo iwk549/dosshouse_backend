@@ -17,19 +17,19 @@ router.get("/:id", [validateObjectID], async (req, res) => {
 });
 
 router.put("/", [auth, adminCheck], async (req, res) => {
-  // validate each incoming match against the team names and round/matchNumber to do the update
+  // validate each incoming match against the round/matchNumber to do the update
   const results = await Match.bulkWrite(
     req.body.map((match) => ({
       updateOne: {
         filter: {
-          homeTeamName: match.homeTeamName,
-          awayTeamName: match.awayTeamName,
           bracketCode: match.bracketCode,
           matchNumber: match.matchNumber,
           round: match.round,
         },
         update: {
           $set: {
+            homeTeamName: match.homeTeamName,
+            awayTeamName: match.awayTeamName,
             homeTeamGoals: match.homeTeamGoals,
             awayTeamGoals: match.awayTeamGoals,
             matchAccepted: match.matchAccepted,
