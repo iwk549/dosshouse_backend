@@ -17,10 +17,9 @@ router.get("/:id", [validateObjectID], async (req, res) => {
 });
 
 router.put("/", [auth, adminCheck], async (req, res) => {
-  // validate each incoming match against the team names and dateTime to do the update
-  const filtered = req.body.filter((match) => match.matchAccepted);
+  // validate each incoming match against the team names and round/matchNumber to do the update
   const results = await Match.bulkWrite(
-    filtered.map((match) => ({
+    req.body.map((match) => ({
       updateOne: {
         filter: {
           homeTeamName: match.homeTeamName,
