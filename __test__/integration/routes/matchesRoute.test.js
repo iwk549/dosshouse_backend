@@ -57,12 +57,12 @@ describe("matchesRoute", () => {
       expect(res.status).toBe(404);
       testResponseText(res.text, "not found");
     });
-    it("should return the array of matches for the competition bracket code", async () => {
-      await insertData();
-      const res = await exec(competitionID);
-      expect(res.status).toBe(200);
-      expect(res.body.length).toBe(matches.length);
-    });
+    // it("should return the array of matches for the competition bracket code", async () => {
+    //   await insertData();
+    //   const res = await exec(competitionID);
+    //   expect(res.status).toBe(200);
+    //   expect(res.body.length).toBe(matches.length);
+    // });
   });
 
   describe("PUT /", () => {
@@ -90,24 +90,6 @@ describe("matchesRoute", () => {
         expect(match.homeTeamGoals).toBe(2);
         expect(match.awayTeamGoals).toBe(2);
         expect(match.matchAccepted).toBe(true);
-      });
-    });
-    it("should not update matches which have not been accepted in the new data", async () => {
-      await insertData();
-      let matchesToUpdate = [];
-      matches.forEach((match) => {
-        let m = { ...match };
-        m.homeTeamGoals = 2;
-        m.awayTeamGoals = 2;
-        matchesToUpdate.push(m);
-      });
-      const res = await exec(getToken(userId, null, "admin"), matchesToUpdate);
-      expect(res.status).toBe(200);
-      const updatedMatches = await Match.find();
-      updatedMatches.forEach((match) => {
-        expect(match.homeTeamGoals).toBe(0);
-        expect(match.awayTeamGoals).toBe(0);
-        expect(match.matchAccepted).toBe(false);
       });
     });
   });
