@@ -12,7 +12,7 @@ const resultMongooseSchema = new mongoose.Schema({
         groupName: { type: String, required: true },
         teamOrder: { type: String, required: true },
       },
-      required: true,
+      required: false,
     },
   ],
   playoff: [
@@ -30,4 +30,31 @@ const resultMongooseSchema = new mongoose.Schema({
 
 const Result = mongoose.model("Result", resultMongooseSchema);
 
+const resultSchema = {
+  code: Joi.string().required(),
+  group: Joi.array()
+    .optional()
+    .items(
+      Joi.object().keys({
+        groupName: Joi.string().required(),
+        teamOrder: Joi.array().items(Joi.string()).required(),
+      })
+    ),
+  playoff: Joi.array()
+    .required()
+    .items(
+      Joi.object().keys({
+        round: Joi.number().integer().required(),
+        teams: Joi.array().required().items(Joi.string()),
+        points: Joi.number().integer().required(),
+      })
+    ),
+  misc: Joi.object(),
+};
+
+function validateResult(result) {
+  return Joi.object(resultSchema).validate(result);
+}
+
 exports.Result = Result;
+exports.validateResult = validateResult;

@@ -59,6 +59,75 @@ describe("resultsRoute", () => {
     }
   };
 
+  describe("PUT /:code", () => {
+    const exec = async (token, code, results, query) => {
+      return await request(server)
+        .put(endpoint + "/" + code + (query ? "?" + query : ""))
+        .send(results)
+        .set(header, token);
+    };
+    testAuth(exec, "admin");
+    it("should return 404 if competition not found", async () => {
+      const admin = await insertUser();
+      const res = await exec(
+        getToken(admin._id, admin, "admin"),
+        "fakeCode",
+        {}
+      );
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition not found");
+    });
+    it("should return 400 if result is invalid", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      const res = await exec(
+        getToken(admin._id, admin, "admin"),
+        competition.code,
+        { invalidField: "xxx" }
+      );
+
+      expect(res.status).toBe(400);
+      testResponseText(res.text, "required");
+    });
+    it("should insert the result if it does not exist", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      const res = await exec(
+        getToken(admin._id, admin, "admin"),
+        competition.code,
+        results[0]
+      );
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("upsertedId");
+
+      const upsertedResult = await Result.findOne({ code: competition.code });
+      expect(upsertedResult).not.toBeNull();
+      expect(String(upsertedResult._id)).toBe(String(res.body.upsertedId));
+    });
+    it("should update the result if it already exists", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      let result = { ...results[0] };
+      let updateResult = { ...results[0] };
+      result.playoff = [{ round: 1, teams: ["1", "2", "3", "4"], points: 1 }];
+      updateResult.playoff = [
+        { round: 2, teams: ["5", "6", "7", "8"], points: 2 },
+      ];
+      await Result.collection.insertMany([result]);
+
+      const res = await exec(
+        getToken(admin._id, admin, "admin"),
+        competition.code,
+        updateResult
+      );
+      expect(res.status).toBe(200);
+      expect(res.body.modifiedCount).toBe(1);
+
+      const updatedResult = await Result.findOne({ code: competition.code });
+      expect(updatedResult.playoff).toMatchObject(updateResult.playoff);
+    });
+  });
+
   describe("GET /:id", () => {
     const exec = async (token, id) => {
       return await request(server)
