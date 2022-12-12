@@ -26,6 +26,7 @@ const resultMongooseSchema = new mongoose.Schema({
     },
   ],
   misc: miscKeys,
+  potentials: { type: Object, required: false },
 });
 
 const Result = mongoose.model("Result", resultMongooseSchema);
@@ -50,6 +51,13 @@ const resultSchema = {
       })
     ),
   misc: Joi.object(),
+  potentials: Joi.object().keys({
+    realisticWinners: Joi.object().keys({
+      topScorer: Joi.array().items(Joi.string()),
+      discipline: Joi.array().items(Joi.string()),
+      thirdPlace: Joi.array().items(Joi.string()),
+    }),
+  }),
 };
 
 function validateResult(result) {

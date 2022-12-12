@@ -156,6 +156,12 @@ const results = [
       discipline: "",
       topScorer: "",
     },
+    potentials: {
+      realisticWinners: {
+        topScorer: [],
+        discipline: [],
+      },
+    },
   },
 ];
 

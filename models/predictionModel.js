@@ -73,6 +73,14 @@ const predictionMongooseSchema = new mongoose.Schema({
   },
   totalPoints: { type: Number, required: true },
   ranking: { type: Number, required: false },
+  potentialPoints: {
+    type: Object,
+    required: false,
+    keys: {
+      maximum: { type: Number, required: false },
+      realistic: { type: Number, required: false },
+    },
+  },
   groups: [
     {
       type: mongoose.Types.ObjectId,
@@ -137,6 +145,10 @@ const predictionSchema = {
     .optional(),
   totalPoints: Joi.number().required().default(0),
   ranking: Joi.number().optional().allow(null),
+  potentialPoints: Joi.object().optional().keys({
+    maximum: Joi.number().integer(),
+    realistic: Joi.number().integer(),
+  }),
   groups: Joi.array()
     .items(Joi.objectID())
     .unique()

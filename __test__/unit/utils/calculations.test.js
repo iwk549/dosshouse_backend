@@ -2,7 +2,11 @@ const {
   calculatePrediction,
   addRanking,
 } = require("../../../utils/calculations");
-const { predictions, results, competitions } = require("../../testData");
+const {
+  predictions,
+  // results,
+  competitions,
+} = require("../../testData");
 
 describe("calculations", () => {
   describe("calculatePredictions", () => {
@@ -22,35 +26,35 @@ describe("calculations", () => {
         topScorer: "a",
       },
     };
-    const exec = (prediction, result, competition) => {
-      return calculatePrediction(prediction, result, competition);
+    const exec = (prediction, result, competition, matches) => {
+      return calculatePrediction(prediction, result, competition, matches);
     };
 
-    const setResult = (matchLevel = ["group", "playoff", "misc"]) => {
-      let result = { ...results[0] };
-      if (matchLevel.includes("group")) {
-        result.group = [
-          { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
-          { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
-        ];
-      } else delete result.group;
-      if (matchLevel.includes("playoff")) {
-        result.playoff = [
-          { round: 1, teams: ["a", "b", "c", "d"] },
-          { round: 2, teams: ["a", "c"] },
-        ];
-      } else delete result.playoff;
-      if (matchLevel.includes("misc")) {
-        result.misc = {
-          winner: "a",
-          thirdPlace: "b",
-          discipline: "a",
-          topScorer: "a",
-        };
-      } else delete result.misc;
+    // const setResult = (matchLevel = ["group", "playoff", "misc"]) => {
+    //   let result = { ...results[0] };
+    //   if (matchLevel.includes("group")) {
+    //     result.group = [
+    //       { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
+    //       { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
+    //     ];
+    //   } else delete result.group;
+    //   if (matchLevel.includes("playoff")) {
+    //     result.playoff = [
+    //       { round: 1, teams: ["a", "b", "c", "d"] },
+    //       { round: 2, teams: ["a", "c"] },
+    //     ];
+    //   } else delete result.playoff;
+    //   if (matchLevel.includes("misc")) {
+    //     result.misc = {
+    //       winner: "a",
+    //       thirdPlace: "b",
+    //       discipline: "a",
+    //       topScorer: "a",
+    //     };
+    //   } else delete result.misc;
 
-      return result;
-    };
+    //   return result;
+    // };
 
     const setPrediction = (
       matchLevel = ["group", "playoff", "misc"],
@@ -289,6 +293,135 @@ describe("calculations", () => {
         expect(res.points.playoff.points).toBe(6);
         // just 2 correct picks made, one in each round
         expect(res.points.playoff.correctPicks).toBe(2);
+      });
+    });
+    describe("adding potential points", () => {
+      const resultForPotentialPoints = {
+        code: "worldCup2022",
+        group: [
+          {
+            groupName: "A",
+            teamOrder: ["a", "b", "c", "d"],
+          },
+        ],
+        playoff: [
+          {
+            round: 1,
+            teams: ["a", "b", "c", "d"],
+            points: 2,
+          },
+        ],
+        misc: {
+          winner: "",
+          thirdPlace: "",
+          discipline: "",
+          topScorer: "",
+        },
+        potentials: {
+          realisticWinners: {
+            topScorer: ["a", "c"],
+            discipline: ["d"],
+            thirdPlace: ["a", "b"],
+          },
+        },
+      };
+      test("potential points possible should match the total points when the tournament is finished", () => {
+        const prediction = setPrediction(["playoff"], null, [
+          { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
+          { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
+          { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 4 },
+        ]);
+        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
+        expect(res.totalPoints).toBe(res.potentialPoints.maximum);
+      });
+      test("potential points should be able to calculate if the winner is possible and assign those points to realistic and maximum", () => {
+        const prediction = setPrediction(
+          ["playoff", "misc"],
+          null,
+          [
+            { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
+            { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
+            { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 2 },
+          ],
+          {
+            winner: "a",
+          }
+        );
+        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
+        expect(res.potentialPoints.maximum).toBe(res.potentialPoints.realistic);
+        expect(res.potentialPoints.maximum).toBe(
+          res.totalPoints + competitions[0].scoring.champion
+        );
+      });
+      test("potential points should calculate the difference between realistic and maximum points for miscPicks", () => {
+        const prediction = setPrediction(
+          ["playoff", "misc"],
+          null,
+          [
+            { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
+            { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
+            { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 2 },
+          ],
+          {
+            topScorer: "b",
+            discipline: "b",
+            thirdPlace: "c",
+          }
+        );
+        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
+        expect(res.potentialPoints.maximum).not.toBe(
+          res.potentialPoints.realistic
+        );
+        expect(res.potentialPoints.realistic).toBe(res.totalPoints);
+        expect(res.potentialPoints.maximum).toBe(
+          res.totalPoints +
+            competitions[0].miscPicks.find((mp) => mp.name === "topScorer")
+              .points +
+            competitions[0].miscPicks.find((mp) => mp.name === "discipline")
+              .points
+        );
+      });
+      test("potential points should calculate the rounds in reverse to accurately represent available points when teams picked in next round paly against each other", () => {
+        const prediction = setPrediction(["playoff"], null, [
+          { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
+          { matchNumber: 2, homeTeam: "c", awayTeam: "d", round: 1 },
+          { matchNumber: 3, homeTeam: "c", awayTeam: "d", round: 2 },
+        ]);
+        const matches = [
+          {
+            matchNumber: 1,
+            homeTeamName: "a",
+            awayTeamName: "b",
+            round: 1,
+          },
+          {
+            matchNumber: 2,
+            homeTeamName: "c",
+            awayTeamName: "d",
+            round: 1,
+          },
+          {
+            matchNumber: 3,
+            homeTeamName: "Winner 1",
+            awayTeamName: "Winner 2",
+            round: 2,
+            getTeamsFrom: {
+              home: { matchNumber: 1 },
+              away: { matchNumber: 2 },
+            },
+          },
+        ];
+        const res = exec(
+          prediction,
+          resultForPotentialPoints,
+          competitions[0],
+          matches
+        );
+        expect(res.potentialPoints.maximum).toBe(
+          res.totalPoints +
+            competitions[0].scoring.playoff.find((s) => s.roundNumber === 2)
+              .points
+        );
       });
     });
   });

@@ -1,4 +1,4 @@
-function calculatePrediction(prediction, result, competition) {
+function calculatePrediction(prediction, result, competition, matches) {
   let points = {
     group: { points: 0, correctPicks: 0 },
     playoff: { points: 0, correctPicks: 0 },
@@ -102,8 +102,111 @@ function calculatePrediction(prediction, result, competition) {
     points.champion.points +
     points.misc.points;
 
+  // find potential points possible
+  let potentialPoints;
+  let maximum = totalPoints;
+  let realistic = totalPoints;
+  const remainingTeams = result.playoff[result.playoff.length - 1].teams;
+  // if the final round has been entered in the results document then there are no more potential points to calculate, set them to equal total points
+  if (
+    result.playoff &&
+    prediction?.playoffPredictions &&
+    result.playoff[result.playoff.length - 1] ===
+      prediction.playoffPredictions[prediction.playoffPredictions.length - 1]
+        .round
+  ) {
+    // do nothing, the competition is in the final round
+  } else if (
+    competition.scoring.playoff &&
+    result.playoff &&
+    prediction.playoffPredictions
+  ) {
+    // get the remaining teams from the result (latest playoff stage entered)
+    // if the prediction picked a winner that is in the remaining teams then those points are possible (realistic)
+    if (remainingTeams.includes(prediction.misc?.winner)) {
+      maximum += competition.scoring.champion;
+      realistic += competition.scoring.champion;
+    }
+
+    if (matches && matches.length > 0) {
+      // if matches were passed then we can figure out which playoff teams have potential to reach the next round
+      // must map backwards from final to see which teams are possible
+      let highestRound = 0;
+      let final;
+      matches.forEach((match) => {
+        if (highestRound < match.round) {
+          highestRound = match.round;
+          final = match;
+        }
+      });
+      if (final) {
+        // give finalist points to each semi final containing a finalist
+        const thisRoundPoints =
+          competition.scoring.playoff.find((c) => c.roundNumber === final.round)
+            ?.points || 0;
+        let finalistPoints = 0;
+        prediction.playoffPredictions.forEach((m) => {
+          if (m.round === final.round) {
+            const finalists = [m.homeTeam, m.awayTeam];
+            if (remainingTeams.includes(m.homeTeam)) {
+              finalistPoints += thisRoundPoints;
+            }
+            if (remainingTeams.includes(m.awayTeam)) {
+              finalistPoints += thisRoundPoints;
+            }
+            const previousMatchResult1 = matches.find(
+              (m) => m.matchNumber === final.getTeamsFrom.home.matchNumber
+            );
+            const previousMatchResult2 = matches.find(
+              (m) => m.matchNumber === final.getTeamsFrom.away.matchNumber
+            );
+            if (
+              finalists.includes(previousMatchResult1.homeTeamName) &&
+              finalists.includes(previousMatchResult1.awayTeamName)
+            )
+              finalistPoints -= thisRoundPoints;
+            if (
+              finalists.includes(previousMatchResult2.homeTeamName) &&
+              finalists.includes(previousMatchResult2.awayTeamName)
+            )
+              finalistPoints -= thisRoundPoints;
+          }
+        });
+        maximum += finalistPoints;
+        realistic += finalistPoints;
+      }
+    }
+    // if the prediction picked a miscPick that is in the remaining teams then those points are available but not realistic
+    // for third place they are not available
+    // if the miscPick is contained in the "realisticWinners" entry within the result then those points should be added to both
+    if (competition.miscPicks && result.misc && prediction.misc) {
+      competition.miscPicks.forEach((miscPick) => {
+        const realisticWinners =
+          (result.potentials?.realisticWinners &&
+            result.potentials?.realisticWinners[miscPick.name]) ||
+          [];
+        const predictionPick = prediction.misc[miscPick.name];
+
+        if (
+          remainingTeams.includes(predictionPick) &&
+          miscPick.name !== "thirdPlace"
+        )
+          maximum += miscPick.points;
+        if (realisticWinners.includes(predictionPick)) {
+          realistic += miscPick.points;
+          if (miscPick.name === "thirdPlace") maximum += miscPick.points;
+        }
+      });
+    }
+  }
+
+  potentialPoints = {
+    maximum,
+    realistic,
+  };
+
   // return {points, totalPoints} for bulkwrite
-  return { points, totalPoints };
+  return { points, totalPoints, potentialPoints };
 }
 
 function addRanking(predictions) {

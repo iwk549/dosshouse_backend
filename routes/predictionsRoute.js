@@ -17,12 +17,17 @@ function addPoints(req) {
   };
   req.body.totalPoints = 0;
   req.body.ranking = null;
+  req.body.potentialPoints = {
+    maximum: 0,
+    realistic: 0,
+  };
 }
 
 function removePoints(req) {
   delete req.body.points;
   delete req.body.totalPoints;
   delete req.body.ranking;
+  delete req.body.potentialPoints;
 }
 
 async function nameIsUnique(name, userID, competitionID) {
@@ -144,7 +149,7 @@ router.get("/:id", [auth, validateObjectID], async (req, res) => {
 
 router.get("/", [auth], async (req, res) => {
   const predictions = await Prediction.find({ userID: req.user._id })
-    .select("competitionID name points totalPoints misc")
+    .select("competitionID name points totalPoints misc potentialPoints")
     .populate("competitionID")
     .populate({
       path: "groups",
@@ -171,7 +176,8 @@ router.get(
     const competition = await Competition.findById(req.params.id);
     if (!competition) return res.status(404).send("Competition not found");
 
-    let selectedFields = "name points totalPoints ranking userID";
+    let selectedFields =
+      "name points totalPoints ranking userID potentialPoints";
     if (competition.submissionDeadline < new Date()) selectedFields += " misc";
 
     if (
