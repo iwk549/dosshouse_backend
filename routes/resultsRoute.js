@@ -9,18 +9,26 @@ const { calculatePrediction, addRanking } = require("../utils/calculations");
 const { Result, validateResult } = require("../models/resultModel");
 const { Prediction } = require("../models/predictionModel");
 const { Competition } = require("../models/competitionModel");
+const { Match } = require("../models/matchModel");
 
 const calculateAndPostResults = async (competition, result) => {
   const allPredictions = await Prediction.find({
     competitionID: competition._id,
   });
+  const matches = await Match.find({ bracketCode: competition.code });
   let updatedPoints = [];
   allPredictions.forEach((p) => {
-    const { points, totalPoints } = calculatePrediction(p, result, competition);
+    const { points, totalPoints, potentialPoints } = calculatePrediction(
+      p,
+      result,
+      competition,
+      matches
+    );
     updatedPoints.push({
       _id: p._id,
       points,
       totalPoints,
+      potentialPoints,
     });
   });
 
@@ -35,6 +43,7 @@ const calculateAndPostResults = async (competition, result) => {
             points: u.points,
             totalPoints: u.totalPoints,
             ranking: u.ranking,
+            potentialPoints: u.potentialPoints,
           },
         },
       },
