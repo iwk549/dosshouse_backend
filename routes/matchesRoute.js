@@ -35,6 +35,8 @@ router.put("/", [auth, adminCheck], async (req, res) => {
             awayTeamGoals: match.awayTeamGoals,
             awayTeamPKs: match.awayTeamPKs,
             matchAccepted: match.matchAccepted,
+            location: match.location,
+            dateTime: match.dateTime.$date,
           },
         },
       },
