@@ -8,25 +8,26 @@
     "test:coverage": "./node_modules/.bin/jest --runInBand --coverage",
     "test:pull_request": "./node_modules/.bin/jest --runInBand --detectOpenHandles",
     "dev": "nodemon -L index.js",
-    "lint": "./node_modules/.bin/eslint *.js"
+    "lint": "./node_modules/.bin/eslint *.js",
+    "audit": "better-npm-audit audit --level moderate --production"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.0.1",
+    "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
-    "config": "^3.3.7",
+    "config": "^3.3.12",
     "cors": "^2.8.5",
-    "express": "^4.17.3",
+    "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^6.3.0",
     "helmet": "^5.0.2",
-    "joi": "^17.6.0",
+    "joi": "^17.13.3",
     "joi-objectid": "^4.0.2",
-    "joi-password-complexity": "^5.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.9",
-    "nodemailer": "^6.7.4",
+    "joi-password-complexity": "^4.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^6.13.8",
+    "nodemailer": "^6.10.1",
     "throng": "^5.0.0",
     "winston": "^3.6.0",
     "winston-mongodb": "^5.0.7"
@@ -36,5 +37,8 @@
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"
+  },
+  "overrides": {
+    "semver": "^7.5.2"
   }
 }
