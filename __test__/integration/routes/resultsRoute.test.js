@@ -7,12 +7,14 @@ const {
   testAuth,
   getToken,
   insertCompetition,
+  cleanup,
 } = require("../../helperFunctions");
 const mongoose = require("mongoose");
 const { Result } = require("../../../models/resultModel");
 const { User } = require("../../../models/userModel");
 const { Competition } = require("../../../models/competitionModel");
 const { Prediction } = require("../../../models/predictionModel");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/results";
 let server;
@@ -20,14 +22,15 @@ let server;
 describe("resultsRoute", () => {
   const competitionID = mongoose.Types.ObjectId();
   beforeAll(async () => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   const insertResult = async (competition) => {

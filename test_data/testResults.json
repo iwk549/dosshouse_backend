@@ -1,0 +1,93 @@
+{
+  "code": "worldCup2022",
+  "group": [
+    {
+      "groupName": "A",
+      "teamOrder": ["Netherlands", "Senegal", "Ecuador", "Qatar"]
+    },
+    {
+      "groupName": "B",
+      "teamOrder": ["England", "United States", "Iran", "Wales"]
+    },
+    {
+      "groupName": "C",
+      "teamOrder": ["Argentina", "Poland", "Mexico", "Saudi Arabia"]
+    },
+    {
+      "groupName": "D",
+      "teamOrder": ["France", "Australia", "Tunisia", "Denmark"]
+    },
+    {
+      "groupName": "E",
+      "teamOrder": ["Japan", "Spain", "Germany", "Costa Rica"]
+    },
+    {
+      "groupName": "F",
+      "teamOrder": ["Morocco", "Croatia", "Belgium", "Canada"]
+    },
+    {
+      "groupName": "G",
+      "teamOrder": ["Brazil", "Switzerland", "Cameroon", "Serbia"]
+    },
+    {
+      "groupName": "H",
+      "teamOrder": ["Portugal", "South Korea", "Uruguay", "Ghana"]
+    }
+  ],
+  "playoff": [
+    {
+      "round": 1,
+      "teams": [
+        "Netherlands",
+        "Senegal",
+        "England",
+        "United States",
+        "Argentina",
+        "Poland",
+        "France",
+        "Australia",
+        "Japan",
+        "Spain",
+        "Morocco",
+        "Croatia",
+        "Brazil",
+        "Switzerland",
+        "Portugal",
+        "South Korea"
+      ],
+      "points": 2
+    },
+    {
+      "round": 2,
+      "teams": [
+        "Netherlands",
+        "Argentina",
+        "France",
+        "England",
+        "Croatia",
+        "Brazil",
+        "Morocco",
+        "Portugal"
+      ],
+      "points": 4
+    },
+    {
+      "round": 3,
+      "teams": ["Croatia", "Argentina", "Morocco", "France"],
+      "points": 8
+    }
+  ],
+  "misc": {
+    "winner": "",
+    "thirdPlace": "",
+    "discipline": "",
+    "topScorer": ""
+  },
+  "potentials": {
+    "realisticWinners": {
+      "topScorer": ["France", "Argentina"],
+      "discipline": ["Saudi Arabia", "Argentina"],
+      "thirdPlace": ["Croatia", "Argentina", "Morocco", "France"]
+    }
+  }
+}

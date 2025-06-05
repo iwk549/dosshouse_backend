@@ -1,0 +1,1119 @@
+[
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Al Ahly (EGY)",
+    "awayTeamName": "Inter Miami (USA)",
+    "dateTime": { "$date": "2025-06-15T00:00:00.000Z" },
+    "matchNumber": 1,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Bayern Munich (GER)",
+    "awayTeamName": "Auckland City (NZL)",
+    "dateTime": { "$date": "2025-06-15T16:00:00.000Z" },
+    "matchNumber": 2,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "TQL Stadium, Cincinnati",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Paris Saint-Germain (FRA)",
+    "awayTeamName": "Atletico Madrid (ESP)",
+    "dateTime": { "$date": "2025-06-15T16:00:00.000Z" },
+    "matchNumber": 3,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Palmeiras (BRA)",
+    "awayTeamName": "Porto (POR)",
+    "dateTime": { "$date": "2025-06-15T22:00:00.000Z" },
+    "matchNumber": 4,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Botafogo (BRA)",
+    "awayTeamName": "Seattle Sounders (USA)",
+    "dateTime": { "$date": "2025-06-15T23:00:00.000Z" },
+    "matchNumber": 5,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Chelsea (ENG)",
+    "awayTeamName": "LAFC (USA)",
+    "dateTime": { "$date": "2025-06-16T19:00:00.000Z" },
+    "matchNumber": 6,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Boca Juniors (ARG)",
+    "awayTeamName": "Benfica (POR)",
+    "dateTime": { "$date": "2025-06-16T22:00:00.000Z" },
+    "matchNumber": 7,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Flamengo (BRA)",
+    "awayTeamName": "Esperance (TUN)",
+    "dateTime": { "$date": "2025-06-17T02:00:00.000Z" },
+    "matchNumber": 8,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Fluminese (BRA)",
+    "awayTeamName": "Borussia Dortmund (GER)",
+    "dateTime": { "$date": "2025-06-17T16:00:00.000Z" },
+    "matchNumber": 9,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "River Plate (ARG)",
+    "awayTeamName": "Urawa Red Diamonds (JAP)",
+    "dateTime": { "$date": "2025-06-17T16:00:00.000Z" },
+    "matchNumber": 10,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Ulsan HD (KOR)",
+    "awayTeamName": "Mamelodi Sundowns (RSA)",
+    "dateTime": { "$date": "2025-06-17T22:00:00.000Z" },
+    "matchNumber": 11,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "Inter&Co Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Monterrey (MEX)",
+    "awayTeamName": "Internazionale (ITA)",
+    "dateTime": { "$date": "2025-06-17T22:00:00.000Z" },
+    "matchNumber": 12,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Manchester City (ENG)",
+    "awayTeamName": "Wydad (MOR)",
+    "dateTime": { "$date": "2025-06-18T16:00:00.000Z" },
+    "matchNumber": 13,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Real Madrid (ESP)",
+    "awayTeamName": "Al Hilal (SAU)",
+    "dateTime": { "$date": "2025-06-18T19:00:00.000Z" },
+    "matchNumber": 14,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Pachuca (MEX)",
+    "awayTeamName": "Salzburg (AUT)",
+    "dateTime": { "$date": "2025-06-18T22:00:00.000Z" },
+    "matchNumber": 15,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "TQL Stadium, Cincinnati",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Al Ain (UAE)",
+    "awayTeamName": "Juventus (ITA)",
+    "dateTime": { "$date": "2025-06-19T01:00:00.000Z" },
+    "matchNumber": 16,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Audi Field, Washington, D.C.",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Palmeiras (BRA)",
+    "awayTeamName": "Al Ahly (EGY)",
+    "dateTime": { "$date": "2025-06-19T16:00:00.000Z" },
+    "matchNumber": 17,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Inter Miami (USA)",
+    "awayTeamName": "Porto (POR)",
+    "dateTime": { "$date": "2025-06-19T19:00:00.000Z" },
+    "matchNumber": 18,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Seattle Sounders (USA)",
+    "awayTeamName": "Atletico Madrid (ESP)",
+    "dateTime": { "$date": "2025-06-19T19:00:00.000Z" },
+    "matchNumber": 19,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Paris Saint-Germain (FRA)",
+    "awayTeamName": "Botafogo (BRA)",
+    "dateTime": { "$date": "2025-06-19T22:00:00.000Z" },
+    "matchNumber": 20,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Benfica (POR)",
+    "awayTeamName": "Auckland City (NZL)",
+    "dateTime": { "$date": "2025-06-20T16:00:00.000Z" },
+    "matchNumber": 21,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "Inter&Co Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Flamengo (BRA)",
+    "awayTeamName": "Chelsea (ENG)",
+    "dateTime": { "$date": "2025-06-20T18:00:00.000Z" },
+    "matchNumber": 22,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "LAFC (USA)",
+    "awayTeamName": "Esperance (TUN)",
+    "dateTime": { "$date": "2025-06-20T21:00:00.000Z" },
+    "matchNumber": 23,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "GEODIS Park, Nashville",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Bayern Munich (GER)",
+    "awayTeamName": "Boca Juniors (ARG)",
+    "dateTime": { "$date": "2025-06-21T01:00:00.000Z" },
+    "matchNumber": 24,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Mamelodi Sundowns (RSA)",
+    "awayTeamName": "Borussia Dortmund (GER)",
+    "dateTime": { "$date": "2025-06-21T16:00:00.000Z" },
+    "matchNumber": 25,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "TQL Stadium, Cincinnati",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Internazionale (ITA)",
+    "awayTeamName": "Urawa Red Diamonds (JAP)",
+    "dateTime": { "$date": "2025-06-21T16:00:00.000Z" },
+    "matchNumber": 26,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Fluminese (BRA)",
+    "awayTeamName": "Ulsan HD (KOR)",
+    "dateTime": { "$date": "2025-06-21T22:00:00.000Z" },
+    "matchNumber": 27,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "River Plate (ARG)",
+    "awayTeamName": "Monterrey (MEX)",
+    "dateTime": { "$date": "2025-06-21T22:00:00.000Z" },
+    "matchNumber": 28,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Juventus (ITA)",
+    "awayTeamName": "Wydad (MOR)",
+    "dateTime": { "$date": "2025-06-22T16:00:00.000Z" },
+    "matchNumber": 29,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Real Madrid (ESP)",
+    "awayTeamName": "Pachuca (MEX)",
+    "dateTime": { "$date": "2025-06-22T19:00:00.000Z" },
+    "matchNumber": 30,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "Bank of America Stadium, Charlotte",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Salzburg (AUT)",
+    "awayTeamName": "Al Hilal (SAU)",
+    "dateTime": { "$date": "2025-06-22T22:00:00.000Z" },
+    "matchNumber": 31,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "Audi Field, Washington, D.C.",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Manchester City (ENG)",
+    "awayTeamName": "Al Ain (UAE)",
+    "dateTime": { "$date": "2025-06-23T01:00:00.000Z" },
+    "matchNumber": 32,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Seattle Sounders (USA)",
+    "awayTeamName": "Paris Saint-Germain (FRA)",
+    "dateTime": { "$date": "2025-06-23T16:00:00.000Z" },
+    "matchNumber": 33,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Atletico Madrid (ESP)",
+    "awayTeamName": "Botafogo (BRA)",
+    "dateTime": { "$date": "2025-06-23T16:00:00.000Z" },
+    "matchNumber": 34,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Inter Miami (USA)",
+    "awayTeamName": "Palmeiras (BRA)",
+    "dateTime": { "$date": "2025-06-24T01:00:00.000Z" },
+    "matchNumber": 35,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Porto (POR)",
+    "awayTeamName": "Al Ahly (EGY)",
+    "dateTime": { "$date": "2025-06-24T01:00:00.000Z" },
+    "matchNumber": 36,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Auckland City (NZL)",
+    "awayTeamName": "Boca Juniors (ARG)",
+    "dateTime": { "$date": "2025-06-24T18:00:00.000Z" },
+    "matchNumber": 37,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "GEODIS Park, Nashville",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Benfica (POR)",
+    "awayTeamName": "Bayern Munich (GER)",
+    "dateTime": { "$date": "2025-06-24T19:00:00.000Z" },
+    "matchNumber": 38,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "location": "Bank of America Stadium, Charlotte",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "LAFC (USA)",
+    "awayTeamName": "Flamengo (BRA)",
+    "dateTime": { "$date": "2025-06-25T01:00:00.000Z" },
+    "matchNumber": 39,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "Camping World Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Esperance (TUN)",
+    "awayTeamName": "Chelsea (ENG)",
+    "dateTime": { "$date": "2025-06-25T01:00:00.000Z" },
+    "matchNumber": 40,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Borussia Dortmund (GER)",
+    "awayTeamName": "Ulsan HD (KOR)",
+    "dateTime": { "$date": "2025-06-25T19:00:00.000Z" },
+    "matchNumber": 41,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "TQL Stadium, Cincinnati",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Mamelodi Sundowns (RSA)",
+    "awayTeamName": "Fluminese (BRA)",
+    "dateTime": { "$date": "2025-06-25T19:00:00.000Z" },
+    "matchNumber": 42,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Internazionale (ITA)",
+    "awayTeamName": "River Plate (ARG)",
+    "dateTime": { "$date": "2025-06-25T22:00:00.000Z" },
+    "matchNumber": 43,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Lumen Field, Seattle",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Urawa Red Diamonds (JAP)",
+    "awayTeamName": "Monterrey (MEX)",
+    "dateTime": { "$date": "2025-06-25T22:00:00.000Z" },
+    "matchNumber": 44,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "location": "Rose Bowl, Los Angeles",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Juventus (ITA)",
+    "awayTeamName": "Manchester City (ENG)",
+    "dateTime": { "$date": "2025-06-26T19:00:00.000Z" },
+    "matchNumber": 45,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Camping World Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Wydad (MOR)",
+    "awayTeamName": "Al Ain (UAE)",
+    "dateTime": { "$date": "2025-06-26T19:00:00.000Z" },
+    "matchNumber": 46,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "location": "Audi Field, Washington, D.C.",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Al Hilal (SAU)",
+    "awayTeamName": "Pachuca (MEX)",
+    "dateTime": { "$date": "2025-06-27T00:00:00.000Z" },
+    "matchNumber": 47,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "GEODIS Park, Nashville",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Salzburg (AUT)",
+    "awayTeamName": "Real Madrid (ESP)",
+    "dateTime": { "$date": "2025-06-27T01:00:00.000Z" },
+    "matchNumber": 48,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group A Winner",
+    "awayTeamName": "Group B Runner Up",
+    "dateTime": { "$date": "2025-06-28T16:00:00.000Z" },
+    "matchNumber": 51,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "A",
+        "position": 1
+      },
+      "away": {
+        "groupName": "B",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 49
+    },
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group C Winner",
+    "awayTeamName": "Group D Runner Up",
+    "dateTime": { "$date": "2025-06-28T20:00:00.000Z" },
+    "matchNumber": 52,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "C",
+        "position": 1
+      },
+      "away": {
+        "groupName": "D",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 50
+    },
+    "location": "Bank of America Stadium, Charlotte",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group B Winner",
+    "awayTeamName": "Group A Runner Up",
+    "dateTime": { "$date": "2025-06-29T16:00:00.000Z" },
+    "matchNumber": 53,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "B",
+        "position": 1
+      },
+      "away": {
+        "groupName": "A",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 51
+    },
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group D Winner",
+    "awayTeamName": "Group C Runner Up",
+    "dateTime": { "$date": "2025-06-29T20:00:00.000Z" },
+    "matchNumber": 54,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "D",
+        "position": 1
+      },
+      "away": {
+        "groupName": "C",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 52
+    },
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group E Winner",
+    "awayTeamName": "Group F Runner Up",
+    "dateTime": { "$date": "2025-06-30T19:00:00.000Z" },
+    "matchNumber": 49,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "E",
+        "position": 1
+      },
+      "away": {
+        "groupName": "F",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 53
+    },
+    "location": "Bank of America Stadium, Charlotte",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group G Winner",
+    "awayTeamName": "Group H Runner Up",
+    "dateTime": { "$date": "2025-07-01T01:00:00.000Z" },
+    "matchNumber": 50,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "G",
+        "position": 1
+      },
+      "away": {
+        "groupName": "H",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 54
+    },
+    "location": "Camping World Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group H Winner",
+    "awayTeamName": "Group G Runner Up",
+    "dateTime": { "$date": "2025-07-01T19:00:00.000Z" },
+    "matchNumber": 55,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "H",
+        "position": 1
+      },
+      "away": {
+        "groupName": "G",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 55
+    },
+    "location": "Hard Rock Stadium, Miami",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Group F Winner",
+    "awayTeamName": "Group E Runner Up",
+    "dateTime": { "$date": "2025-07-02T01:00:00.000Z" },
+    "matchNumber": 56,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "F",
+        "position": 1
+      },
+      "away": {
+        "groupName": "E",
+        "position": 2
+      }
+    },
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 53",
+    "awayTeamName": "Winner 54",
+    "dateTime": { "$date": "2025-07-04T19:00:00.000Z" },
+    "matchNumber": 57,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 53
+      },
+      "away": {
+        "matchNumber": 54
+      }
+    },
+    "location": "Camping World Stadium, Orlando",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 49",
+    "awayTeamName": "Winner 50",
+    "dateTime": { "$date": "2025-07-05T01:00:00.000Z" },
+    "matchNumber": 58,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 49
+      },
+      "away": {
+        "matchNumber": 50
+      }
+    },
+    "location": "Lincoln Financial Field, Philadelphia",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 51",
+    "awayTeamName": "Winner 52",
+    "dateTime": { "$date": "2025-07-05T16:00:00.000Z" },
+    "matchNumber": 59,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 51
+      },
+      "away": {
+        "matchNumber": 52
+      }
+    },
+    "location": "Mercedes-Benz Stadium, Atlanta",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 55",
+    "awayTeamName": "Winner 56",
+    "dateTime": { "$date": "2025-07-05T20:00:00.000Z" },
+    "matchNumber": 60,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 55
+      },
+      "away": {
+        "matchNumber": 56
+      }
+    },
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 57",
+    "awayTeamName": "Winner 58",
+    "dateTime": { "$date": "2025-07-08T19:00:00.000Z" },
+    "matchNumber": 61,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 57
+      },
+      "away": {
+        "matchNumber": 58
+      }
+    },
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 59",
+    "awayTeamName": "Winner 60",
+    "dateTime": { "$date": "2025-07-09T19:00:00.000Z" },
+    "matchNumber": 62,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 59
+      },
+      "away": {
+        "matchNumber": 60
+      }
+    },
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Winner 61",
+    "awayTeamName": "Winner 62",
+    "dateTime": { "$date": "2025-07-13T19:00:00.000Z" },
+    "matchNumber": 63,
+    "round": 4,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 61
+      },
+      "away": {
+        "matchNumber": 62
+      }
+    },
+    "location": "MetLife Stadium, New Jersey",
+    "bracketCode": "clubWorldCup2025"
+  }
+]

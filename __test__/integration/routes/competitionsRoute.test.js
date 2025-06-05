@@ -10,9 +10,11 @@ const {
   testResponseText,
   testObjectID,
   deleteAllData,
+  cleanup,
 } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competitionModel");
 const mongoose = require("mongoose");
+const { start } = require("../../../index");
 
 const endpoint = "/api/v1/competitions";
 let server;
@@ -32,16 +34,20 @@ describe("competitionsRoute", () => {
     await Competition.collection.insertMany(newCompetitions);
   };
 
-  describe("GET /active", () => {
-    beforeAll(async () => {
-      if (process.env.NODE_ENV === "test") server = require("../../../index");
-      else throw "Not in test environment";
-    });
-    afterAll(() => {
-      server.close();
-      deleteAllData();
-    });
+  beforeAll(async () => {
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
+  });
+  afterAll(async () => {
+    await cleanup(server);
+  });
 
+  afterEach(async () => {
+    await deleteAllData();
+  });
+
+  describe("GET /active", () => {
     const exec = async () => {
       return await request(server).get(endpoint + "/active");
     };
@@ -60,15 +66,6 @@ describe("competitionsRoute", () => {
     });
   });
   describe("GET /expired", () => {
-    beforeAll(async () => {
-      if (process.env.NODE_ENV === "test") server = require("../../../index");
-      else throw "Not in test environment";
-    });
-    afterAll(() => {
-      server.close();
-      deleteAllData();
-    });
-
     const exec = async () => {
       return await request(server).get(endpoint + "/expired");
     };
@@ -86,15 +83,6 @@ describe("competitionsRoute", () => {
     });
   });
   describe("GET /single/:id", () => {
-    beforeAll(async () => {
-      if (process.env.NODE_ENV === "test") server = require("../../../index");
-      else throw "Not in test environment";
-    });
-    afterAll(() => {
-      server.close();
-      deleteAllData();
-    });
-
     const exec = async (id) => {
       return await request(server).get(endpoint + "/single/" + id);
     };

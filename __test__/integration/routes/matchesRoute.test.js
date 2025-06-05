@@ -12,11 +12,13 @@ const {
   getToken,
   testResponseText,
   testObjectID,
+  cleanup,
 } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competitionModel");
 const { Match } = require("../../../models/matchModel");
 const { User } = require("../../../models/userModel");
 const mongoose = require("mongoose");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/matches";
 let server;
@@ -24,16 +26,16 @@ let server;
 describe("matchesRoute", () => {
   const userId = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
-  beforeAll(() => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+  beforeAll(async () => {
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
-
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   const insertData = async () => {

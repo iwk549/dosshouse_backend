@@ -12,22 +12,25 @@ const {
   getToken,
   insertPredictions,
   insertGroups,
+  cleanup,
 } = require("../../helperFunctions");
 const { users, header } = require("../../testData");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/users";
 let server;
 
 describe("usersRoute", () => {
   beforeAll(async () => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   const insertUsers = async () => {

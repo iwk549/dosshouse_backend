@@ -11,13 +11,8 @@ if (process.env.NODE_ENV !== "test")
     lifetime: Infinity,
     start,
   });
-else {
-  /* eslint-disable */
-  console.log("Testing in progress...");
-  start();
-}
 
-function start() {
+async function start() {
   let server;
   const express = require("express");
   const app = express();
@@ -34,5 +29,8 @@ function start() {
       logger.log("info", `Listening on port ${PORT}...`);
     });
   } else server = app.listen();
-  module.exports = server;
+
+  return server;
 }
+
+module.exports.start = start;
