@@ -8,14 +8,23 @@ const { Version } = require("../models/versionModel");
 const { users, competitions, predictions } = require("./testData");
 const mongoose = require("mongoose");
 
-function deleteAllData() {
-  User.collection.deleteMany();
-  Prediction.collection.deleteMany();
-  Competition.collection.deleteMany();
-  Group.collection.deleteMany();
-  Match.collection.deleteMany();
-  Result.collection.deleteMany();
-  Version.collection.deleteMany();
+async function cleanup(server) {
+  if (server) await server.close();
+  try {
+    await mongoose.connection.close();
+  } catch (error) {
+    //
+  }
+}
+
+async function deleteAllData() {
+  await User.collection.deleteMany();
+  await Prediction.collection.deleteMany();
+  await Competition.collection.deleteMany();
+  await Group.collection.deleteMany();
+  await Match.collection.deleteMany();
+  await Result.collection.deleteMany();
+  await Version.collection.deleteMany();
 }
 
 function testResponseText(responseText, expectedToContain) {
@@ -133,3 +142,4 @@ module.exports.pickADate = pickADate;
 module.exports.testAuth = testAuth;
 module.exports.testObjectID = testObjectID;
 module.exports.deleteAllData = deleteAllData;
+module.exports.cleanup = cleanup;

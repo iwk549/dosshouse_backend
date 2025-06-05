@@ -8,12 +8,14 @@ const {
   testObjectID,
   insertCompetition,
   insertPredictions,
+  cleanup,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/predictionModel");
 const { Group } = require("../../../models/groupModel");
 const mongoose = require("mongoose");
 const { max, pickADate } = require("../../../utils/allowables");
 const { User } = require("../../../models/userModel");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/predictions";
 let server;
@@ -22,12 +24,13 @@ describe("predictionsRoute", () => {
   const userID = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
   let prediction;
-  beforeAll(() => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+  beforeAll(async () => {
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
   beforeEach(async () => {
     prediction = { ...predictions[0] };
@@ -35,8 +38,8 @@ describe("predictionsRoute", () => {
     prediction.userID = userID;
     prediction.name = "New Bracket";
   });
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   const raiseInsertCompetition = async (daysUntilSubmissionDeadline) => {

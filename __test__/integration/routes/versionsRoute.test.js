@@ -10,22 +10,25 @@ const {
   deleteAllData,
   testAuth,
   getToken,
+  cleanup,
 } = require("../../helperFunctions");
 const { users, header, versions } = require("../../testData");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/versions";
 let server;
 
-describe("usersRoute", () => {
+describe("versionsRoute", () => {
   beforeAll(async () => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   const user = { ...users[0] };

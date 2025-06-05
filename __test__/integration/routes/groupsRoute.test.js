@@ -8,12 +8,14 @@ const {
   testObjectID,
   insertGroups,
   insertCompetition,
+  cleanup,
 } = require("../../helperFunctions");
 const { Group } = require("../../../models/groupModel");
 const { Prediction } = require("../../../models/predictionModel");
 const { User } = require("../../../models/userModel");
 const mongoose = require("mongoose");
 const { reservedGroupNames, max } = require("../../../utils/allowables");
+const { start } = require("../../..");
 
 const endpoint = "/api/v1/groups";
 let server;
@@ -22,14 +24,15 @@ describe("groupsRoute", () => {
   const userID = mongoose.Types.ObjectId();
   const competitionID = mongoose.Types.ObjectId();
   beforeAll(async () => {
-    if (process.env.NODE_ENV === "test") server = require("../../../index");
-    else throw "Not in test environment";
+    if (process.env.NODE_ENV === "test") {
+      server = await start();
+    } else throw "Not in test environment";
   });
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await cleanup(server);
   });
-  afterEach(() => {
-    deleteAllData();
+  afterEach(async () => {
+    await deleteAllData();
   });
 
   describe("POST /", () => {
