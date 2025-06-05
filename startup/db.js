@@ -6,6 +6,7 @@ module.exports = async function (env) {
   if (env !== "test") db = config.get("db");
   else db = "mongodb://localhost/dosshouse_tests";
 
+  mongoose.set("strictQuery", true);
   mongoose
     .connect(db, {
       useNewUrlParser: true,
