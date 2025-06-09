@@ -58,14 +58,7 @@ const competitionMongooseSchema = new mongoose.Schema({
         description: { type: String, required: true },
         positionInGroup: { type: Number, required: true },
         teamsToIncludeInBracket: { type: Number, required: true },
-        scoring: {
-          type: Object,
-          keys: {
-            perTeam: { type: Number, required: true },
-            bonus: { type: Number, required: true },
-          },
-          required: false,
-        },
+        scoring: groupScoringSchema,
         matrix: {
           type: Map,
           of: new mongoose.Schema({
