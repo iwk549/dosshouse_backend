@@ -83,6 +83,7 @@ const competitions = [
         points: 10,
       },
     ],
+    groupMatrix: [{ key: "thirdPlaceRank" }],
   },
   {
     _id: mongoose.Types.ObjectId("6252ebe1d595c7d6a7a76dee"),

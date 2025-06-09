@@ -2,6 +2,14 @@ const Joi = require("joi");
 Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 
+const groupScoringSchema = {
+  type: Object,
+  keys: {
+    perTeam: { type: Number, required: true },
+    bonus: { type: Number, required: true },
+  },
+  required: false,
+};
 const competitionMongooseSchema = new mongoose.Schema({
   code: { type: String, required: true },
   name: { type: String, required: true },
@@ -12,14 +20,7 @@ const competitionMongooseSchema = new mongoose.Schema({
   scoring: {
     type: Object,
     keys: {
-      group: {
-        type: Object,
-        keys: {
-          perTeam: { type: Number, required: true },
-          bonus: { type: Number, required: true },
-        },
-        required: false,
-      },
+      group: groupScoringSchema,
       playoff: [
         {
           type: Object,
@@ -46,6 +47,36 @@ const competitionMongooseSchema = new mongoose.Schema({
         info: { type: Object, required: false },
       },
       required: true,
+    },
+  ],
+  groupMatrix: [
+    {
+      type: Object,
+      required: false,
+      keys: {
+        name: { type: String, required: true },
+        description: { type: String, required: true },
+        positionInGroup: { type: Number, required: true },
+        teamsToIncludeInBracket: { type: Number, required: true },
+        scoring: {
+          type: Object,
+          keys: {
+            perTeam: { type: Number, required: true },
+            bonus: { type: Number, required: true },
+          },
+          required: false,
+        },
+        matrix: {
+          type: Map,
+          of: new mongoose.Schema({
+            type: Map,
+            of: new mongoose.Schema({
+              groupName: { type: String, required: true },
+              position: { type: Number, required: true },
+            }),
+          }),
+        },
+      },
     },
   ],
   prize: {
