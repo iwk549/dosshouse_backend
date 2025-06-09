@@ -12,7 +12,7 @@ router.get("/:id", [validateObjectID], async (req, res) => {
   if (!competition) return res.status(404).send("Competition not found");
   const matches = await Match.find({
     bracketCode: competition.code,
-  }).sort("groupName 1 dateTime 1");
+  }).sort({ groupName: 1, dateTime: 1, matchNumber: 1 });
   res.send(matches);
 });
 
@@ -36,7 +36,7 @@ router.put("/", [auth, adminCheck], async (req, res) => {
             awayTeamPKs: match.awayTeamPKs,
             matchAccepted: match.matchAccepted,
             location: match.location,
-            dateTime: match.dateTime.$date,
+            dateTime: match.dateTime?.$date,
           },
         },
       },

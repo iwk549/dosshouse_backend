@@ -19,21 +19,28 @@ function calculatePrediction(prediction, result, competition, matches) {
         (groupResult) => groupResult.groupName === groupPrediction.groupName
       );
       if (groupResult) {
+        // find if this group is part of a matrix
+        const groupMatrix =
+          competition.groupMatrix?.length &&
+          competition.groupMatrix.find((g) => g.key === groupResult.groupName);
+        const scoring =
+          (groupMatrix && groupMatrix.scoring) || competition.scoring.group;
         groupResult.teamOrder.forEach((resultTeam, idx) => {
+          // if part of groupMatrix need to check against group name
+          const checkAgainst = groupMatrix
+            ? groupPrediction.teamOrder[idx]?.split(":")[0]
+            : groupPrediction.teamOrder[idx];
           // add the per team point amount for each correctly placed team
-          if (resultTeam === groupPrediction.teamOrder[idx]) {
-            thisGroupPoints += competition.scoring.group.perTeam;
+          if (resultTeam === checkAgainst) {
+            thisGroupPoints += scoring.perTeam;
             thisGroupCorrectPicks++;
           }
         });
 
         // if max points were acheived for this group
         // meaning all teams were in the correct place, add the bonus points
-        if (
-          thisGroupPoints ===
-          groupResult.teamOrder.length * competition.scoring.group.perTeam
-        )
-          thisGroupPoints += competition.scoring.group.bonus;
+        if (thisGroupPoints === groupResult.teamOrder.length * scoring.perTeam)
+          thisGroupPoints += scoring.bonus;
       }
       points.group = {
         points: points.group.points + thisGroupPoints,

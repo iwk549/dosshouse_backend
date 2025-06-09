@@ -14,6 +14,7 @@ describe("calculations", () => {
       group: [
         { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
         { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
+        { groupName: "thirdPlaceRank", teamOrder: ["A", "B", "C"] },
       ],
       playoff: [
         { round: 1, teams: ["a", "b", "c", "d"] },
@@ -30,44 +31,32 @@ describe("calculations", () => {
       return calculatePrediction(prediction, result, competition, matches);
     };
 
-    // const setResult = (matchLevel = ["group", "playoff", "misc"]) => {
-    //   let result = { ...results[0] };
-    //   if (matchLevel.includes("group")) {
-    //     result.group = [
-    //       { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
-    //       { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
-    //     ];
-    //   } else delete result.group;
-    //   if (matchLevel.includes("playoff")) {
-    //     result.playoff = [
-    //       { round: 1, teams: ["a", "b", "c", "d"] },
-    //       { round: 2, teams: ["a", "c"] },
-    //     ];
-    //   } else delete result.playoff;
-    //   if (matchLevel.includes("misc")) {
-    //     result.misc = {
-    //       winner: "a",
-    //       thirdPlace: "b",
-    //       discipline: "a",
-    //       topScorer: "a",
-    //     };
-    //   } else delete result.misc;
-
-    //   return result;
-    // };
-
     const setPrediction = (
-      matchLevel = ["group", "playoff", "misc"],
+      matchLevel = ["group", "groupMatrix", "playoff", "misc"],
       groupResult,
       playoffResult,
-      miscResult
+      miscResult,
+      groupMatrixResult
     ) => {
       let prediction = { ...predictions[0] };
-      if (matchLevel.includes("group")) {
-        prediction.groupPredictions = groupResult || [
-          { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
-          { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
-        ];
+      if (matchLevel.includes("group") || matchLevel.includes("groupMatrix")) {
+        if (matchLevel.includes("group"))
+          prediction.groupPredictions = groupResult || [
+            { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
+            { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
+          ];
+        if (matchLevel.includes("groupMatrix")) {
+          const groupMatrix = groupMatrixResult || [
+            {
+              groupName: "thirdPlaceRank",
+              teamOrder: ["A: a", "B: b", "C: c"],
+            },
+          ];
+          prediction.groupPredictions = [
+            ...prediction.groupPredictions,
+            ...groupMatrix,
+          ];
+        }
       } else delete prediction.groupPredictions;
       if (matchLevel.includes("playoff")) {
         prediction.playoffPredictions = playoffResult || [
@@ -102,6 +91,35 @@ describe("calculations", () => {
         expect(res.points.group.correctPicks).toBe(8);
         expect(res.totalPoints).toBe(res.points.group.points);
       });
+      it("should calculate groupMatrix points correctly", () => {
+        const prediction = setPrediction(["groupMatrix"]);
+        const res = exec(prediction, result, competitions[0]);
+
+        // 2 points for each correct team position
+        // 1 bonus point
+        expect(res.points.group.points).toBe(4);
+        expect(res.points.group.correctPicks).toBe(3);
+        expect(res.totalPoints).toBe(res.points.group.points);
+      });
+      it("should calculate groupMatrix points correctly when teams do not match (check only group name)", () => {
+        const prediction = setPrediction(["groupMatrix"], null, null, null, [
+          {
+            groupName: "thirdPlaceRank",
+            teamOrder: [
+              "A: some team",
+              "B: non matching team",
+              "C: other team",
+            ],
+          },
+        ]);
+        const res = exec(prediction, result, competitions[0]);
+
+        // 2 points for each correct team position
+        // 1 bonus point
+        expect(res.points.group.points).toBe(4);
+        expect(res.points.group.correctPicks).toBe(3);
+        expect(res.totalPoints).toBe(res.points.group.points);
+      });
       it("should calculate playoff points correctly", () => {
         const prediction = setPrediction(["playoff"]);
         const res = exec(prediction, result, competitions[0]);
@@ -125,12 +143,17 @@ describe("calculations", () => {
         );
       });
       it("should calculate the entire prediction correctly", () => {
-        const prediction = setPrediction(["group", "playoff", "misc"]);
+        const prediction = setPrediction([
+          "group",
+          "groupMatrix",
+          "playoff",
+          "misc",
+        ]);
         const res = exec(prediction, result, competitions[0]);
 
         // max points from each previous test expected
-        expect(res.points.group.points).toBe(10);
-        expect(res.points.group.correctPicks).toBe(8);
+        expect(res.points.group.points).toBe(14);
+        expect(res.points.group.correctPicks).toBe(11);
         expect(res.points.playoff.points).toBe(16);
         expect(res.points.playoff.correctPicks).toBe(6);
         expect(res.points.champion.points).toBe(32);
@@ -159,6 +182,20 @@ describe("calculations", () => {
         expect(res.points.group.points).toBe(4);
         expect(res.points.group.correctPicks).toBe(4);
         expect(res.totalPoints).toBe(4);
+      });
+      it("should calculate partial groupMatrix picks correctly", () => {
+        const prediction = setPrediction(["groupMatrix"], null, null, null, [
+          {
+            groupName: "thirdPlaceRank",
+            teamOrder: ["B: qqq", "A: xxx", "C: zzz"],
+          },
+        ]);
+        const res = exec(prediction, result, competitions[0]);
+
+        // 1 points, 1 for each correct pick, no bonus
+        expect(res.points.group.points).toBe(1);
+        expect(res.points.group.correctPicks).toBe(1);
+        expect(res.totalPoints).toBe(1);
       });
       it("should calculate partial playoff picks", () => {
         const prediction = setPrediction(["playoff"], null, [
@@ -229,19 +266,48 @@ describe("calculations", () => {
           { name: "discipline", points: 5 },
           { name: "topScorer", points: 18 },
         ];
+        competition.groupMatrix = [
+          {
+            key: "thirdPlaceRank",
+            scoring: {
+              perTeam: 3,
+              bonus: 3,
+            },
+          },
+        ];
         return competition;
       };
 
       it("should calculate points correctly based off competition settings", () => {
-        const prediction = setPrediction(["group", "playoff", "misc"]);
+        const prediction = setPrediction([
+          "group",
+          "groupMatrix",
+          "playoff",
+          "misc",
+        ]);
         const competition = setCompetition();
         const res = exec(prediction, result, competition);
 
-        expect(res.points.group.points).toBe(
-          competition.scoring.group.perTeam * res.points.group.correctPicks +
-            competition.scoring.group.bonus * 2
+        const matrixPrediction = prediction.groupPredictions.find(
+          (g) => g.groupName === competition.groupMatrix[0].key
         );
-        expect(res.points.group.correctPicks).toBe(8);
+
+        const regularGroupPoints =
+          competition.scoring.group.perTeam *
+            (res.points.group.correctPicks -
+              matrixPrediction.teamOrder.length) +
+          competition.scoring.group.bonus *
+            (prediction.groupPredictions.length - 1);
+
+        const matrixGroupPoints =
+          competition.groupMatrix[0].scoring.perTeam *
+            matrixPrediction.teamOrder.length +
+          competition.groupMatrix[0].scoring.bonus;
+
+        expect(res.points.group.points).toBe(
+          regularGroupPoints + matrixGroupPoints
+        );
+        expect(res.points.group.correctPicks).toBe(11);
         expect(res.points.playoff.points).toBe(
           competition.scoring.playoff.find((p) => p.roundNumber === 1).points *
             4 +
