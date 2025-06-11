@@ -363,11 +363,11 @@ async function addPredictionToGroup(req, res, next) {
       status: 404,
       message: "This prediction is already a member of the requested group",
     });
-  const result = await Prediction.updateOne(
+  await Prediction.updateOne(
     { _id: req.params.id },
     { $push: { groups: group._id } }
   );
-  res.send(result);
+  res.send(group._id);
 }
 
 async function removePredictionFromGroup(req, res, next) {

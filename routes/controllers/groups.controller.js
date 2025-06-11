@@ -12,7 +12,7 @@ const groupNameIsReserved = (groupName) => {
 function createGroupLink(group, competitionID) {
   return (
     url +
-    "/predictions?type=groupLink&groupID=" +
+    "/competitions?type=groupLink&groupID=" +
     group._id +
     "&groupPasscode=" +
     group.passcode +
