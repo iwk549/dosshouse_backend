@@ -10,9 +10,9 @@ const {
   insertCompetition,
   cleanup,
 } = require("../../helperFunctions");
-const { Group } = require("../../../models/groupModel");
-const { Prediction } = require("../../../models/predictionModel");
-const { User } = require("../../../models/userModel");
+const { Group } = require("../../../models/group.model");
+const { Prediction } = require("../../../models/prediction.model");
+const { User } = require("../../../models/user.model");
 const mongoose = require("mongoose");
 const { reservedGroupNames, max } = require("../../../utils/allowables");
 const { start } = require("../../..");

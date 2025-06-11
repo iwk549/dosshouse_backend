@@ -1,4 +1,4 @@
-const { User } = require("../models/userModel");
+const { User } = require("../models/user.model");
 
 async function adminCheck(req, res, next) {
   try {
@@ -7,7 +7,7 @@ async function adminCheck(req, res, next) {
   } catch (error) {
     //
   }
-  res.status(403).send("Access Denied");
+  next({ status: 403, message: "Access Denied" });
 }
 
 module.exports.adminCheck = adminCheck;

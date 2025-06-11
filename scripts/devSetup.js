@@ -1,5 +1,8 @@
-const { User } = require("../models/userModel");
-const { Version, dosshouseVersionStringID } = require("../models/versionModel");
+const { User } = require("../models/user.model");
+const {
+  Version,
+  dosshouseVersionStringID,
+} = require("../models/version.model");
 const { saltAndHashPassword } = require("../utils/users");
 
 require("../startup/db")(process.env.NODE_ENV);

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
-const { User } = require("../../../models/userModel");
+const { User } = require("../../../models/user.model");
 const {
   Version,
   dosshouseVersionStringID,
-} = require("../../../models/versionModel");
+} = require("../../../models/version.model");
 const {
   testResponseText,
   deleteAllData,

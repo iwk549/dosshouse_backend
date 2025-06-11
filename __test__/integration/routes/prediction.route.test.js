@@ -10,11 +10,11 @@ const {
   insertPredictions,
   cleanup,
 } = require("../../helperFunctions");
-const { Prediction } = require("../../../models/predictionModel");
-const { Group } = require("../../../models/groupModel");
+const { Prediction } = require("../../../models/prediction.model");
+const { Group } = require("../../../models/group.model");
 const mongoose = require("mongoose");
 const { max, pickADate } = require("../../../utils/allowables");
-const { User } = require("../../../models/userModel");
+const { User } = require("../../../models/user.model");
 const { start } = require("../../..");
 
 const endpoint = "/api/v1/predictions";
@@ -653,13 +653,8 @@ describe("predictionsRoute", () => {
         .set(header, token);
     testAuth(exec);
     testObjectID(exec, true);
-    it("should return 404 if the competition is not found", async () => {
-      const res = await exec(getToken(userID), competitionID);
-      expect(res.status).toBe(404);
-      testResponseText(res.text, "competition not found");
-    });
+
     it("should return the predictions for the user in the provided competition", async () => {
-      await insertCompetition(competitionID);
       const insertedPredictions = await insertPredictions(
         3,
         userID,

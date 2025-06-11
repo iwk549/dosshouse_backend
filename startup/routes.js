@@ -1,12 +1,12 @@
 const error = require("../middleware/errors");
 const express = require("express");
-const matches = require("../routes/matchesRoute");
-const competitions = require("../routes/competitionsRoute");
-const users = require("../routes/usersRoute");
-const predictions = require("../routes/predictionsRoute");
-const results = require("../routes/resultsRoute");
-const groups = require("../routes/groupsRoute");
-const versions = require("../routes/versionsRoute");
+const matches = require("../routes/routers/match.route");
+const competitions = require("../routes/routers/competition.route");
+const users = require("../routes/routers/user.controller");
+const predictions = require("../routes/routers/prediction.route");
+const results = require("../routes/routers/result.route");
+const groups = require("../routes/routers/group.route");
+const versions = require("../routes/routers/version.route");
 const cors = require("cors");
 const { highLimiter } = require("../middleware/rateLimiter");
 
