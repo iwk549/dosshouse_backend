@@ -3,3 +3,4 @@ coverage/
 .env.local
 *.log
 *do_not_commit*
+uploads/

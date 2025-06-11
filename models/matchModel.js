@@ -32,8 +32,44 @@ const matchMongooseSchema = new mongoose.Schema({
       matchNumber: { type: Number, required: false },
     },
   },
+  metadata: { type: Object, required: false },
 });
+
+const getTeamsFromSchema = Joi.object().required().keys({
+  position: Joi.number().optional(),
+  groupName: Joi.string().optional(),
+  matchNumber: Joi.number().optional(),
+});
+const matchSchema = {
+  dateTime: Joi.date().optional(),
+  homeTeamName: Joi.string().required(),
+  homeTeamGoals: Joi.number().optional(),
+  homeTeamPKs: Joi.number().optional(),
+  homeTeamAbbreviation: Joi.string().optional(),
+  awayTeamName: Joi.string().required(),
+  awayTeamGoals: Joi.number().optional(),
+  awayTeamPKs: Joi.number().optional(),
+  awayTeamAbbreviation: Joi.string().optional(),
+  matchAccepted: Joi.boolean().required(),
+  location: Joi.string().optional(),
+  type: Joi.string().required(),
+  groupName: Joi.string().optional(),
+  round: Joi.number().required(),
+  matchNumber: Joi.number().required(),
+  sport: Joi.string().required(),
+  bracketCode: Joi.string().required(),
+  getTeamsFrom: Joi.object().optional().keys({
+    home: getTeamsFromSchema,
+    away: getTeamsFromSchema,
+  }),
+  metadata: Joi.object().optional(),
+};
+
+function validateMatch(match) {
+  return Joi.object(matchSchema).validate(match);
+}
 
 const Match = mongoose.model("Match", matchMongooseSchema);
 
 exports.Match = Match;
+exports.validateMatch = validateMatch;
