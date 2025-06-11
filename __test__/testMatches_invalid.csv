@@ -1,0 +1,8 @@
+bracketCode,matchAccepted,date,time,location,homeTeamName,awayTeamName,matchNumber,round,sport,type,groupName,getTeamsFrom.home.groupName,getTeamsFrom.home.position,getTeamsFrom.home.matchNumber,getTeamsFrom.away.groupName,getTeamsFrom.away.position,getTeamsFrom.away.matchNumber,metadata.matchNumber
+testBracket1,FALSE,1/1/2025,9:00,Los Angeles,,Team B,1,1,Soccer,Group,A,,,,,,,
+testBracket1,FALSE,1/1/2025,11:00,Miami,Team C,Team D,2,1,,,A,,,,,,,
+testBracket1,FALSE,1/2/2025,9:00,New York,Team E,Team F,3,1,Soccer,Group,B,,,,,,,
+testBracket1,FALSE,1/2/2025,11:00,Philadelphia,Team G,Team H,,1,Soccer,Group,B,,,,,,,
+testBracket1,FALSE,1/3/2025,9:00,Los Angeles,Group A Winner,,5,1,Soccer,Playoff,,A,1,,B,2,,5
+testBracket1,FALSE,1/3/2025,11:00,Philadelphia,Group B Winner,Group A Runner Up,6,,Soccer,Playoff,,B,1,,A,2,,6
+testBracket1,FALSE,1/4/2025,10:00,Miami,Winner 5,Winner 6,7,2,Soccer,Playoff,,,,5,,,6,7

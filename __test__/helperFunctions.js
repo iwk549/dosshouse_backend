@@ -33,11 +33,24 @@ function testResponseText(responseText, expectedToContain) {
   );
 }
 
+function testReponse(res, expectedStatus, expectedText) {
+  expect(res.status).toBe(expectedStatus);
+  if (expectedText) testResponseText(res.text, expectedText);
+}
+
 function getToken(_id, user, role = "") {
   const newUser = new User(user || users[0]);
   newUser._id = _id || newUser._id;
   if (role) newUser.role = role;
   return newUser.generateAuthToken();
+}
+
+async function insertUser(userID, override = {}) {
+  let user = { ...users[0], ...override };
+  user._id = userID;
+  await User.collection.insertOne(user);
+
+  return user;
 }
 
 async function insertCompetition(competitionID, competition) {
@@ -133,8 +146,10 @@ function testObjectID(executionFunction, needsToken, tokenRole, user) {
   });
 }
 
+module.exports.testReponse = testReponse;
 module.exports.testResponseText = testResponseText;
 module.exports.getToken = getToken;
+module.exports.insertUser = insertUser;
 module.exports.insertCompetition = insertCompetition;
 module.exports.insertPredictions = insertPredictions;
 module.exports.insertGroups = insertGroups;
