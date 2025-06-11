@@ -1,9 +1,3 @@
-/* 
-The competitions route does not allow for updating or deleting
-Tests can get finicky when trying to manually insert and delete data quickly with multiple tests
-Each describe block must have it's own beforeAll and afterAll calls to ensure data validity
-*/
-
 const request = require("supertest");
 const { competitions } = require("../../testData");
 const {
@@ -12,7 +6,7 @@ const {
   deleteAllData,
   cleanup,
 } = require("../../helperFunctions");
-const { Competition } = require("../../../models/competitionModel");
+const { Competition } = require("../../../models/competition.model");
 const mongoose = require("mongoose");
 const { start } = require("../../../index");
 

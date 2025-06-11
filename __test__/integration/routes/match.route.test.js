@@ -16,9 +16,9 @@ const {
   insertUser,
   testReponse,
 } = require("../../helperFunctions");
-const { Competition } = require("../../../models/competitionModel");
-const { Match } = require("../../../models/matchModel");
-const { User } = require("../../../models/userModel");
+const { Competition } = require("../../../models/competition.model");
+const { Match } = require("../../../models/match.model");
+const { User } = require("../../../models/user.model");
 const mongoose = require("mongoose");
 const { start } = require("../../..");
 const fs = require("fs");

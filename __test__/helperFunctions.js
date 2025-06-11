@@ -1,10 +1,10 @@
-const { User } = require("../models/userModel");
-const { Prediction } = require("../models/predictionModel");
-const { Competition } = require("../models/competitionModel");
-const { Group } = require("../models/groupModel");
-const { Match } = require("../models/matchModel");
-const { Result } = require("../models/resultModel");
-const { Version } = require("../models/versionModel");
+const { User } = require("../models/user.model");
+const { Prediction } = require("../models/prediction.model");
+const { Competition } = require("../models/competition.model");
+const { Group } = require("../models/group.model");
+const { Match } = require("../models/match.model");
+const { Result } = require("../models/result.model");
+const { Version } = require("../models/version.model");
 const { users, competitions, predictions } = require("./testData");
 const mongoose = require("mongoose");
 

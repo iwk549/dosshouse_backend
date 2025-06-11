@@ -10,10 +10,10 @@ const {
   cleanup,
 } = require("../../helperFunctions");
 const mongoose = require("mongoose");
-const { Result } = require("../../../models/resultModel");
-const { User } = require("../../../models/userModel");
-const { Competition } = require("../../../models/competitionModel");
-const { Prediction } = require("../../../models/predictionModel");
+const { Result } = require("../../../models/result.model");
+const { User } = require("../../../models/user.model");
+const { Competition } = require("../../../models/competition.model");
+const { Prediction } = require("../../../models/prediction.model");
 const { start } = require("../../..");
 
 const endpoint = "/api/v1/results";

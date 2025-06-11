@@ -5,47 +5,41 @@ const {
   validateLogin,
   validateEdit,
   validateEmail,
-} = require("../models/userModel");
-const express = require("express");
-const router = express.Router();
-const { loginLimiter, lowLimiter } = require("../middleware/rateLimiter");
+} = require("../../models/user.model");
 const {
   saltAndHashPassword,
   trimEmail,
   comparePasswords,
-} = require("../utils/users");
-const auth = require("../middleware/auth");
+} = require("../../utils/users");
 const mongoose = require("mongoose");
-const { sendPasswordReset } = require("../utils/emailing");
-const { pickADate } = require("../utils/allowables");
-const transactions = require("../utils/transactions");
-const { Group } = require("../models/groupModel");
+const { sendPasswordReset } = require("../../utils/emailing");
+const { pickADate } = require("../../utils/allowables");
+const transactions = require("../../utils/transactions");
+const { Group } = require("../../models/group.model");
 
-// do not implement rate limiter during testing
-const nonTestingRatelimiter =
-  process.env.NODE_ENV !== "test" ? [loginLimiter] : [];
-
-router.post("/", nonTestingRatelimiter, async (req, res) => {
+async function createNewAccount(req, res, next) {
   req.body.email = trimEmail(req.body.email);
   delete req.body.role;
   delete req.body.settings;
   const existingAccount = await User.findOne({ email: req.body.email });
   if (existingAccount)
-    return res
-      .status(400)
-      .send(
-        "You already have an account using this email. Please log in with your password."
-      );
+    return next({
+      status: 400,
+      message:
+        "You already have an account using this email. Please log in with your password.",
+    });
+
   const ex = validateUser(req.body);
-  if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  if (ex.error)
+    return next({ status: 400, message: ex.error.details[0].message });
   // check password is valid
   const pw = validatePassword(req.body.password);
   if (pw.error) {
-    return res
-      .status(400)
-      .send(
-        "Password must contain at least one lower case, one upper case and one number."
-      );
+    return next({
+      status: 400,
+      message:
+        "Password must contain at least one lower case, one upper case and one number.",
+    });
   }
   req.body.password = await saltAndHashPassword(req.body.password);
   req.body.lastActive = new Date();
@@ -53,9 +47,9 @@ router.post("/", nonTestingRatelimiter, async (req, res) => {
   await user.save();
   const token = user.generateAuthToken();
   res.send(token);
-});
+}
 
-router.post("/login", nonTestingRatelimiter, async (req, res) => {
+async function login(req, res, next) {
   req.body.email = trimEmail(req.body.email);
   const message = "Invalid email or password";
 
@@ -63,32 +57,32 @@ router.post("/login", nonTestingRatelimiter, async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   });
-  if (ex.error) return res.status(400).send(message);
+  if (ex.error) return next({ status: 400, message: message });
 
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).send(message);
+  if (!user) return next({ status: 400, message: message });
   const matchingPassword = await comparePasswords(
     req.body.password,
     user?.password
   );
 
-  if (!matchingPassword) return res.status(400).send(message);
+  if (!matchingPassword) return next({ status: 400, message: message });
   const token = user.generateAuthToken();
   res.send(token);
-});
+}
 
-router.get("/", [auth], async (req, res) => {
+async function getUserInfo(req, res, next) {
   const user = await User.findById(req.user._id);
-  if (!user) return res.status(409).send("Account not found");
+  if (!user) return next({ status: 409, message: "Account not found" });
   await User.updateOne(
     { _id: req.user._id },
     { $set: { lastActive: new Date() } }
   );
   const token = user.generateAuthToken();
   res.send(token);
-});
+}
 
-router.delete("/", [auth], async (req, res) => {
+async function deleteUser(req, res, next) {
   // if the user account is not found we cannot delete anything,
   // but the mission has been accomplished so this is a success route
   const user = await User.findById(req.user._id);
@@ -132,19 +126,22 @@ router.delete("/", [auth], async (req, res) => {
 
   const results = await transactions.executeTransactionRepSet(queries);
   if (results.name)
-    return res
-      .status(400)
-      .send("Something went wrong, account was not deleted. Please try again.");
+    return next({
+      status: 400,
+      message:
+        "Something went wrong, account was not deleted. Please try again.",
+    });
 
   res.send(results);
-});
+}
 
-router.put("/", [auth], async (req, res) => {
+async function updateUser(req, res, next) {
   const user = await User.findById(req.user._id);
-  if (!user) return res.status(400).send("User account not found");
+  if (!user) return next({ status: 400, message: "User account not found" });
 
   const ex = validateEdit(req.body);
-  if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  if (ex.error)
+    return next({ status: 400, message: ex.error.details[0].message });
 
   const update = {
     name: req.body.name,
@@ -160,12 +157,12 @@ router.put("/", [auth], async (req, res) => {
 
   const token = updatedUser.generateAuthToken();
   res.send(token);
-});
+}
 
-router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
+async function requestPasswordReset(req, res, next) {
   const email = trimEmail(req.params.email);
   const ex = validateEmail(email);
-  if (ex.error) return res.status(400).send("Not a valid email");
+  if (ex.error) next({ status: 400, message: "Not a valid email" });
 
   const user = await User.findOne({ email });
   if (user) {
@@ -176,11 +173,11 @@ router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
         passwordResetToken
       );
       if (!emailSentSuccessfully)
-        return res
-          .status(400)
-          .send(
-            "Something went wrong. Reset email was not sent. Please try again."
-          );
+        return next({
+          status: 400,
+          message:
+            "Something went wrong. Reset email was not sent. Please try again.",
+        });
     }
     await User.updateOne(
       { email },
@@ -197,26 +194,28 @@ router.put("/resetpassword/:email", [lowLimiter], async (req, res) => {
   res.send(
     "An email will be sent to the address if an account is registered under it."
   );
-});
+}
 
-router.put("/updatepassword", nonTestingRatelimiter, async (req, res) => {
+async function updatePassword(req, res, next) {
   const user = await User.findOne({
     email: req.body.email,
     "passwordResetToken.token": req.body.token,
   });
-  if (!user) return res.status(400).send("Password reset not requested");
+  if (!user)
+    return next({ status: 400, message: "Password reset not requested" });
   if (user.passwordReset?.expiration < pickADate(-1))
-    return res
-      .status(400)
-      .send("Reset token has expired, please request another reset");
+    return next({
+      status: 400,
+      message: "Reset token has expired, please request another reset",
+    });
 
   const pw = validatePassword(req.body.password);
   if (pw.error) {
-    return res
-      .status(400)
-      .send(
-        "Password must contain at least one lower case, one upper case and one number."
-      );
+    return next({
+      status: 400,
+      message:
+        "Password must contain at least one lower case, one upper case and one number.",
+    });
   }
 
   const shPassword = await saltAndHashPassword(req.body.password);
@@ -235,6 +234,14 @@ router.put("/updatepassword", nonTestingRatelimiter, async (req, res) => {
 
   const token = updatedUser.generateAuthToken();
   res.send(token);
-});
+}
 
-module.exports = router;
+module.exports = {
+  createNewAccount,
+  login,
+  getUserInfo,
+  deleteUser,
+  updateUser,
+  requestPasswordReset,
+  updatePassword,
+};

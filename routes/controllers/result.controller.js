@@ -1,15 +1,10 @@
 const mongoose = require("mongoose");
-const express = require("express");
-const router = express.Router();
-const validateObjectID = require("../middleware/validateObjectID");
-const auth = require("../middleware/auth");
-const { adminCheck } = require("../middleware/admin");
-const { calculatePrediction, addRanking } = require("../utils/calculations");
+const { calculatePrediction, addRanking } = require("../../utils/calculations");
 
-const { Result, validateResult } = require("../models/resultModel");
-const { Prediction } = require("../models/predictionModel");
-const { Competition } = require("../models/competitionModel");
-const { Match } = require("../models/matchModel");
+const { Result, validateResult } = require("../../models/result.model");
+const { Prediction } = require("../../models/prediction.model");
+const { Competition } = require("../../models/competition.model");
+const { Match } = require("../../models/match.model");
 
 const calculateAndPostResults = async (competition, result) => {
   const allPredictions = await Prediction.find({
@@ -51,13 +46,14 @@ const calculateAndPostResults = async (competition, result) => {
   );
 };
 
-// this route should upsert a results file
-router.put("/:code", [auth, adminCheck], async (req, res) => {
+async function updateResultsByCompetition(req, res, next) {
   const competition = await Competition.findOne({ code: req.params.code });
-  if (!competition) return res.status(404).send("Competition not found");
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
 
   const ex = validateResult(req.body);
-  if (ex.error) return res.status(400).send(ex.error.details[0].message);
+  if (ex.error)
+    return next({ status: 400, message: ex.error.details[0].message });
 
   const update = await Result.updateOne({ code: req.params.code }, req.body, {
     upsert: true,
@@ -68,27 +64,33 @@ router.put("/:code", [auth, adminCheck], async (req, res) => {
   }
 
   res.send(update);
-});
+}
 
-router.get("/:id", [auth, validateObjectID], async (req, res) => {
+async function getResult(req, res, next) {
   const competition = await Competition.findById(req.params.id);
-  if (!competition) return res.status(404).send("Competition not found");
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
 
   const results = await Result.findOne({ code: competition.code });
-  if (!results) return res.status(404).send("Results not found");
+  if (!results) return next({ status: 404, message: "Results not found" });
 
   res.send(results);
-});
+}
 
-router.post("/calculate/:code", [auth, adminCheck], async (req, res) => {
+async function calculateCompetition(req, res, next) {
   const result = await Result.findOne({ code: req.params.code });
   const competition = await Competition.findOne({ code: req.params.code });
-  if (!result) return res.status(404).send("Result not found");
-  if (!competition) return res.status(404).send("Competition not found");
+  if (!result) return next({ status: 404, message: "Result not found" });
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
 
   await calculateAndPostResults(competition, result);
 
   res.send("ok");
-});
+}
 
-module.exports = router;
+module.exports = {
+  updateResultsByCompetition,
+  getResult,
+  calculateCompetition,
+};

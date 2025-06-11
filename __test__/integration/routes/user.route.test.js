@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
-const { Group } = require("../../../models/groupModel");
-const { Prediction } = require("../../../models/predictionModel");
-const { User } = require("../../../models/userModel");
+const { Group } = require("../../../models/group.model");
+const { Prediction } = require("../../../models/prediction.model");
+const { User } = require("../../../models/user.model");
 const { pickADate } = require("../../../utils/allowables");
 const { saltAndHashPassword, decodeJwt } = require("../../../utils/users");
 const {
