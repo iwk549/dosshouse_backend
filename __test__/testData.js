@@ -645,13 +645,10 @@ const users = [
   },
 ];
 
-const versions = [{ major: 1, minor: 0, patch: 0 }];
-
 module.exports.competitions = competitions;
 module.exports.matches = matches;
 module.exports.results = results;
 module.exports.predictions = predictions;
 module.exports.groups = groups;
 module.exports.users = users;
-module.exports.versions = versions;
 module.exports.header = "x-auth-token";

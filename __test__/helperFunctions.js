@@ -4,7 +4,6 @@ const { Competition } = require("../models/competition.model");
 const { Group } = require("../models/group.model");
 const { Match } = require("../models/match.model");
 const { Result } = require("../models/result.model");
-const { Version } = require("../models/version.model");
 const { users, competitions, predictions } = require("./testData");
 const mongoose = require("mongoose");
 
@@ -24,7 +23,6 @@ async function deleteAllData() {
   await Group.collection.deleteMany();
   await Match.collection.deleteMany();
   await Result.collection.deleteMany();
-  await Version.collection.deleteMany();
 }
 
 function testResponseText(responseText, expectedToContain) {

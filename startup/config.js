@@ -1,6 +1,6 @@
 const config = require("config");
 
-// db, jwtPrivateKey, versionID are required to start the app
+// db, jwtPrivateKey are required to start the app
 module.exports = function () {
   if (!config.get("jwtPrivateKey")) {
     console.log("jwt");
