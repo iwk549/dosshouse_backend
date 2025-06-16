@@ -12,6 +12,10 @@
     "lint": "./node_modules/.bin/eslint *.js",
     "audit": "better-npm-audit audit --level moderate --production"
   },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
