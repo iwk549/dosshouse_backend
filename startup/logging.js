@@ -1,7 +1,5 @@
 const winston = require("winston");
-require("winston-mongodb");
 require("express-async-errors");
-const config = require("config");
 
 module.exports = function () {
   const logger = winston.createLogger({
@@ -18,15 +16,6 @@ module.exports = function () {
   if (process.env.NODE_ENV !== "production") {
     logger.add(
       new winston.transports.Console({ format: winston.format.simple() })
-    );
-  }
-  if (process.env.NODE_ENV !== "test") {
-    logger.add(
-      new winston.transports.MongoDB({
-        level: "error",
-        db: config.get("db"),
-        options: { useUnifiedTopology: true },
-      })
     );
   }
   return logger;
