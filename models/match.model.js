@@ -3,6 +3,7 @@ Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 
 const matchMongooseSchema = new mongoose.Schema({
+  bracketCode: { type: String, required: true, index: true },
   dateTime: { type: Date, required: false },
   homeTeamName: { type: String, required: true },
   homeTeamGoals: { type: Number, required: false },
@@ -19,7 +20,6 @@ const matchMongooseSchema = new mongoose.Schema({
   round: { type: Number, required: false },
   matchNumber: { type: Number, required: false },
   sport: { type: String, required: true },
-  bracketCode: { type: String, required: true },
   getTeamsFrom: {
     home: {
       position: { type: Number, required: false },

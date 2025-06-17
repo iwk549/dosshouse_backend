@@ -6,12 +6,18 @@ const { max } = require("../utils/allowables");
 const { miscKeys } = require("../utils/allowables");
 
 const predictionMongooseSchema = new mongoose.Schema({
-  userID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  userID: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+    ref: "User",
+    index: true,
+  },
   name: { type: String, required: true },
   competitionID: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Competition",
+    index: true,
   },
   groupPredictions: [
     {

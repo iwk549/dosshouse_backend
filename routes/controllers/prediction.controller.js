@@ -170,10 +170,22 @@ async function deletePrediction(req, res, next) {
   const prediction = await Prediction.findOne({
     userID: req.user._id,
     _id: req.params.id,
-  });
+  }).populate("competitionID");
   if (!prediction)
     return next({ status: 404, message: "Submission not found" });
-  const result = await Prediction.findByIdAndDelete(req.params.id);
+
+  const now = new Date();
+  if ((prediction.competitionID?.submissionDeadline || now) < now)
+    return next({
+      status: 400,
+      message:
+        "The submission deadline has passed, you cannot delete this submission",
+    });
+
+  const result = await Prediction.deleteOne({
+    userID: req.user._id,
+    _id: req.params.id,
+  });
   res.send(result);
 }
 
@@ -346,7 +358,7 @@ async function addPredictionToGroup(req, res, next) {
     });
 
   const group = await Group.findOne({
-    name: new RegExp(req.body.name, "i"),
+    lowercaseName: req.body.name?.toLowerCase() || "",
     passcode: req.body.passcode,
   });
   if (!group)

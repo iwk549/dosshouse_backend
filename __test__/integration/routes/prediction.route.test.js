@@ -9,6 +9,7 @@ const {
   insertCompetition,
   insertPredictions,
   cleanup,
+  testReponse,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/prediction.model");
 const { Group } = require("../../../models/group.model");
@@ -253,6 +254,16 @@ describe("predictionsRoute", () => {
       const res = await exec(getToken(userID), mongoose.Types.ObjectId());
       expect(res.status).toBe(404);
       testResponseText(res.text, "not found");
+    });
+    it("should return 400 if competition deadline has passed", async () => {
+      const insertedPredictions = await insertPredictions(
+        1,
+        userID,
+        competitionID
+      );
+      await insertCompetition(competitionID, { ...competitions[0] });
+      const res = await exec(getToken(userID), insertedPredictions[0]._id);
+      testReponse(res, 400, "deadline has passed");
     });
     it("should delete the prediction", async () => {
       const insertedPredictions = await insertPredictions(
@@ -502,7 +513,7 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
     });
-    it("should add the group to the prediction (case insensitive on group name", async () => {
+    it("should add the group to the prediction (case insensitive on group name)", async () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
@@ -510,6 +521,7 @@ describe("predictionsRoute", () => {
       );
       const group = {
         name: "Group1",
+        lowercaseName: "group1",
         passcode: "passcode",
         ownerID: mongoose.Types.ObjectId(),
         competitionID: insertedPredictions[0].competitionID,
