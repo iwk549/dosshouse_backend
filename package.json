@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/jest --verbose --runInBand --watchAll",
-    "test:windows": "jest --verbose --runInBand --watch",
     "test:coverage": "./node_modules/.bin/jest --runInBand --coverage",
-    "test:pull_request": "./node_modules/.bin/jest --runInBand --detectOpenHandles",
+    "test:windows": "jest --verbose --runInBand --watch",
+    "test:windows:cov": "jest --runInBand --coverage --detectOpenHandles",
+    "test:pull_request": "./node_modules/.bin/jest --runInBand --coverage --detectOpenHandles",
     "dev": "nodemon -L index.js",
     "lint": "./node_modules/.bin/eslint *.js",
     "audit": "better-npm-audit audit --level moderate --production"
