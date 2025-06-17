@@ -11,7 +11,7 @@ const groupScoringSchema = {
   required: false,
 };
 const competitionMongooseSchema = new mongoose.Schema({
-  code: { type: String, required: true },
+  code: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   submissionDeadline: { type: Date, required: false },
   competitionStart: { type: Date, required: false },

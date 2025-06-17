@@ -7,11 +7,6 @@ const groupMongooseSchema = new mongoose.Schema({
   name: { type: String, required: true },
   lowercaseName: { type: String, required: true, unique: true },
   passcode: { type: String, required: true },
-  // competitionID: {
-  //   type: mongoose.Types.ObjectId,
-  //   required: true,
-  //   ref: "Competition",
-  // },
 });
 
 const Group = mongoose.model("Group", groupMongooseSchema);

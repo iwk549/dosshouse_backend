@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { miscKeys } = require("../utils/allowables");
 
 const resultMongooseSchema = new mongoose.Schema({
-  code: { type: String, required: true },
+  code: { type: String, required: true, unique: true },
   group: [
     {
       type: Object,

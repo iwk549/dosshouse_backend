@@ -358,7 +358,7 @@ async function addPredictionToGroup(req, res, next) {
     });
 
   const group = await Group.findOne({
-    name: new RegExp(req.body.name, "i"),
+    lowercaseName: req.body.name?.toLowerCase() || "",
     passcode: req.body.passcode,
   });
   if (!group)

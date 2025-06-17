@@ -513,7 +513,7 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "maximum");
     });
-    it("should add the group to the prediction (case insensitive on group name", async () => {
+    it("should add the group to the prediction (case insensitive on group name)", async () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
@@ -521,6 +521,7 @@ describe("predictionsRoute", () => {
       );
       const group = {
         name: "Group1",
+        lowercaseName: "group1",
         passcode: "passcode",
         ownerID: mongoose.Types.ObjectId(),
         competitionID: insertedPredictions[0].competitionID,
