@@ -33,4 +33,12 @@ async function start() {
   return server;
 }
 
+[("SIGINT", "SIGTERM", "SIGQUIT")].forEach((signal) => {
+  process.on(signal, async function () {
+    // eslint-disable-next-line no-console
+    console.error(signal + " occurred");
+    process.exit();
+  });
+});
+
 module.exports.start = start;
