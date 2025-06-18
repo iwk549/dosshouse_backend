@@ -6,6 +6,7 @@ const users = require("../routes/routers/user.controller");
 const predictions = require("../routes/routers/prediction.route");
 const results = require("../routes/routers/result.route");
 const groups = require("../routes/routers/group.route");
+const admin = require("../routes/routers/admin.route");
 const cors = require("cors");
 const { highLimiter } = require("../middleware/rateLimiter");
 
@@ -35,6 +36,7 @@ module.exports = function (app) {
   app.use("/api/v1/predictions", predictions);
   app.use("/api/v1/results", results);
   app.use("/api/v1/groups", groups);
+  app.use("/api/v1/admin", admin);
   app.use("/api/v1/healthz", async (req, res) => {
     res.send("Healthy");
   });
