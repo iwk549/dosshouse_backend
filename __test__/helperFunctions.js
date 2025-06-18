@@ -4,7 +4,13 @@ const { Competition } = require("../models/competition.model");
 const { Group } = require("../models/group.model");
 const { Match } = require("../models/match.model");
 const { Result } = require("../models/result.model");
-const { users, competitions, predictions } = require("./testData");
+const {
+  users,
+  competitions,
+  predictions,
+  matches,
+  results,
+} = require("./testData");
 const mongoose = require("mongoose");
 
 async function cleanup(server) {
@@ -56,6 +62,28 @@ async function insertCompetition(competitionID, competition) {
   competitionToInsert._id = competitionID;
   await Competition.collection.insertOne(competitionToInsert);
   return competitionToInsert;
+}
+
+async function insertResult(override = {}) {
+  let result = { ...results[0], ...override };
+  await Result.collection.insertOne(result);
+  return result;
+}
+
+async function insertMatch(override = {}) {
+  let match = { ...matches[0], ...override };
+
+  await Match.collection.insertOne(match);
+
+  return match;
+}
+
+async function insertPrediction(override = {}) {
+  let prediction = { ...predictions[0], ...override };
+
+  await Prediction.collection.insertOne(prediction);
+
+  return prediction;
 }
 
 async function insertPredictions(
@@ -149,8 +177,11 @@ module.exports.testResponseText = testResponseText;
 module.exports.getToken = getToken;
 module.exports.insertUser = insertUser;
 module.exports.insertCompetition = insertCompetition;
+module.exports.insertResult = insertResult;
 module.exports.insertPredictions = insertPredictions;
 module.exports.insertGroups = insertGroups;
+module.exports.insertMatch = insertMatch;
+module.exports.insertPrediction = insertPrediction;
 module.exports.pickADate = pickADate;
 module.exports.testAuth = testAuth;
 module.exports.testObjectID = testObjectID;
