@@ -1,0 +1,1110 @@
+[
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Qatar",
+    "awayTeamName": "Ecuador",
+    "dateTime": { "$date": "2022-11-20T16:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 1,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Senegal",
+    "awayTeamName": "Netherlands",
+    "dateTime": { "$date": "2022-11-21T10:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 2,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 6,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "England",
+    "awayTeamName": "Iran",
+    "dateTime": { "$date": "2022-11-21T13:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 3,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "United States",
+    "awayTeamName": "Wales",
+    "dateTime": { "$date": "2022-11-21T19:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 4,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Argentina",
+    "awayTeamName": "Saudi Arabia",
+    "dateTime": { "$date": "2022-11-22T10:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 5,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Mexico",
+    "awayTeamName": "Poland",
+    "dateTime": { "$date": "2022-11-22T16:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 6,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 4,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "France",
+    "awayTeamName": "Australia",
+    "dateTime": { "$date": "2022-11-22T19:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 7,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Denmark",
+    "awayTeamName": "Tunisia",
+    "dateTime": { "$date": "2022-11-22T13:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 8,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 7,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Spain",
+    "awayTeamName": "Costa Rica",
+    "dateTime": { "$date": "2022-11-23T16:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 9,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Germany",
+    "awayTeamName": "Japan",
+    "dateTime": { "$date": "2022-11-23T13:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 10,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Belgium",
+    "awayTeamName": "Canada",
+    "dateTime": { "$date": "2022-11-23T19:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 11,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Morocco",
+    "awayTeamName": "Croatia",
+    "dateTime": { "$date": "2022-11-23T10:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 12,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Brazil",
+    "awayTeamName": "Serbia",
+    "dateTime": { "$date": "2022-11-24T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 13,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Switzerland",
+    "awayTeamName": "Cameroon",
+    "dateTime": { "$date": "2022-11-24T10:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 14,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Portugal",
+    "awayTeamName": "Ghana",
+    "dateTime": { "$date": "2022-11-24T16:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 15,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Uruguay",
+    "awayTeamName": "South Korea",
+    "dateTime": { "$date": "2022-11-24T13:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 16,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 3,
+    "matchAccepted": true,
+    "homeTeamName": "Qatar",
+    "awayTeamName": "Senegal",
+    "dateTime": { "$date": "2022-11-25T13:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 17,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Netherlands",
+    "awayTeamName": "Ecuador",
+    "dateTime": { "$date": "2022-11-25T16:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 18,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "England",
+    "awayTeamName": "United States",
+    "dateTime": { "$date": "2022-11-25T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 19,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Wales",
+    "awayTeamName": "Iran",
+    "dateTime": { "$date": "2022-11-25T10:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 20,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Argentina",
+    "awayTeamName": "Mexico",
+    "dateTime": { "$date": "2022-11-26T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 21,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Poland",
+    "awayTeamName": "Saudi Arabia",
+    "dateTime": { "$date": "2022-11-26T13:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 22,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "France",
+    "awayTeamName": "Denmark",
+    "dateTime": { "$date": "2022-11-26T16:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 23,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Tunisia",
+    "awayTeamName": "Australia",
+    "dateTime": { "$date": "2022-11-26T10:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 24,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Spain",
+    "awayTeamName": "Germany",
+    "dateTime": { "$date": "2022-11-27T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 25,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Japan",
+    "awayTeamName": "Costa Rica",
+    "dateTime": { "$date": "2022-11-27T10:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 26,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Belgium",
+    "awayTeamName": "Morocco",
+    "dateTime": { "$date": "2022-11-27T13:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 27,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 4,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Croatia",
+    "awayTeamName": "Canada",
+    "dateTime": { "$date": "2022-11-27T16:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 28,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Brazil",
+    "awayTeamName": "Switzerland",
+    "dateTime": { "$date": "2022-11-28T16:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 29,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "awayTeamGoals": 3,
+    "matchAccepted": true,
+    "homeTeamName": "Cameroon",
+    "awayTeamName": "Serbia",
+    "dateTime": { "$date": "2022-11-28T10:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 30,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Portugal",
+    "awayTeamName": "Uruguay",
+    "dateTime": { "$date": "2022-11-28T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 31,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 3,
+    "matchAccepted": true,
+    "homeTeamName": "South Korea",
+    "awayTeamName": "Ghana",
+    "dateTime": { "$date": "2022-11-28T13:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 32,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Netherlands",
+    "awayTeamName": "Qatar",
+    "dateTime": { "$date": "2022-11-29T15:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 33,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Ecuador",
+    "awayTeamName": "Senegal",
+    "dateTime": { "$date": "2022-11-29T15:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 34,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "A",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 3,
+    "matchAccepted": true,
+    "homeTeamName": "Wales",
+    "awayTeamName": "England",
+    "dateTime": { "$date": "2022-11-29T19:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 35,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Iran",
+    "awayTeamName": "United States",
+    "dateTime": { "$date": "2022-11-29T19:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 36,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "B",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Poland",
+    "awayTeamName": "Argentina",
+    "dateTime": { "$date": "2022-11-30T19:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 37,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Saudi Arabia",
+    "awayTeamName": "Mexico",
+    "dateTime": { "$date": "2022-11-30T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 38,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "C",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Tunisia",
+    "awayTeamName": "France",
+    "dateTime": { "$date": "2022-11-30T15:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 39,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Australia",
+    "awayTeamName": "Denmark",
+    "dateTime": { "$date": "2022-11-30T15:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 40,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "D",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "Japan",
+    "awayTeamName": "Spain",
+    "dateTime": { "$date": "2022-12-01T19:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 41,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 4,
+    "matchAccepted": true,
+    "homeTeamName": "Costa Rica",
+    "awayTeamName": "Germany",
+    "dateTime": { "$date": "2022-12-01T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 42,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "E",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Croatia",
+    "awayTeamName": "Belgium",
+    "dateTime": { "$date": "2022-12-01T15:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 43,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Canada",
+    "awayTeamName": "Morocco",
+    "dateTime": { "$date": "2022-12-01T15:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 44,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "F",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "awayTeamGoals": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Cameroon",
+    "awayTeamName": "Brazil",
+    "dateTime": { "$date": "2022-12-02T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 45,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 3,
+    "matchAccepted": true,
+    "homeTeamName": "Serbia",
+    "awayTeamName": "Switzerland",
+    "dateTime": { "$date": "2022-12-02T19:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 46,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "G",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "awayTeamGoals": 1,
+    "matchAccepted": true,
+    "homeTeamName": "South Korea",
+    "awayTeamName": "Portugal",
+    "dateTime": { "$date": "2022-12-02T15:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 47,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Ghana",
+    "awayTeamName": "Uruguay",
+    "dateTime": { "$date": "2022-12-02T15:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 48,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Group",
+    "groupName": "H",
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Netherlands",
+    "awayTeamName": "United States",
+    "dateTime": { "$date": "2022-12-03T15:00:00.000Z" },
+    "location": "Khalifa International Stadium",
+    "matchNumber": 49,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "A",
+        "position": 1
+      },
+      "away": {
+        "groupName": "B",
+        "position": 2
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Argentina",
+    "awayTeamName": "Australia",
+    "dateTime": { "$date": "2022-12-03T19:00:00.000Z" },
+    "location": "Ahmad Bin Ali Stadium",
+    "matchNumber": 50,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "C",
+        "position": 1
+      },
+      "away": {
+        "groupName": "D",
+        "position": 2
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "France",
+    "awayTeamName": "Poland",
+    "dateTime": { "$date": "2022-12-04T15:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 53,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "D",
+        "position": 1
+      },
+      "away": {
+        "groupName": "C",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 51
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "England",
+    "awayTeamName": "Senegal",
+    "dateTime": { "$date": "2022-12-04T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 54,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "B",
+        "position": 1
+      },
+      "away": {
+        "groupName": "A",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 52
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "homeTeamPKs": 1,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 3,
+    "matchAccepted": true,
+    "homeTeamName": "Japan",
+    "awayTeamName": "Croatia",
+    "dateTime": { "$date": "2022-12-05T15:00:00.000Z" },
+    "location": "Al Janoub Stadium",
+    "matchNumber": 51,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "E",
+        "position": 1
+      },
+      "away": {
+        "groupName": "F",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 53
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 4,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Brazil",
+    "awayTeamName": "South Korea",
+    "dateTime": { "$date": "2022-12-05T19:00:00.000Z" },
+    "location": "Stadium 974",
+    "matchNumber": 52,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "G",
+        "position": 1
+      },
+      "away": {
+        "groupName": "H",
+        "position": 2
+      }
+    },
+    "metadata": {
+      "matchNumber": 54
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 3,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Morocco",
+    "awayTeamName": "Spain",
+    "dateTime": { "$date": "2022-12-06T15:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 55,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "F",
+        "position": 1
+      },
+      "away": {
+        "groupName": "E",
+        "position": 2
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 6,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Portugal",
+    "awayTeamName": "Switzerland",
+    "dateTime": { "$date": "2022-12-06T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 56,
+    "round": 1,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "groupName": "H",
+        "position": 1
+      },
+      "away": {
+        "groupName": "G",
+        "position": 2
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "homeTeamPKs": 4,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 2,
+    "matchAccepted": true,
+    "homeTeamName": "Croatia",
+    "awayTeamName": "Brazil",
+    "dateTime": { "$date": "2022-12-09T15:00:00.000Z" },
+    "location": "Education City Stadium",
+    "matchNumber": 58,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 53
+      },
+      "away": {
+        "matchNumber": 54
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "homeTeamPKs": 3,
+    "awayTeamGoals": 2,
+    "awayTeamPKs": 4,
+    "matchAccepted": true,
+    "homeTeamName": "Netherlands",
+    "awayTeamName": "Argentina",
+    "dateTime": { "$date": "2022-12-09T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 57,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 49
+      },
+      "away": {
+        "matchNumber": 50
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 1,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Morocco",
+    "awayTeamName": "Portugal",
+    "dateTime": { "$date": "2022-12-10T15:00:00.000Z" },
+    "location": "Al Thumama Stadium",
+    "matchNumber": 60,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 55
+      },
+      "away": {
+        "matchNumber": 56
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 2,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 1,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "France",
+    "awayTeamName": "England",
+    "dateTime": { "$date": "2022-12-10T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 59,
+    "round": 2,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 51
+      },
+      "away": {
+        "matchNumber": 52
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 3,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": true,
+    "homeTeamName": "Argentina",
+    "awayTeamName": "Croatia",
+    "dateTime": { "$date": "2022-12-13T19:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 61,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 57
+      },
+      "away": {
+        "matchNumber": 58
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "France",
+    "awayTeamName": "Morocco",
+    "dateTime": { "$date": "2022-12-14T19:00:00.000Z" },
+    "location": "Al Bayt Stadium",
+    "matchNumber": 62,
+    "round": 3,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 59
+      },
+      "away": {
+        "matchNumber": 60
+      }
+    },
+    "bracketCode": "worldCup2022"
+  },
+  {
+    "homeTeamGoals": 0,
+    "homeTeamPKs": 0,
+    "awayTeamGoals": 0,
+    "awayTeamPKs": 0,
+    "matchAccepted": false,
+    "homeTeamName": "Argentina",
+    "awayTeamName": "Winner 62",
+    "dateTime": { "$date": "2022-12-18T15:00:00.000Z" },
+    "location": "Lusail Stadium",
+    "matchNumber": 64,
+    "round": 4,
+    "sport": "Soccer",
+    "type": "Playoff",
+    "getTeamsFrom": {
+      "home": {
+        "matchNumber": 61
+      },
+      "away": {
+        "matchNumber": 62
+      }
+    },
+    "bracketCode": "worldCup2022"
+  }
+]
