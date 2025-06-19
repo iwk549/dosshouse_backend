@@ -75,19 +75,20 @@
       "round": 3,
       "teams": ["Croatia", "Argentina", "Morocco", "France"],
       "points": 8
-    }
+    },
+    { "round": 4, "teams": ["Argentina", "France"], "points": 16 }
   ],
   "misc": {
-    "winner": "",
-    "thirdPlace": "",
-    "discipline": "",
-    "topScorer": ""
+    "winner": "Argentina",
+    "thirdPlace": "Croatia",
+    "discipline": "Argentina",
+    "topScorer": "France"
   },
   "potentials": {
     "realisticWinners": {
-      "topScorer": ["France", "Argentina"],
-      "discipline": ["Saudi Arabia", "Argentina"],
-      "thirdPlace": ["Croatia", "Argentina", "Morocco", "France"]
+      "topScorer": [],
+      "discipline": [],
+      "thirdPlace": []
     }
   }
 }

@@ -1,0 +1,139 @@
+[
+  {
+    "_id": { "$oid": "6252ebe1d595c7d6a7a76ded" },
+    "code": "worldCup2022",
+    "name": "World Cup 2022",
+    "submissionDeadline": { "$date": "2022-11-20T15:00:00.000Z" },
+    "maxSubmissions": 2,
+    "competitionStart": { "$date": "2022-11-20T16:00:00.000Z" },
+    "competitionEnd": { "$date": "2022-12-18T18:00:00.000Z" },
+    "scoring": {
+      "group": {
+        "perTeam": 1,
+        "bonus": 1
+      },
+      "playoff": [
+        {
+          "roundName": "Round of 16",
+          "roundNumber": 1,
+          "points": 2
+        },
+        {
+          "roundName": "Quarter Final",
+          "roundNumber": 2,
+          "points": 4
+        },
+        {
+          "roundName": "Semi Final",
+          "roundNumber": 3,
+          "points": 8
+        },
+        {
+          "roundName": "Final",
+          "roundNumber": 4,
+          "points": 16
+        }
+      ],
+      "champion": 32
+    },
+    "miscPicks": [
+      {
+        "name": "thirdPlace",
+        "label": "Third Place",
+        "description": "Winner of the third place playoff",
+        "points": 16,
+        "info": {
+          "homeTeamGoals": 0,
+          "homeTeamPKs": 0,
+          "awayTeamGoals": 0,
+          "awayTeamPKs": 0,
+          "matchAccepted": false,
+          "homeTeamName": "Croatia",
+          "awayTeamName": "Morocco",
+          "dateTime": { "$date": "2022-12-17T15:00:00.000Z" },
+          "location": "Khalifa International Stadium",
+          "matchNumber": 63,
+          "round": 1001,
+          "sport": "Soccer",
+          "type": "Playoff",
+          "getTeamsFrom": {
+            "home": {
+              "matchNumber": 61
+            },
+            "away": {
+              "matchNumber": 62
+            }
+          }
+        }
+      },
+      {
+        "name": "discipline",
+        "label": "Worst Discipline",
+        "description": "Team with the worst disciplinary record at the end of the tournament (most yellow and red cards).",
+        "points": 10
+      },
+      {
+        "name": "topScorer",
+        "label": "Top Goalscorer",
+        "description": "Team with the player who wins the golden boot for most goals in the tournament",
+        "points": 10
+      }
+    ],
+    "prize": {
+      "text": "One free year of ultimatescoreboard.com Ultimate level subscription.",
+      "link": "https://ultimatescoreboard.com"
+    }
+  },
+  {
+    "_id": { "$oid": "683f0928dc52d0c36b3e3b5f" },
+    "code": "clubWorldCup2025",
+    "name": "Club World Cup 2025",
+    "submissionDeadline": { "$date": "2025-06-14T23:00:00.000Z" },
+    "maxSubmissions": 1,
+    "competitionStart": { "$date": "2025-06-15T00:00:00.000Z" },
+    "competitionEnd": { "$date": "2025-07-13T21:00:00.000Z" },
+    "scoring": {
+      "group": {
+        "perTeam": 1,
+        "bonus": 1
+      },
+      "playoff": [
+        {
+          "roundName": "Round of 16",
+          "roundNumber": 1,
+          "points": 2
+        },
+        {
+          "roundName": "Quarter Final",
+          "roundNumber": 2,
+          "points": 4
+        },
+        {
+          "roundName": "Semi Final",
+          "roundNumber": 3,
+          "points": 8
+        },
+        {
+          "roundName": "Final",
+          "roundNumber": 4,
+          "points": 16
+        }
+      ],
+      "champion": 32
+    },
+    "miscPicks": [
+      {
+        "name": "discipline",
+        "label": "Worst Discipline",
+        "description": "Team with the worst disciplinary record at the end of the tournament (most yellow and red cards).",
+        "points": 10
+      },
+      {
+        "name": "topScorer",
+        "label": "Top Goalscorer",
+        "description": "Team with the player who wins the golden boot for most goals in the tournament",
+        "points": 10
+      }
+    ]
+  }
+]
