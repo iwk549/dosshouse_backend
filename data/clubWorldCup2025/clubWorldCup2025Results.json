@@ -1,0 +1,105 @@
+{
+  "code": "worldCup2022",
+  "group": [
+    {
+      "groupName": "A",
+      "teamOrder": [
+        "Al Ahly (EGY)",
+        "Porto (POR)",
+        "Palmeiras (BRA)",
+        "Inter Miami (USA)"
+      ]
+    },
+    {
+      "groupName": "B",
+      "teamOrder": [
+        "Paris Saint-Germain (FRA)",
+        "Botafogo (BRA)",
+        "Seattle Sounders (USA)",
+        "Atletico Madrid (ESP)"
+      ]
+    },
+    {
+      "groupName": "C",
+      "teamOrder": [
+        "Bayern Munich (GER)",
+        "Benfica (POR)",
+        "Boca Juniors (ARG)",
+        "Auckland City (NZL)"
+      ]
+    },
+    {
+      "groupName": "D",
+      "teamOrder": [
+        "Flamengo (BRA)",
+        "Chelsea (ENG)",
+        "LAFC (USA)",
+        "Esperance (TUN)"
+      ]
+    },
+    {
+      "groupName": "E",
+      "teamOrder": [
+        "River Plate (ARG)",
+        "Monterrey (MEX)",
+        "Internazionale (ITA)",
+        "Urawa Red Diamonds (JAP)"
+      ]
+    },
+    {
+      "groupName": "F",
+      "teamOrder": [
+        "Mamelodi Sundowns (RSA)",
+        "Dortmund (GER)",
+        "Fluminense (BRA)",
+        "Ulsan HD (KOR)"
+      ]
+    },
+    {
+      "groupName": "G",
+      "teamOrder": [
+        "Juventus (ITA)",
+        "Manchester City (ENG)",
+        "Wydad (MOR)",
+        "Al Ain (UAE)"
+      ]
+    },
+    {
+      "groupName": "H",
+      "teamOrder": [
+        "Salzburg (AUT)",
+        "Real Madrid (ESP)",
+        "Al Hilal (SAU)",
+        "Pachuca (MEX)"
+      ]
+    }
+  ],
+  "playoff": [
+    {
+      "round": 1,
+      "teams": [],
+      "points": 2
+    },
+    {
+      "round": 2,
+      "teams": [],
+      "points": 4
+    },
+    {
+      "round": 3,
+      "teams": [],
+      "points": 8
+    },
+    {
+      "round": 4,
+      "teams": [],
+      "points": 16
+    }
+  ],
+  "misc": {
+    "winner": "",
+    "discipline": "",
+    "topScorer": ""
+  },
+  "potentials": {}
+}
