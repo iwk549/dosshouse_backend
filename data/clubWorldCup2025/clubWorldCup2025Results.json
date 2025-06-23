@@ -4,19 +4,19 @@
     {
       "groupName": "A",
       "teamOrder": [
-        "Al Ahly (EGY)",
-        "Porto (POR)",
         "Palmeiras (BRA)",
-        "Inter Miami (USA)"
+        "Inter Miami (USA)",
+        "Porto (POR)",
+        "Al Ahly (EGY)"
       ]
     },
     {
       "groupName": "B",
       "teamOrder": [
-        "Paris Saint-Germain (FRA)",
         "Botafogo (BRA)",
-        "Seattle Sounders (USA)",
-        "Atletico Madrid (ESP)"
+        "Paris Saint-Germain (FRA)",
+        "Atletico Madrid (ESP)",
+        "Seattle Sounders (USA)"
       ]
     },
     {
@@ -33,25 +33,25 @@
       "teamOrder": [
         "Flamengo (BRA)",
         "Chelsea (ENG)",
-        "LAFC (USA)",
-        "Esperance (TUN)"
+        "Esperance (TUN)",
+        "LAFC (USA)"
       ]
     },
     {
       "groupName": "E",
       "teamOrder": [
         "River Plate (ARG)",
-        "Monterrey (MEX)",
         "Internazionale (ITA)",
+        "Monterrey (MEX)",
         "Urawa Red Diamonds (JAP)"
       ]
     },
     {
       "groupName": "F",
       "teamOrder": [
-        "Mamelodi Sundowns (RSA)",
-        "Borussia Dortmund (GER)",
         "Fluminense (BRA)",
+        "Borussia Dortmund (GER)",
+        "Mamelodi Sundowns (RSA)",
         "Ulsan HD (KOR)"
       ]
     },
@@ -67,8 +67,8 @@
     {
       "groupName": "H",
       "teamOrder": [
-        "Salzburg (AUT)",
         "Real Madrid (ESP)",
+        "Salzburg (AUT)",
         "Al Hilal (SAU)",
         "Pachuca (MEX)"
       ]
@@ -77,7 +77,7 @@
   "playoff": [
     {
       "round": 1,
-      "teams": [],
+      "teams": ["Flamengo"],
       "points": 2
     },
     {
@@ -98,8 +98,8 @@
   ],
   "misc": {
     "winner": "",
-    "discipline": "",
-    "topScorer": ""
+    "discipline": ["Boca Juniors (ARG)"],
+    "topScorer": ["Bayern Munich (GER)"]
   },
   "potentials": {}
 }
