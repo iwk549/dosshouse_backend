@@ -194,6 +194,7 @@ describe("resultsRoute", () => {
       updatedPredictions.forEach((up) => {
         expect(up.ranking).toBe(1);
         expect(up.totalPoints).toBe(updatedPredictions[0].totalPoints);
+        expect(up.totalPicks).toBe(updatedPredictions[0].totalPicks);
       });
     });
   });

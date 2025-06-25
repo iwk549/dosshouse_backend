@@ -12,12 +12,13 @@ const {
 
 function addPoints(req) {
   req.body.points = {
-    group: { points: 0, correctPicks: 0 },
+    group: { points: 0, correctPicks: 0, bonus: 0 },
     playoff: { points: 0, correctPicks: 0 },
     champion: { points: 0, correctPicks: 0 },
     misc: { points: 0, correctPicks: 0 },
   };
   req.body.totalPoints = 0;
+  req.body.totalPicks = 0;
   req.body.ranking = null;
   req.body.potentialPoints = {
     maximum: 0,
@@ -28,6 +29,7 @@ function addPoints(req) {
 function removePoints(req) {
   delete req.body.points;
   delete req.body.totalPoints;
+  delete req.body.totalPicks;
   delete req.body.ranking;
   delete req.body.potentialPoints;
 }

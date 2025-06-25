@@ -100,6 +100,7 @@ describe("calculations", () => {
         expect(res.points.group.points).toBe(4);
         expect(res.points.group.correctPicks).toBe(3);
         expect(res.totalPoints).toBe(res.points.group.points);
+        expect(res.totalPicks).toBe(res.points.group.correctPicks);
       });
       it("should calculate groupMatrix points correctly when teams do not match (check only group name)", () => {
         const prediction = setPrediction(["groupMatrix"], null, null, null, [
@@ -119,6 +120,7 @@ describe("calculations", () => {
         expect(res.points.group.points).toBe(4);
         expect(res.points.group.correctPicks).toBe(3);
         expect(res.totalPoints).toBe(res.points.group.points);
+        expect(res.totalPicks).toBe(res.points.group.correctPicks);
       });
       it("should calculate playoff points correctly", () => {
         const prediction = setPrediction(["playoff"]);
@@ -129,6 +131,7 @@ describe("calculations", () => {
         // correct picks will be 4 for round 1, 2 for round 2
         expect(res.points.playoff.correctPicks).toBe(6);
         expect(res.totalPoints).toBe(res.points.playoff.points);
+        expect(res.totalPicks).toBe(res.points.playoff.correctPicks);
       });
       it("should calculate misc picks correctly", () => {
         const prediction = setPrediction(["misc"]);
@@ -140,6 +143,9 @@ describe("calculations", () => {
         expect(res.points.misc.points).toBe(36);
         expect(res.totalPoints).toBe(
           res.points.champion.points + res.points.misc.points
+        );
+        expect(res.totalPicks).toBe(
+          res.points.champion.correctPicks + res.points.misc.correctPicks
         );
       });
       it("should calculate the entire prediction correctly", () => {
@@ -164,6 +170,12 @@ describe("calculations", () => {
             res.points.champion.points +
             res.points.misc.points
         );
+        expect(res.totalPicks).toBe(
+          res.points.group.correctPicks +
+            res.points.playoff.correctPicks +
+            res.points.champion.correctPicks +
+            res.points.misc.correctPicks
+        );
       });
     });
 
@@ -182,6 +194,7 @@ describe("calculations", () => {
         expect(res.points.group.points).toBe(4);
         expect(res.points.group.correctPicks).toBe(4);
         expect(res.totalPoints).toBe(4);
+        expect(res.totalPicks).toBe(4);
       });
       it("should calculate partial groupMatrix picks correctly", () => {
         const prediction = setPrediction(["groupMatrix"], null, null, null, [
@@ -208,6 +221,8 @@ describe("calculations", () => {
         // 4 points for 2 correct teams in round 1
         // 4 points for 1 correct team in round 2
         expect(res.points.playoff.points).toBe(8);
+        expect(res.totalPoints).toBe(8);
+        expect(res.totalPicks).toBe(3);
       });
       it("should calculate partial misc picks", () => {
         const prediction = setPrediction(["misc"], null, null, {
@@ -220,6 +235,8 @@ describe("calculations", () => {
 
         // 20 points for discipline and topscorer
         expect(res.points.misc.points).toBe(20);
+        expect(res.totalPoints).toBe(20);
+        expect(res.totalPicks).toBe(2);
       });
       it("should calculate partial points for all categories", () => {
         const prediction = setPrediction(
@@ -242,8 +259,9 @@ describe("calculations", () => {
         );
         const res = exec(prediction, result, competitions[0]);
 
-        // total points shoudl be sum of previous scores in this block
+        // total points should be sum of previous scores in this block
         expect(res.totalPoints).toBe(32);
+        expect(res.totalPicks).toBe(9);
       });
     });
 
@@ -325,6 +343,12 @@ describe("calculations", () => {
             res.points.playoff.points +
             res.points.champion.points +
             res.points.misc.points
+        );
+        expect(res.totalPicks).toBe(
+          res.points.group.correctPicks +
+            res.points.playoff.correctPicks +
+            res.points.champion.correctPicks +
+            res.points.misc.correctPicks
         );
       });
     });
@@ -516,7 +540,7 @@ describe("calculations", () => {
       ];
       const res = addRanking(predictions);
       res.forEach((r) => {
-        expect(r.expectedRanking).toBe(r.ranking);
+        expect(r.ranking).toBe(r.expectedRanking);
       });
     });
     it("should rank correctly when some predictions have same points but others do not", () => {
@@ -529,7 +553,181 @@ describe("calculations", () => {
       ];
       const res = addRanking(predictions);
       res.forEach((r) => {
-        expect(r.expectedRanking).toBe(r.ranking);
+        expect(r.ranking).toBe(r.expectedRanking);
+      });
+    });
+    describe("tiebreakers", () => {
+      [
+        {
+          field: "totalPoints",
+          predictions: [
+            {
+              expectedRanking: 2,
+              totalPoints: 5,
+            },
+            {
+              expectedRanking: 1,
+              totalPoints: 10,
+            },
+          ],
+        },
+        {
+          field: "champion",
+          predictions: [
+            {
+              expectedRanking: 2,
+              totalPicks: 10,
+            },
+            {
+              expectedRanking: 1,
+              totalPicks: 5,
+              points: {
+                champion: { correctPicks: 1 },
+              },
+            },
+          ],
+        },
+        {
+          field: "totalPicks",
+          predictions: [
+            {
+              expectedRanking: 2,
+              totalPoints: 10,
+              totalPicks: 0,
+            },
+            {
+              expectedRanking: 1,
+              totalPoints: 10,
+              totalPicks: 1,
+            },
+          ],
+        },
+        {
+          field: "playoff points",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                playoff: { points: 5, correctPicks: 10 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                playoff: { points: 10, correctPicks: 5 },
+              },
+            },
+          ],
+        },
+        {
+          field: "playoff picks",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                playoff: { points: 10, correctPicks: 5 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                playoff: { points: 10, correctPicks: 10 },
+              },
+            },
+          ],
+        },
+        {
+          field: "group points",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                group: { points: 5, correctPicks: 10 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                group: { points: 10, correctPicks: 5 },
+              },
+            },
+          ],
+        },
+        {
+          field: "group picks",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                group: { points: 10, correctPicks: 5 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                group: { points: 10, correctPicks: 10 },
+              },
+            },
+          ],
+        },
+        {
+          field: "group bonus",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                group: { points: 10, correctPicks: 10, bonus: 5 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                group: { points: 10, correctPicks: 10, bonus: 10 },
+              },
+            },
+          ],
+        },
+        {
+          field: "misc points",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                misc: { points: 5, correctPicks: 10 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                misc: { points: 10, correctPicks: 10 },
+              },
+            },
+          ],
+        },
+        {
+          field: "misc picks",
+          predictions: [
+            {
+              expectedRanking: 2,
+              points: {
+                misc: { points: 10, correctPicks: 5 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              points: {
+                misc: { points: 10, correctPicks: 10 },
+              },
+            },
+          ],
+        },
+      ].forEach((tb) => {
+        it(`should use the ${tb.field} tiebreaker`, () => {
+          const res = addRanking(tb.predictions);
+          res.forEach((r) => {
+            expect(r.ranking).toBe(r.expectedRanking);
+          });
+        });
       });
     });
   });
