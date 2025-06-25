@@ -13,16 +13,13 @@ const calculateAndPostResults = async (competition, result) => {
   const matches = await Match.find({ bracketCode: competition.code });
   let updatedPoints = [];
   allPredictions.forEach((p) => {
-    const { points, totalPoints, potentialPoints } = calculatePrediction(
-      p,
-      result,
-      competition,
-      matches
-    );
+    const { points, totalPoints, totalPicks, potentialPoints } =
+      calculatePrediction(p, result, competition, matches);
     updatedPoints.push({
       _id: p._id,
       points,
       totalPoints,
+      totalPicks,
       potentialPoints,
     });
   });
@@ -37,6 +34,7 @@ const calculateAndPostResults = async (competition, result) => {
           $set: {
             points: u.points,
             totalPoints: u.totalPoints,
+            totalPicks: u.totalPicks,
             ranking: u.ranking,
             potentialPoints: u.potentialPoints,
           },

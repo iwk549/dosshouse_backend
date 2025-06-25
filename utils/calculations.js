@@ -1,6 +1,6 @@
 function calculatePrediction(prediction, result, competition, matches) {
   let points = {
-    group: { points: 0, correctPicks: 0 },
+    group: { points: 0, correctPicks: 0, bonus: 0 },
     playoff: { points: 0, correctPicks: 0 },
     champion: { points: 0, correctPicks: 0 },
     misc: { points: 0, correctPicks: 0 },
@@ -15,6 +15,7 @@ function calculatePrediction(prediction, result, competition, matches) {
     prediction.groupPredictions.forEach((groupPrediction) => {
       let thisGroupPoints = 0;
       let thisGroupCorrectPicks = 0;
+      let thisGroupBonus = 0;
       const groupResult = result.group.find(
         (groupResult) => groupResult.groupName === groupPrediction.groupName
       );
@@ -39,12 +40,18 @@ function calculatePrediction(prediction, result, competition, matches) {
 
         // if max points were acheived for this group
         // meaning all teams were in the correct place, add the bonus points
-        if (thisGroupPoints === groupResult.teamOrder.length * scoring.perTeam)
+        if (
+          thisGroupPoints ===
+          groupResult.teamOrder.length * scoring.perTeam
+        ) {
+          thisGroupBonus += 1;
           thisGroupPoints += scoring.bonus;
+        }
       }
       points.group = {
         points: points.group.points + thisGroupPoints,
         correctPicks: points.group.correctPicks + thisGroupCorrectPicks,
+        bonus: points.group.bonus + thisGroupBonus,
       };
     });
   }
@@ -108,6 +115,11 @@ function calculatePrediction(prediction, result, competition, matches) {
     points.playoff.points +
     points.champion.points +
     points.misc.points;
+  const totalPicks =
+    points.group.correctPicks +
+    points.playoff.correctPicks +
+    points.champion.correctPicks +
+    points.misc.correctPicks;
 
   // find potential points possible
   let potentialPoints;
@@ -212,23 +224,58 @@ function calculatePrediction(prediction, result, competition, matches) {
     realistic,
   };
 
-  // return {points, totalPoints} for bulkwrite
-  return { points, totalPoints, potentialPoints };
+  // return {points, totalPoints, totalPicks} for bulkwrite
+  return { points, totalPoints, totalPicks, potentialPoints };
 }
 
+function getDescendantProp(obj, desc) {
+  var arr = desc.split(".");
+  while (arr.length && (obj = obj[arr.shift()]));
+  return obj;
+}
+const tiebreakers = [
+  "totalPoints",
+  "points.champion.correctPicks",
+  "totalPicks",
+  "points.playoff.points",
+  "points.playoff.correctPicks",
+  "points.group.points",
+  "points.group.correctPicks",
+  "points.group.bonus",
+  "points.misc.points",
+  "points.misc.correctPicks",
+];
+
 function addRanking(predictions) {
-  predictions.sort((a, b) => b.totalPoints - a.totalPoints);
-  let nextRanking = 0;
-  const addRanking = predictions.map((p, idx) => {
-    if (
-      !predictions[idx - 1] ||
-      predictions[idx - 1].totalPoints !== p.totalPoints
-    )
-      nextRanking = idx + 1;
+  predictions.sort((a, b) => {
+    let value;
+    for (let i = 0; i < tiebreakers.length; i++) {
+      const aVal = getDescendantProp(a, tiebreakers[i]) || 0;
+      const bVal = getDescendantProp(b, tiebreakers[i]) || 0;
+      value = bVal - aVal;
+      if (value !== 0) break;
+    }
+    return value;
+  });
+
+  let nextRanking = 1;
+  const withRankings = predictions.map((p, idx) => {
+    const prev = predictions[idx - 1];
+    if (prev) {
+      let value;
+      for (let i = 0; i < tiebreakers.length; i++) {
+        const aVal = getDescendantProp(p, tiebreakers[i]) || 0;
+        const bVal = getDescendantProp(prev, tiebreakers[i]) || 0;
+        value = bVal - aVal;
+        if (value !== 0) break;
+      }
+      if (value) nextRanking = idx + 1;
+    }
 
     return { ...p, ranking: nextRanking };
   });
-  return addRanking;
+
+  return withRankings;
 }
 
 module.exports.calculatePrediction = calculatePrediction;

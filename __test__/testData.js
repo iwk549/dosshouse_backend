@@ -286,6 +286,7 @@ const predictions = [
       misc: { points: 20, correctPicks: 2 },
     },
     totalPoints: 35,
+    totalPicks: 10,
     ranking: null,
   },
   {
