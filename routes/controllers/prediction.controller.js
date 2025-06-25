@@ -195,7 +195,8 @@ async function getLeaderboardByGroup(req, res, next) {
   const competition = await Competition.findById(req.params.id);
   if (!competition) next({ status: 404, message: "Competition not found" });
 
-  let selectedFields = "name points totalPoints ranking userID potentialPoints";
+  let selectedFields =
+    "name points totalPoints totalPicks ranking userID potentialPoints";
   if (competition.submissionDeadline < new Date()) selectedFields += " misc";
 
   if (
@@ -255,6 +256,7 @@ async function searchLeaderboard(req, res, next) {
     name: "$name",
     points: "$points",
     totalPoints: "$totalPoints",
+    totalPicks: "$totalPicks",
     ranking: "$ranking",
   };
   if (competition.submissionDeadline < new Date())

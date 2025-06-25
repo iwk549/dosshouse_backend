@@ -556,7 +556,7 @@ describe("calculations", () => {
         expect(r.ranking).toBe(r.expectedRanking);
       });
     });
-    describe("tiebreakers", () => {
+    describe("Tiebreakers and situations", () => {
       [
         {
           field: "totalPoints",
@@ -721,13 +721,45 @@ describe("calculations", () => {
             },
           ],
         },
+        {
+          testName: "Club World Cup Prod Situation",
+          predictions: [
+            {
+              expectedRanking: 3,
+              totalPicks: 11,
+              points: {
+                group: { points: 3, correctPicks: 3 },
+                playoff: { points: 16, correctPicks: 8 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              totalPicks: 12,
+              points: {
+                group: { points: 5, correctPicks: 5 },
+                playoff: { points: 14, correctPicks: 7 },
+              },
+            },
+            {
+              expectedRanking: 1,
+              totalPicks: 12,
+              points: {
+                group: { points: 5, correctPicks: 5 },
+                playoff: { points: 14, correctPicks: 7 },
+              },
+            },
+          ],
+        },
       ].forEach((tb) => {
-        it(`should use the ${tb.field} tiebreaker`, () => {
-          const res = addRanking(tb.predictions);
-          res.forEach((r) => {
-            expect(r.ranking).toBe(r.expectedRanking);
-          });
-        });
+        it(
+          tb.field ? `should use the ${tb.field} tiebreaker` : tb.testName,
+          () => {
+            const res = addRanking(tb.predictions);
+            res.forEach((r) => {
+              expect(r.ranking).toBe(r.expectedRanking);
+            });
+          }
+        );
       });
     });
   });
