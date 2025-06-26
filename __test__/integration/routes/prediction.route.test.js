@@ -10,6 +10,7 @@ const {
   insertPredictions,
   cleanup,
   testReponse,
+  insertPrediction,
 } = require("../../helperFunctions");
 const { Prediction } = require("../../../models/prediction.model");
 const { Group } = require("../../../models/group.model");
@@ -64,6 +65,14 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(404);
       testResponseText(res.text, "competition");
     });
+    it("should return 400 if submission is for second chance and competition does not allow second chance", async () => {
+      await insertCompetition(competitionID);
+      const res = await exec(getToken(), {
+        ...prediction,
+        isSecondChance: true,
+      });
+      testReponse(res, 400, "does not allow for second chance");
+    });
     it("should return 400 if the submission deadline is passed", async () => {
       await raiseInsertCompetition(-1);
       const res = await exec(getToken(), prediction);
@@ -111,6 +120,20 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(200);
       const insertedPrediction = await Prediction.findById(res.body);
       expect(insertedPrediction).not.toBeNull();
+    });
+    it("should include the second chance flag", async () => {
+      await insertCompetition(competitionID, null, {
+        secondChance: {
+          submissionDeadline: pickADate(1),
+        },
+      });
+      const res = await exec(getToken(), {
+        ...prediction,
+        isSecondChance: true,
+      });
+      expect(res.status).toBe(200);
+      const insertedPrediction = await Prediction.findById(res.body);
+      expect(insertedPrediction.isSecondChance).toBe(true);
     });
   });
 
@@ -281,7 +304,13 @@ describe("predictionsRoute", () => {
   });
 
   describe("GET /leaderboard/:id/:resultsPerPage/:pageNumber/:groupID", () => {
-    const exec = async (competitionID, pageNumber, perPage, groupID = "all") =>
+    const exec = async (
+      competitionID,
+      pageNumber,
+      perPage,
+      groupID = "all",
+      query = ""
+    ) =>
       await request(server).get(
         endpoint +
           "/leaderboard/" +
@@ -291,7 +320,8 @@ describe("predictionsRoute", () => {
           "/" +
           pageNumber +
           "/" +
-          groupID
+          groupID +
+          query
       );
     testObjectID(exec);
     it("should return 404 if competition not found", async () => {
@@ -330,6 +360,13 @@ describe("predictionsRoute", () => {
       const res = await exec(competitionID, 1, 25);
       expect(res.body.predictions[0]).toHaveProperty("misc");
     });
+    it("should return only second chance entries", async () => {
+      await raiseInsertCompetition(-1);
+      await insertPrediction({ competitionID, isSecondChance: true });
+      await insertPredictions(49, userID, competitionID);
+      const res = await exec(competitionID, 1, 25, "all", "?secondChance=true");
+      expect(res.body.predictions.length).toBe(1);
+    });
     it("should only return predictions that are part of the group", async () => {
       await raiseInsertCompetition(-1);
       const insertedPredictions = await insertPredictions(
@@ -349,7 +386,7 @@ describe("predictionsRoute", () => {
   });
 
   describe("GET /leaderboard/:id/:search", () => {
-    const exec = async (competitionID, groupID = "all", search) =>
+    const exec = async (competitionID, groupID = "all", search, query = "") =>
       await request(server).get(
         endpoint +
           "/leaderboard/" +
@@ -357,7 +394,8 @@ describe("predictionsRoute", () => {
           "/" +
           groupID +
           "/" +
-          search
+          search +
+          query
       );
     testObjectID(exec);
     it("should return 404 if competition not found", async () => {
@@ -372,6 +410,20 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(400);
       testResponseText(res.text, "group");
       testResponseText(res.text, "valid object");
+    });
+    it("should return only second chance entries", async () => {
+      await User.insertMany({ ...users[0], _id: userID, name: "First" });
+      await raiseInsertCompetition(-1);
+      await insertPrediction({ competitionID, isSecondChance: true, userID });
+      await insertPrediction({ competitionID, isSecondChance: false, userID });
+      const filter = "First";
+      const res = await exec(
+        competitionID,
+        "all",
+        filter,
+        "?secondChance=true"
+      );
+      expect(res.body.predictions.length).toBe(1);
     });
     it("should return predictions matching the search", async () => {
       await User.insertMany({ ...users[0], _id: userID, name: "First" });
@@ -477,6 +529,15 @@ describe("predictionsRoute", () => {
       const res = await exec(getToken(), mongoose.Types.ObjectId());
       expect(res.status).toBe(404);
       testResponseText(res.text, "prediction not found");
+    });
+    it("should return 400 if prediction is second chance", async () => {
+      const prediction = await insertPrediction({
+        competitionID,
+        userID,
+        isSecondChance: true,
+      });
+      const res = await exec(getToken(userID), prediction._id);
+      testReponse(res, 400, "second chance predictions cannot");
     });
     it("should return 404 if group does not exist", async () => {
       const insertedPredictions = await insertPredictions(

@@ -57,9 +57,13 @@ async function insertUser(userID, override = {}) {
   return user;
 }
 
-async function insertCompetition(competitionID, competition) {
+async function insertCompetition(competitionID, competition, override = {}) {
   let competitionToInsert = competition || { ...competitions[0] };
   competitionToInsert._id = competitionID;
+  competitionToInsert = {
+    ...competitionToInsert,
+    ...override,
+  };
   await Competition.collection.insertOne(competitionToInsert);
   return competitionToInsert;
 }
