@@ -45,6 +45,26 @@ async function nameIsUnique(name, userID, competitionID) {
   return null;
 }
 
+function deadlineHasPassed(competition, isSecondChance) {
+  return (
+    (isSecondChance
+      ? competition?.secondChance?.submissionDeadline
+      : competition?.submissionDeadline) < new Date()
+  );
+}
+
+function leaderboardFilters(req) {
+  const groupsQuery =
+    req.params.groupID.toLowerCase() === "all"
+      ? {}
+      : { groups: mongoose.Types.ObjectId(req.params.groupID) };
+  const secondChanceQuery = {
+    isSecondChance: req.query.secondChance === "true" || { $ne: true },
+  };
+
+  return { groupsQuery, secondChanceQuery };
+}
+
 async function createNewPrediction(req, res, next) {
   req.body.userID = req.user._id;
   addPoints(req);
@@ -56,7 +76,14 @@ async function createNewPrediction(req, res, next) {
   const competition = await Competition.findById(req.body.competitionID);
   if (!competition)
     return next({ status: 404, message: "Competition not found" });
-  if (competition.submissionDeadline < new Date())
+
+  if (req.body.isSecondChance && !competition.secondChance)
+    return next({
+      status: 400,
+      message: "This competition does not allow for second chance entries",
+    });
+
+  if (deadlineHasPassed(competition, req.body.isSecondChance))
     return next({
       status: 400,
       message:
@@ -66,8 +93,12 @@ async function createNewPrediction(req, res, next) {
   const predictions = await Prediction.find({
     competitionID: req.body.competitionID,
     userID: req.body.userID,
-  }).select("name");
-  if (predictions.length >= competition.maxSubmissions)
+  }).select("name isSecondChance");
+  if (
+    predictions.filter((p) =>
+      req.body.isSecondChance ? p.isSecondChance : !p.isSecondChance
+    ).length >= competition.maxSubmissions
+  )
     return next({
       status: 400,
       message: `You have already submitted the maximum allowed predictions for this competition (${competition.maxSubmissions})`,
@@ -104,7 +135,7 @@ async function updatePrediction(req, res, next) {
   const competition = await Competition.findById(req.body.competitionID);
   if (!competition)
     return next({ status: 404, message: "Competition not found" });
-  if (competition.submissionDeadline < new Date())
+  if (deadlineHasPassed(competition, prediction.isSecondChance))
     return next({
       status: 400,
       message: "The submission deadline has passed. No more edits can be made.",
@@ -158,7 +189,9 @@ async function getPrediction(req, res, next) {
 
 async function getUsersPredictions(req, res) {
   const predictions = await Prediction.find({ userID: req.user._id })
-    .select("competitionID name points totalPoints misc potentialPoints")
+    .select(
+      "competitionID name points totalPoints misc potentialPoints isSecondChance"
+    )
     .populate("competitionID")
     .populate({
       path: "groups",
@@ -176,8 +209,7 @@ async function deletePrediction(req, res, next) {
   if (!prediction)
     return next({ status: 404, message: "Submission not found" });
 
-  const now = new Date();
-  if ((prediction.competitionID?.submissionDeadline || now) < now)
+  if (deadlineHasPassed(prediction.competitionID, prediction.isSecondChance))
     return next({
       status: 400,
       message:
@@ -197,7 +229,8 @@ async function getLeaderboardByGroup(req, res, next) {
 
   let selectedFields =
     "name points totalPoints totalPicks ranking userID potentialPoints";
-  if (competition.submissionDeadline < new Date()) selectedFields += " misc";
+  if (deadlineHasPassed(competition, req.query.secondChance === "true"))
+    selectedFields += " misc";
 
   if (
     req.params.groupID !== "all" &&
@@ -208,11 +241,7 @@ async function getLeaderboardByGroup(req, res, next) {
       message: `Group ID parameter must be "all" or a valid objectID`,
     });
 
-  // group query will only be set if groupID is passed
-  const groupsQuery =
-    req.params.groupID.toLowerCase() === "all"
-      ? {}
-      : { groups: mongoose.Types.ObjectId(req.params.groupID) };
+  const { groupsQuery, secondChanceQuery } = leaderboardFilters(req);
 
   const limit = !isNaN(Number(req.params.resultsPerPage))
     ? Number(req.params.resultsPerPage)
@@ -221,8 +250,10 @@ async function getLeaderboardByGroup(req, res, next) {
     ? Number(req.params.pageNumber)
     : 1;
   const skip = limit * (pageNumber - 1);
+
   const predictions = await Prediction.find({
     competitionID: req.params.id,
+    ...secondChanceQuery,
     ...groupsQuery,
   })
     .select(selectedFields)
@@ -233,6 +264,7 @@ async function getLeaderboardByGroup(req, res, next) {
   const count = await Prediction.count({
     competitionID: req.params.id,
     ...groupsQuery,
+    ...secondChanceQuery,
   });
 
   // do not remove _id from groupInfo ownerID, this is used client side to display remove button
@@ -259,7 +291,7 @@ async function searchLeaderboard(req, res, next) {
     totalPicks: "$totalPicks",
     ranking: "$ranking",
   };
-  if (competition.submissionDeadline < new Date())
+  if (deadlineHasPassed(competition, req.query.secondChance === "true"))
     projectedFields.misc = "$misc";
 
   if (
@@ -271,11 +303,7 @@ async function searchLeaderboard(req, res, next) {
       message: `Group ID parameter must be "all" or a valid objectID`,
     });
 
-  // group query will only be set if groupID is passed
-  const groupsQuery =
-    req.params.groupID.toLowerCase() === "all"
-      ? {}
-      : { groups: mongoose.Types.ObjectId(req.params.groupID) };
+  const { groupsQuery, secondChanceQuery } = leaderboardFilters(req);
   const searchParamRegex = new RegExp(req.params.search, "i");
 
   // this pipeline will:
@@ -286,6 +314,7 @@ async function searchLeaderboard(req, res, next) {
     {
       $match: {
         competitionID: mongoose.Types.ObjectId(req.params.id),
+        ...secondChanceQuery,
         ...groupsQuery,
       },
     },
@@ -325,7 +354,7 @@ async function searchLeaderboard(req, res, next) {
 
 async function getNonUserPrediction(req, res, next) {
   const prediction = await Prediction.findById(req.params.id).select(
-    "competitionID"
+    "competitionID isSecondChance"
   );
   if (!prediction)
     return next({ status: 404, message: "Prediction not found" });
@@ -335,7 +364,7 @@ async function getNonUserPrediction(req, res, next) {
     return next({ status: 404, message: "Competition not found" });
 
   let selectedFields;
-  if (competition.submissionDeadline > new Date())
+  if (!deadlineHasPassed(competition, prediction.isSecondChance))
     selectedFields = "name points totalPoints userID";
 
   let predictionToSend;
@@ -355,6 +384,14 @@ async function addPredictionToGroup(req, res, next) {
   });
   if (!prediction)
     return next({ status: 404, message: "Prediction not found" });
+
+  if (prediction.isSecondChance) {
+    return next({
+      status: 400,
+      message: "Second chance predictions cannot be added to groups",
+    });
+  }
+
   if (prediction.groups.length >= max.groupsPerPrediction)
     return next({
       status: 400,

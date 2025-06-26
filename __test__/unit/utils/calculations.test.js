@@ -514,6 +514,63 @@ describe("calculations", () => {
         );
       });
     });
+
+    describe("Second Chance Competitions", () => {
+      it("should not include points for group picks", () => {
+        const prediction = setPrediction(
+          ["group"],
+          [
+            { groupName: "a", teamOrder: ["b", "a", "c", "d"] },
+            { groupName: "b", teamOrder: ["f", "g", "f", "g"] },
+          ]
+        );
+        prediction.isSecondChance = true;
+        const res = exec(prediction, result, competitions[0]);
+
+        // 4 points, 1 for each correct pick, no bonus
+        expect(res.points.group.points).toBe(0);
+        expect(res.points.group.correctPicks).toBe(0);
+        expect(res.totalPoints).toBe(0);
+        expect(res.totalPicks).toBe(0);
+      });
+      it("should not include points for the first round of playoffs", () => {
+        const prediction = setPrediction(["playoff"], null, [
+          { matchNumber: 1, homeTeam: "e", awayTeam: "f", round: 1 },
+          { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
+        ]);
+        prediction.isSecondChance = true;
+        const res = exec(prediction, result, competitions[0]);
+
+        // 4 points for 2 correct teams in round 1
+        // 4 points for 1 correct team in round 2
+        expect(res.points.playoff.points).toBe(0);
+        expect(res.totalPoints).toBe(0);
+        expect(res.totalPicks).toBe(0);
+      });
+      it("should not include bonus points for non thirdPlace picks", () => {
+        const prediction = setPrediction(["misc"]);
+        prediction.isSecondChance = true;
+        const res = exec(prediction, result, competitions[0]);
+
+        expect(res.points.champion.points).toBe(32);
+        expect(res.points.misc.points).toBe(16);
+        expect(res.points.misc.correctPicks).toBe(1);
+      });
+      it("should calculate as expected", () => {
+        const prediction = setPrediction(["group", "playoff", "misc"]);
+        prediction.isSecondChance = true;
+        const res = exec(prediction, result, competitions[0]);
+
+        expect(res.points.group.points).toBe(0);
+        expect(res.points.group.correctPicks).toBe(0);
+        expect(res.points.playoff.points).toBe(8);
+        expect(res.points.playoff.correctPicks).toBe(2);
+        expect(res.points.misc.points).toBe(16);
+        expect(res.points.misc.correctPicks).toBe(1);
+        expect(res.points.champion.points).toBe(32);
+        expect(res.points.champion.correctPicks).toBe(1);
+      });
+    });
   });
 
   describe("addRanking", () => {

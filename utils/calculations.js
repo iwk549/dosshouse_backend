@@ -19,7 +19,7 @@ function calculatePrediction(prediction, result, competition, matches) {
       const groupResult = result.group.find(
         (groupResult) => groupResult.groupName === groupPrediction.groupName
       );
-      if (groupResult) {
+      if (!prediction.isSecondChance && groupResult) {
         // find if this group is part of a matrix
         const groupMatrix =
           competition.groupMatrix?.length &&
@@ -69,22 +69,27 @@ function calculatePrediction(prediction, result, competition, matches) {
     prediction.playoffPredictions
   ) {
     result.playoff.forEach((playoffResult) => {
-      const thisRoundPredictions = prediction.playoffPredictions.filter(
-        (playoffPrediction) => playoffPrediction.round === playoffResult.round
-      );
-      const thisRoundScoring = competition.scoring.playoff.find(
-        (c) => c.roundNumber === playoffResult.round
-      );
-      if (thisRoundScoring && thisRoundPredictions) {
-        // match the result against each team in prediction
-        // this will prevent a user from picking a single team
-        // in multiple spots and getting points for each
-        playoffResult.teams.forEach((t) => {
-          const teamFound = thisRoundPredictions.find(
-            (p) => p.homeTeam === t || p.awayTeam === t
-          );
-          if (teamFound) addPointsAndPicks(thisRoundScoring);
-        });
+      if (prediction.isSecondChance && playoffResult.round === 1) {
+        // skip this round for second chance brackets
+        // these picks were prepopulated
+      } else {
+        const thisRoundPredictions = prediction.playoffPredictions.filter(
+          (playoffPrediction) => playoffPrediction.round === playoffResult.round
+        );
+        const thisRoundScoring = competition.scoring.playoff.find(
+          (c) => c.roundNumber === playoffResult.round
+        );
+        if (thisRoundScoring && thisRoundPredictions) {
+          // match the result against each team in prediction
+          // this will prevent a user from picking a single team
+          // in multiple spots and getting points for each
+          playoffResult.teams.forEach((t) => {
+            const teamFound = thisRoundPredictions.find(
+              (p) => p.homeTeam === t || p.awayTeam === t
+            );
+            if (teamFound) addPointsAndPicks(thisRoundScoring);
+          });
+        }
       }
     });
   }
@@ -101,10 +106,15 @@ function calculatePrediction(prediction, result, competition, matches) {
         predictionPick &&
         result.misc[miscPick.name].includes(predictionPick)
       ) {
-        points.misc = {
-          points: points.misc.points + miscPick.points,
-          correctPicks: points.misc.correctPicks + 1,
-        };
+        if (prediction.isSecondChance && miscPick.name !== "thirdPlace") {
+          // do not add points for non third place picks
+          // golden boot, worst discipline, etc are not awarded to second chance brackets
+        } else {
+          points.misc = {
+            points: points.misc.points + miscPick.points,
+            correctPicks: points.misc.correctPicks + 1,
+          };
+        }
       }
     });
   }

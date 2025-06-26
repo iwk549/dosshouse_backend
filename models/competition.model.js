@@ -13,9 +13,19 @@ const groupScoringSchema = {
 const competitionMongooseSchema = new mongoose.Schema({
   code: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  submissionDeadline: { type: Date, required: false },
-  competitionStart: { type: Date, required: false },
-  competitionEnd: { type: Date, required: false },
+  submissionDeadline: { type: Date, required: true },
+  competitionStart: { type: Date, required: true },
+  competitionEnd: { type: Date, required: true },
+  secondChance: {
+    type: Object,
+    required: false,
+    keys: {
+      maxSubmissions: { type: Number, required: false },
+      availableFrom: { type: Date, required: true },
+      submissionDeadline: { type: Date, required: true },
+      competitionStart: { type: Date, required: true },
+    },
+  },
   maxSubmissions: { type: Number, required: true },
   scoring: {
     type: Object,

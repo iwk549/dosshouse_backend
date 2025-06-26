@@ -19,6 +19,7 @@ const predictionMongooseSchema = new mongoose.Schema({
     ref: "Competition",
     index: true,
   },
+  isSecondChance: { type: Boolean, required: false },
   groupPredictions: [
     {
       type: Object,
@@ -113,6 +114,7 @@ const predictionSchema = {
   userID: Joi.objectID().required(),
   name: Joi.string().min(3).max(50).required().label("Bracket Name"),
   competitionID: Joi.objectID().required(),
+  isSecondChance: Joi.boolean().optional(),
   groupPredictions: Joi.array()
     .items(
       Joi.object()
