@@ -6,7 +6,7 @@ const { Prediction } = require("../../models/prediction.model");
 const { Competition } = require("../../models/competition.model");
 const { Match } = require("../../models/match.model");
 
-const calculateAndPostResults = async (competition, result) => {
+const calculateAndPostSubmissions = async (competition, result) => {
   const allPredictions = await Prediction.find({
     competitionID: competition._id,
   });
@@ -17,6 +17,7 @@ const calculateAndPostResults = async (competition, result) => {
       calculatePrediction(p, result, competition, matches);
     updatedPoints.push({
       _id: p._id,
+      isSecondChance: p.isSecondChance,
       points,
       totalPoints,
       totalPicks,
@@ -24,23 +25,33 @@ const calculateAndPostResults = async (competition, result) => {
     });
   });
 
-  const predictionsWithRanking = addRanking(updatedPoints);
+  // split second chance submissions into separate ranking order
+  const primary = [];
+  const secondary = [];
+  updatedPoints.forEach((p) => {
+    if (p.isSecondChance) secondary.push(p);
+    else primary.push(p);
+  });
+  const predictionsWithRanking = addRanking(primary);
+  const secondChancePredictionsWithRanking = addRanking(secondary);
 
   await Prediction.bulkWrite(
-    predictionsWithRanking.map((u) => ({
-      updateOne: {
-        filter: { _id: mongoose.Types.ObjectId(u._id) },
-        update: {
-          $set: {
-            points: u.points,
-            totalPoints: u.totalPoints,
-            totalPicks: u.totalPicks,
-            ranking: u.ranking,
-            potentialPoints: u.potentialPoints,
+    [...predictionsWithRanking, ...secondChancePredictionsWithRanking].map(
+      (u) => ({
+        updateOne: {
+          filter: { _id: mongoose.Types.ObjectId(u._id) },
+          update: {
+            $set: {
+              points: u.points,
+              totalPoints: u.totalPoints,
+              totalPicks: u.totalPicks,
+              ranking: u.ranking,
+              potentialPoints: u.potentialPoints,
+            },
           },
         },
-      },
-    }))
+      })
+    )
   );
 };
 
@@ -58,7 +69,7 @@ async function updateResultsByCompetition(req, res, next) {
   });
 
   if (req.query.calculate) {
-    await calculateAndPostResults(competition, req.body);
+    await calculateAndPostSubmissions(competition, req.body);
   }
 
   res.send(update);
@@ -82,7 +93,7 @@ async function calculateCompetition(req, res, next) {
   if (!competition)
     return next({ status: 404, message: "Competition not found" });
 
-  await calculateAndPostResults(competition, result);
+  await calculateAndPostSubmissions(competition, result);
 
   res.send("ok");
 }

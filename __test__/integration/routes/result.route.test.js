@@ -8,6 +8,7 @@ const {
   getToken,
   insertCompetition,
   cleanup,
+  insertPrediction,
 } = require("../../helperFunctions");
 const mongoose = require("mongoose");
 const { Result } = require("../../../models/result.model");
@@ -33,8 +34,8 @@ describe("resultsRoute", () => {
     await deleteAllData();
   });
 
-  const insertResult = async (competition) => {
-    let result = { ...results[0] };
+  const insertResult = async (competition, override = {}) => {
+    let result = { ...results[0], ...override };
     result.bracketCode = competition.code;
     await Result.collection.insertOne(result);
     return result;
@@ -195,6 +196,61 @@ describe("resultsRoute", () => {
         expect(up.ranking).toBe(1);
         expect(up.totalPoints).toBe(updatedPredictions[0].totalPoints);
         expect(up.totalPicks).toBe(updatedPredictions[0].totalPicks);
+      });
+    });
+    it("should add rankings separately for second chance competitions", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      const result = await insertResult(competition, {
+        group: [{ groupName: "A", teamOrder: ["A", "B", "C", "D"] }],
+        playoff: [
+          { round: 1, teams: ["A", "B", "C", "D"] },
+          { round: 2, teams: ["A", "B"] },
+        ],
+      });
+      const pred3 = await insertPrediction({
+        competitionID,
+        groupPredictions: [],
+        playoffPredictions: [],
+      });
+      const pred2 = await insertPrediction({
+        competitionID,
+        groupPredictions: [{ groupName: "A", teamOrder: ["D", "B", "C", "A"] }],
+        playoffPredictions: [{ round: 1, homeTeam: "D", awayTeam: "B" }],
+      });
+      const pred1 = await insertPrediction({
+        competitionID,
+        groupPredictions: [{ groupName: "A", teamOrder: ["A", "B", "C", "D"] }],
+        playoffPredictions: [{ round: 1, homeTeam: "A", awayTeam: "B" }],
+      });
+      const predSc2 = await insertPrediction({
+        isSecondChance: true,
+        competitionID,
+        groupPredictions: [],
+        playoffPredictions: [],
+      });
+      const predSc1 = await insertPrediction({
+        isSecondChance: true,
+        competitionID,
+        groupPredictions: [],
+        playoffPredictions: [{ round: 2, homeTeam: "A", awayTeam: "B" }],
+      });
+      await exec(getToken(admin._id, admin, "admin"), result.code);
+      const order = [pred1, pred2, pred3];
+      const orderSc = [predSc1, predSc2];
+      const updated = await Prediction.find();
+
+      order.forEach((pred, idx) => {
+        const thisPred = updated.find(
+          (u) => String(u._id) === String(pred._id)
+        );
+        expect(thisPred.ranking).toBe(idx + 1);
+      });
+      orderSc.forEach((pred, idx) => {
+        const thisPred = updated.find(
+          (u) => String(u._id) === String(pred._id)
+        );
+        expect(thisPred.ranking).toBe(idx + 1);
       });
     });
   });

@@ -142,7 +142,7 @@ function calculatePrediction(prediction, result, competition, matches) {
     prediction?.playoffPredictions &&
     result.playoff[result.playoff.length - 1] ===
       prediction.playoffPredictions[prediction.playoffPredictions.length - 1]
-        .round
+        ?.round
   ) {
     // do nothing, the competition is in the final round
   } else if (
