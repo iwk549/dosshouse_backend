@@ -9,10 +9,8 @@ const {
   calculateCompetition,
 } = require("../controllers/result.controller");
 
-router.use(auth);
-
-router.put("/:code", [adminCheck], updateResultsByCompetition);
+router.put("/:code", [auth, adminCheck], updateResultsByCompetition);
 router.get("/:id", [validateObjectID], getResult);
-router.post("/calculate/:code", [adminCheck], calculateCompetition);
+router.post("/calculate/:code", [auth, adminCheck], calculateCompetition);
 
 module.exports = router;
