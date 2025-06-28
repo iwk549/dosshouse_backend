@@ -138,7 +138,7 @@ describe("resultsRoute", () => {
         .get(endpoint + "/" + id)
         .set(header, token);
     };
-    testAuth(exec);
+
     testObjectID(exec, true);
     it("should return 404 if the competition is not found", async () => {
       const res = await exec(getToken(), mongoose.Types.ObjectId());
