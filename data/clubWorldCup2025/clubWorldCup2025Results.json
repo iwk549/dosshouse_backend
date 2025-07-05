@@ -101,5 +101,33 @@
     "discipline": ["Boca Juniors (ARG)"],
     "topScorer": ["Bayern Munich (GER)"]
   },
-  "potentials": {}
+  "potentials": {},
+  "leaders": [
+    {
+      "key": "discipline",
+      "label": "Worst Discipline",
+      "leaders": [
+        {
+          "team": "Boca Juniors (ARG)",
+          "value": "2 Red Cards, 5 Yellow Cards"
+        }
+      ]
+    },
+    {
+      "key": "topScorer",
+      "label": "Top Goalscorer",
+      "leaders": [
+        {
+          "team": "Boca Juniors (ARG)",
+          "player": "Test One",
+          "value": "2 Goals, 1 Assist"
+        },
+        {
+          "team": "Bayern Munich (GER)",
+          "player": "Test Two",
+          "value": "2 Goals, 1 Assist"
+        }
+      ]
+    }
+  ]
 }
