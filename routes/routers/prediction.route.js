@@ -15,6 +15,7 @@ const {
   removePredictionFromGroup,
   removePredictionFromGroupByGroupOwner,
   getUsersPredictionsByCompetition,
+  getPredictionsByMisc,
 } = require("../controllers/prediction.controller");
 
 router.post("/", [auth], createNewPrediction);
@@ -31,6 +32,11 @@ router.get(
   "/leaderboard/:id/:groupID/:search",
   [validateObjectID],
   searchLeaderboard
+);
+router.get(
+  "/bonus/:id/:key/:team",
+  [auth, validateObjectID],
+  getPredictionsByMisc
 );
 router.get("/unowned/:id", [auth, validateObjectID], getNonUserPrediction);
 router.put("/addtogroup/:id", [auth, validateObjectID], addPredictionToGroup);

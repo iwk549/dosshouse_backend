@@ -740,4 +740,42 @@ describe("predictionsRoute", () => {
       expect(res.body.length).toBe(insertedPredictions.length);
     });
   });
+
+  describe("GET /bonus/:id/:key/:team", () => {
+    const exec = async (token, competitionID, key = "x", team = "x") =>
+      await request(server)
+        .get(endpoint + "/bonus/" + competitionID + "/" + key + "/" + team)
+        .set(header, token);
+    testAuth(exec);
+    testObjectID(exec, true);
+
+    it("should return 400 if submission deadline has not passed", async () => {
+      const pred = await insertPrediction({ misc: { testKey: "Team A" } });
+      const comp = await insertCompetition(pred.competitionID, {
+        submissionDeadline: pickADate(1),
+      });
+      const res = await exec(getToken(userID), comp._id, "testKey", "Team A");
+      testReponse(res, 400);
+    });
+    it("should return submissions containing the matching pick", async () => {
+      const pred = await insertPrediction({ misc: { testKey: "Team A" } });
+      await insertCompetition(pred.competitionID);
+      await insertPrediction({ misc: { testKey: "Team A" } });
+      await insertPrediction({
+        misc: { testKey: "Team B", otherKey: "Team A" },
+      });
+      await insertPrediction({
+        competitionID: "other",
+        misc: { testKey: "Team A" },
+      });
+      const res = await exec(
+        getToken(userID),
+        pred.competitionID,
+        "testKey",
+        "Team A"
+      );
+      testReponse(res, 200);
+      expect(res.body.length).toBe(2);
+    });
+  });
 });
