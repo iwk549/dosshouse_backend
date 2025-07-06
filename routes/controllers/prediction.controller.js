@@ -468,6 +468,23 @@ async function getUsersPredictionsByCompetition(req, res) {
   res.send(predictions);
 }
 
+async function getPredictionsByMisc(req, res, next) {
+  const predictions = await Prediction.find({
+    competitionID: req.params.id,
+    ["misc." + req.params.key]: req.params.team,
+  })
+    .populate("competitionID")
+    .populate({ path: "userID", select: "name" });
+
+  if (predictions[0] && !deadlineHasPassed(predictions[0].competitionID)) {
+    return next({
+      status: 400,
+      message: "Pick information hidden until submission deadline has passed",
+    });
+  }
+  res.send(predictions);
+}
+
 module.exports = {
   createNewPrediction,
   updatePrediction,
@@ -481,4 +498,5 @@ module.exports = {
   removePredictionFromGroup,
   removePredictionFromGroupByGroupOwner,
   getUsersPredictionsByCompetition,
+  getPredictionsByMisc,
 };

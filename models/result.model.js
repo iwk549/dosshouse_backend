@@ -27,6 +27,7 @@ const resultMongooseSchema = new mongoose.Schema({
   ],
   misc: miscKeys,
   potentials: { type: Object, required: false },
+  leaders: [{ type: Object, required: false }],
 });
 
 const Result = mongoose.model("Result", resultMongooseSchema);
@@ -58,6 +59,24 @@ const resultSchema = {
       thirdPlace: Joi.array().items(Joi.string()),
     }),
   }),
+  leaders: Joi.array()
+    .items(
+      Joi.object().keys({
+        key: Joi.string().required(),
+        label: Joi.string().required(),
+        leaders: Joi.array()
+          .required()
+          .items(
+            Joi.object().keys({
+              team: Joi.string().required(),
+              player: Joi.string().optional(),
+              value: Joi.string().required(),
+              eliminated: Joi.boolean().optional(),
+            })
+          ),
+      })
+    )
+    .optional(),
 };
 
 function validateResult(result) {
