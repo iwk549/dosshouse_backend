@@ -646,10 +646,97 @@ const users = [
   },
 ];
 
+const playoffMatches = [
+  {
+    round: 1,
+    homeTeamName: "Team A",
+    awayTeamName: "Team B",
+    matchNumber: 1,
+    matchAccepted: false,
+    getTeamsFrom: {
+      home: { group: "A", position: 1 },
+      away: { group: "B", position: 2 },
+    },
+  },
+  {
+    round: 1,
+    homeTeamName: "Team A",
+    awayTeamName: "Team F",
+    matchAccepted: false,
+    matchNumber: 2,
+    getTeamsFrom: {
+      home: { group: "A", position: 1 },
+      away: { group: "B", position: 2 },
+    },
+  },
+  {
+    round: 1,
+    homeTeamName: "Team I",
+    awayTeamName: "Team N",
+    matchAccepted: false,
+    matchNumber: 3,
+    getTeamsFrom: {
+      home: { group: "C", position: 1 },
+      away: { group: "D", position: 2 },
+    },
+  },
+  {
+    round: 1,
+    homeTeamName: "Team J",
+    awayTeamName: "Team M",
+    matchAccepted: false,
+    matchNumber: 4,
+    getTeamsFrom: {
+      home: { group: "C", position: 2 },
+      away: { group: "D", position: 1 },
+    },
+  },
+  {
+    round: 2,
+    homeTeamName: "Winner 1",
+    awayTeamName: "Winner 3",
+    matchAccepted: false,
+    matchNumber: 6,
+    getTeamsFrom: {
+      home: { matchNumber: 1 },
+      away: { matchNumber: 3 },
+    },
+    metadata: {
+      matchNumber: 5,
+    },
+  },
+  {
+    round: 2,
+    homeTeamName: "Winner 2",
+    awayTeamName: "Winner 4",
+    matchAccepted: false,
+    matchNumber: 5,
+    getTeamsFrom: {
+      home: { matchNumber: 2 },
+      away: { matchNumber: 4 },
+    },
+    metadata: {
+      matchNumber: 6,
+    },
+  },
+  {
+    round: 3,
+    homeTeamName: "Winner 5",
+    awayTeamName: "Winner 6",
+    matchAccepted: false,
+    matchNumber: 7,
+    getTeamsFrom: {
+      home: { matchNumber: 5 },
+      away: { matchNumber: 6 },
+    },
+  },
+];
+
 module.exports.competitions = competitions;
 module.exports.matches = matches;
 module.exports.results = results;
 module.exports.predictions = predictions;
 module.exports.groups = groups;
 module.exports.users = users;
+module.exports.playoffMatches = playoffMatches;
 module.exports.header = "x-auth-token";

@@ -1,3 +1,43 @@
+class MatchNode {
+  constructor(match) {
+    this.id = match.metadata?.matchNumber || match.matchNumber;
+    this.round = match.round;
+    this.homeTeamName = match.homeTeamName;
+    this.awayTeamName = match.awayTeamName;
+    this.matchAccepted = match.matchAccepted;
+    this.homeTeamFrom = match.getTeamsFrom.home.matchNumber;
+    this.awayTeamFrom = match.getTeamsFrom.away.matchNumber;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+function createBinaryPlayoffTree(matches) {
+  const nodes = {};
+
+  let roundOneSet = true;
+  let finalMatchNumber = 0;
+  for (let m of matches) {
+    if (m.round === 1 && !m.teamsSet) {
+      roundOneSet = false;
+      break;
+    }
+    const node = new MatchNode(m);
+    if (node.id > finalMatchNumber) finalMatchNumber = node.id;
+    nodes[node.id] = node;
+  }
+
+  if (!roundOneSet) return null;
+
+  for (let key in nodes) {
+    const thisNode = nodes[key];
+    thisNode.left = nodes[thisNode.homeTeamFrom];
+    thisNode.right = nodes[thisNode.awayTeamFrom];
+  }
+
+  return nodes[finalMatchNumber];
+}
+
 function calculatePrediction(prediction, result, competition, matches) {
   let points = {
     group: { points: 0, correctPicks: 0, bonus: 0 },
@@ -288,5 +328,7 @@ function addRanking(predictions) {
   return withRankings;
 }
 
+module.exports.createBinaryPlayoffTree = createBinaryPlayoffTree;
+module.exports.MatchNode = MatchNode;
 module.exports.calculatePrediction = calculatePrediction;
 module.exports.addRanking = addRanking;

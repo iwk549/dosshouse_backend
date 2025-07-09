@@ -35,6 +35,7 @@ async function updateJsonMatches(req, res) {
             awayTeamGoals: match.awayTeamGoals,
             awayTeamPKs: match.awayTeamPKs,
             matchAccepted: match.matchAccepted,
+            teamsSet: match.teamsSet,
             location: match.location,
             dateTime: match.dateTime?.$date,
           },
