@@ -13,8 +13,8 @@
     {
       "groupName": "B",
       "teamOrder": [
-        "Botafogo (BRA)",
         "Paris Saint-Germain (FRA)",
+        "Botafogo (BRA)",
         "Atletico Madrid (ESP)",
         "Seattle Sounders (USA)"
       ]
@@ -22,8 +22,8 @@
     {
       "groupName": "C",
       "teamOrder": [
-        "Bayern Munich (GER)",
         "Benfica (POR)",
+        "Bayern Munich (GER)",
         "Boca Juniors (ARG)",
         "Auckland City (NZL)"
       ]
@@ -40,17 +40,17 @@
     {
       "groupName": "E",
       "teamOrder": [
-        "River Plate (ARG)",
         "Internazionale (ITA)",
         "Monterrey (MEX)",
+        "River Plate (ARG)",
         "Urawa Red Diamonds (JAP)"
       ]
     },
     {
       "groupName": "F",
       "teamOrder": [
-        "Fluminense (BRA)",
         "Borussia Dortmund (GER)",
+        "Fluminense (BRA)",
         "Mamelodi Sundowns (RSA)",
         "Ulsan HD (KOR)"
       ]
@@ -58,18 +58,18 @@
     {
       "groupName": "G",
       "teamOrder": [
-        "Juventus (ITA)",
         "Manchester City (ENG)",
-        "Wydad (MOR)",
-        "Al Ain (UAE)"
+        "Juventus (ITA)",
+        "Al Ain (UAE)",
+        "Wydad (MOR)"
       ]
     },
     {
       "groupName": "H",
       "teamOrder": [
         "Real Madrid (ESP)",
-        "Salzburg (AUT)",
         "Al Hilal (SAU)",
+        "Salzburg (AUT)",
         "Pachuca (MEX)"
       ]
     }
@@ -77,29 +77,81 @@
   "playoff": [
     {
       "round": 1,
-      "teams": ["Flamengo (BRA)"],
+      "teams": [
+        "Palmeiras (BRA)",
+        "Inter Miami (USA)",
+        "Paris Saint-Germain (FRA)",
+        "Botafogo (BRA)",
+        "Benfica (POR)",
+        "Bayern Munich (GER)",
+        "Flamengo (BRA)",
+        "Chelsea (ENG)",
+        "Internazionale (ITA)",
+        "Monterrey (MEX)",
+        "Borussia Dortmund (GER)",
+        "Fluminense (BRA)",
+        "Juventus (ITA)",
+        "Manchester City (ENG)",
+        "Real Madrid (ESP)",
+        "Al Hilal (SAU)"
+      ],
       "points": 2
     },
     {
       "round": 2,
-      "teams": [],
+      "teams": [
+        "Palmeiras (BRA)",
+        "Chelsea (ENG)",
+        "Paris Saint-Germain (FRA)",
+        "Bayern Munich (GER)",
+        "Fluminense (BRA)",
+        "Al Hilal (SAU)",
+        "Real Madrid (ESP)",
+        "Borussia Dortmund (GER)"
+      ],
       "points": 4
     },
     {
       "round": 3,
-      "teams": [],
+      "teams": [
+        "Fluminense (BRA)",
+        "Chelsea (ENG)",
+        "Paris Saint-Germain (FRA)",
+        "Real Madrid (ESP)"
+      ],
       "points": 8
     },
     {
       "round": 4,
-      "teams": [],
+      "teams": ["Chelsea (ENG)", "Paris Saint-Germain (FRA)"],
       "points": 16
     }
   ],
   "misc": {
-    "winner": "",
-    "discipline": ["Boca Juniors (ARG)"],
-    "topScorer": ["Bayern Munich (GER)"]
+    "winner": "Chelsea (ENG)",
+    "discipline": ["Chelsea (ENG)"],
+    "topScorer": ["Real Madrid (ESP)"]
   },
-  "potentials": {}
+  "potentials": {},
+  "leaders": [
+    {
+      "key": "discipline",
+      "label": "Worst Discipline",
+      "leaders": [
+        { "team": "Chelsea (ENG)", "value": "17 Yellow Cards, 1 Red Card" }
+      ]
+    },
+    {
+      "key": "topScorer",
+      "label": "Top Goalscorer",
+      "leaders": [
+        {
+          "team": "Real Madrid (ESP)",
+          "player": "Gonzalo Garcia",
+          "value": "4 Goals, 1 Assist",
+          "eliminated": true
+        }
+      ]
+    }
+  ]
 }
