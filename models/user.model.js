@@ -15,7 +15,7 @@ const userMongooseSchema = new mongoose.Schema({
     minLength: 5,
     maxLength: 255,
   },
-  password: { type: String, required: true, minLength: 8, maxLength: 1024 },
+  password: { type: String, required: false, minLength: 8, maxLength: 1024 },
   role: { type: String, required: false },
   settings: { type: Object, required: false },
   lastActive: { type: Date, required: false },
@@ -27,6 +27,7 @@ const userMongooseSchema = new mongoose.Schema({
     },
     required: false,
   },
+  googleId: { type: String, required: false },
 });
 
 userMongooseSchema.methods.generateAuthToken = function () {
@@ -48,7 +49,7 @@ const userSchema = {
   _id: Joi.objectID(),
   name: Joi.string().min(3).max(100).required(),
   email: Joi.string().min(5).max(255).required().email(),
-  password: Joi.string().min(8).max(50).required(),
+  password: Joi.string().min(8).max(1024).required().allow(null),
   lastActive: Joi.date().optional().allow("", null),
   passwordResetToken: Joi.object()
     .keys({
@@ -56,6 +57,7 @@ const userSchema = {
     })
     .optional()
     .allow(null),
+  googleId: Joi.string().optional(),
 };
 
 function validateUser(user) {

@@ -16,6 +16,8 @@ const { sendPasswordReset } = require("../../utils/emailing");
 const { pickADate } = require("../../utils/allowables");
 const transactions = require("../../utils/transactions");
 const { Group } = require("../../models/group.model");
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 async function createNewAccount(req, res, next) {
   req.body.email = trimEmail(req.body.email);
@@ -236,6 +238,63 @@ async function updatePassword(req, res, next) {
   res.send(token);
 }
 
+/*
+********************************
+  OAuth Logins
+********************************
+*/
+async function oAuthLogin(userFilter, name, email) {
+  let token;
+  const user = await User.findOne({ ...userFilter });
+  if (!user) {
+    const userWithSharedEmail = await User.findOne({ email });
+    if (userWithSharedEmail) {
+      userWithSharedEmail.set({ ...userFilter, lastActive: new Date() });
+      await userWithSharedEmail.save();
+      token = userWithSharedEmail.generateAuthToken();
+    } else {
+      const newUser = new User({
+        email,
+        name,
+        password: null,
+        lastActive: new Date(),
+        ...userFilter,
+      });
+      await newUser.save();
+      token = newUser.generateAuthToken();
+    }
+  } else {
+    user.set({ lastActive: new Date() });
+    await user.save();
+    token = user.generateAuthToken();
+  }
+
+  return token;
+}
+
+async function loginWithGoogle(req, res, next) {
+  if (!req.body.idToken)
+    return next({ status: 400, message: "No token provided" });
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: req.body.idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    const googleId = payload.sub;
+    const email = payload.email;
+    const name = payload.name;
+
+    const token = await oAuthLogin({ googleId }, name, email);
+    res.send(token);
+  } catch (error) {
+    next({ status: 400, message: error.message });
+  }
+}
+
 module.exports = {
   createNewAccount,
   login,
@@ -244,4 +303,5 @@ module.exports = {
   updateUser,
   requestPasswordReset,
   updatePassword,
+  loginWithGoogle,
 };

@@ -10,6 +10,7 @@ const {
   updateUser,
   requestPasswordReset,
   updatePassword,
+  loginWithGoogle,
 } = require("../controllers/user.controller");
 
 // do not implement rate limiter during testing
@@ -23,5 +24,6 @@ router.delete("/", [auth], deleteUser);
 router.put("/", [auth], updateUser);
 router.put("/resetpassword/:email", [lowLimiter], requestPasswordReset);
 router.put("/updatepassword", nonTestingRatelimiter, updatePassword);
+router.post("/loginwithgoogle", nonTestingRatelimiter, loginWithGoogle);
 
 module.exports = router;
