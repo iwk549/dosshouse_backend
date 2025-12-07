@@ -13,9 +13,19 @@ const {
   insertPredictions,
   insertGroups,
   cleanup,
+  testReponse,
+  insertUser,
 } = require("../../helperFunctions");
 const { users, header } = require("../../testData");
 const { start } = require("../../..");
+const { OAuth2Client } = require("google-auth-library");
+jest.mock("google-auth-library", () => {
+  return {
+    OAuth2Client: jest.fn().mockImplementation(() => ({
+      verifyIdToken: jest.fn(),
+    })),
+  };
+});
 
 const endpoint = "/api/v1/users";
 let server;
@@ -283,6 +293,64 @@ describe("usersRoute", () => {
       const updatedUser = await User.findById(insertedUsers[0]._id);
       expect(updatedUser.password).not.toBe("NewPassword1");
       expect(updatedUser.passwordReset).toBeNull();
+    });
+  });
+
+  describe("POST /loginwithgoogle", () => {
+    const exec = async (idToken) =>
+      await request(server)
+        .post(endpoint + "/loginwithgoogle")
+        .send({ idToken });
+
+    beforeEach(() => {
+      const mockVerify = OAuth2Client.mock.results[0].value.verifyIdToken;
+
+      mockVerify.mockResolvedValue({
+        getPayload: () => ({
+          sub: "google-id-123",
+          email: "test@test.com",
+          name: "Test User",
+        }),
+      });
+    });
+
+    it("should return 400 if no idToken provided", async () => {
+      const res = await exec();
+      testReponse(res, 400, "no token");
+    });
+    it("should return 400 if verifying token fails", async () => {
+      const mockVerify = OAuth2Client.mock.results[0].value.verifyIdToken;
+      mockVerify.mockRejectedValue(new Error("test error"));
+      const res = await exec("xxx");
+      testReponse(res, 400, "test error");
+    });
+    it("should create a new user", async () => {
+      const res = await exec("xxx");
+      testReponse(res, 200);
+      const savedUser = await User.findOne();
+      expect(savedUser).toMatchObject({
+        googleId: "google-id-123",
+        email: "test@test.com",
+        name: "Test User",
+      });
+    });
+    it("should tie an existing user with the same email", async () => {
+      const user = await insertUser(null, { email: "test@test.com" });
+      const res = await exec("xxx");
+      testReponse(res, 200);
+      const savedUser = await User.findOne();
+      expect(savedUser).toMatchObject({
+        googleId: "google-id-123",
+        email: "test@test.com",
+        name: user.name,
+      });
+    });
+    it("should login an existing user", async () => {
+      await insertUser(null, { googleId: "google-id-123" });
+      const res = await exec("xxx");
+      testReponse(res, 200);
+      const users = await User.find();
+      expect(users.length).toBe(1);
     });
   });
 });
