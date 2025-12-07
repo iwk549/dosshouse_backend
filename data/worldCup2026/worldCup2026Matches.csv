@@ -1,0 +1,104 @@
+bracketCode,matchAccepted,date,time,location,homeTeamName,homeTeamAbbreviation,homeTeamGoals,homeTeamPKs,awayTeamName,awayTeamAbbreviation,awayTeamGoals,awayTeamPKs,matchNumber,round,sport,type,groupName,getTeamsFrom.home.groupName,getTeamsFrom.home.position,getTeamsFrom.home.matchNumber,getTeamsFrom.away.groupName,getTeamsFrom.away.position,getTeamsFrom.away.matchNumber,metadata.matchNumber
+worldCup2026,FALSE,6/11/26,08:00,Mexico City,Mexico,,,,South Africa,,,,1,1,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/11/26,08:00,Guadalajara,South Korea,,,,UEFA D: Czech Republic/Republic of Ireland/Denmark/North Macedonia,,,,2,1,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/12/26,08:00,Toronto,Canada,,,,UEFA A: Wales/Bosnia & Herzegovina/Italy/Northern Ireland,,,,3,1,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/12/26,08:00,Los Angeles,USA,,,,Paraguay,,,,4,1,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/13/26,08:00,New Jersey,Brazil,,,,Morocco,,,,5,1,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/13/26,08:00,Vancouver,Australia,,,,UEFA C: Slovakia/Kosovo/Turkey/Romania,,,,6,1,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/13/26,08:00,Boston,Haiti,,,,Scotland,,,,7,1,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/13/26,08:00,San Francisco,Qatar,,,,Switzerland,,,,8,1,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/14/26,08:00,Houston,Germany,,,,Curacao,,,,9,1,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/14/26,08:00,Philadelphia,Ivory Coast,,,,Ecuador,,,,10,1,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/14/26,08:00,Dallas,Netherlands,,,,Japan,,,,11,1,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/14/26,08:00,Monterrey,UEFA B: Ukraine/Sweden/Poland/Albania,,,,Tunisia,,,,12,1,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/15/26,08:00,Atlanta,Spain,,,,Cape Verde,,,,13,1,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/15/26,08:00,Miami,Saudi Arabia,,,,Uruguay,,,,14,1,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/15/26,08:00,Seattle,Belgium,,,,Egypt,,,,15,1,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/15/26,08:00,Los Angeles,Iran,,,,New Zealand,,,,16,1,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/16/26,08:00,New Jersey,France,,,,Senegal,,,,17,1,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/16/26,08:00,Boston,FIFA 2: Boliva/Suriname/Iraq,,,,Norway,,,,18,1,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/16/26,08:00,Kansas City,Argentina,,,,Algeria,,,,19,1,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/16/26,08:00,San Francisco,Austria,,,,Jordan,,,,20,1,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/17/26,08:00,Dallas,England,,,,Croatia,,,,21,1,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/17/26,08:00,Toronto,Ghana,,,,Panama,,,,22,1,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/17/26,08:00,Houston,Portugal,,,,FIFA 1: Jamaica/New Caledonia/Congo DR,,,,23,1,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,6/17/26,08:00,Mexico City,Uzbekistan,,,,Colombia,,,,24,1,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,6/18/26,08:00,Atlanta,UEFA D: Czech Republic/Republic of Ireland/Denmark/North Macedonia,,,,South Africa,,,,25,2,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/18/26,08:00,Los Angeles,Switzerland,,,,UEFA A: Wales/Bosnia & Herzegovina/Italy/Northern Ireland,,,,26,2,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/18/26,08:00,Vancouver,Canada,,,,Qatar,,,,27,2,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/18/26,08:00,Guadalajara,Mexico,,,,South Korea,,,,28,2,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/19/26,08:00,Philadelphia,Brazil,,,,Haiti,,,,29,2,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/19/26,08:00,Boston,Scotland,,,,Morocco,,,,30,2,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/19/26,08:00,San Francisco,UEFA C: Slovakia/Kosovo/Turkey/Romania,,,,Paraguay,,,,31,2,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/19/26,08:00,Seattle,USA,,,,Australia,,,,32,2,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/20/26,08:00,Toronto,Germany,,,,Ivory Coast,,,,33,2,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/20/26,08:00,Kansas City,Ecuador,,,,Curacao,,,,34,2,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/20/26,08:00,Houston,Netherlands,,,,UEFA B: Ukraine/Sweden/Poland/Albania,,,,35,2,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/20/26,08:00,Monterrey,Tunisia,,,,Japan,,,,36,2,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/21/26,08:00,Atlanta,Spain,,,,Saudi Arabia,,,,37,2,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/21/26,08:00,Miami,Uruguay,,,,Cape Verde,,,,38,2,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/21/26,08:00,Los Angeles,Belgium,,,,Iran,,,,39,2,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/21/26,08:00,Vancouver,New Zealand,,,,Egypt,,,,40,2,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/22/26,08:00,Philadelphia,France,,,,FIFA 2: Boliva/Suriname/Iraq,,,,41,2,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/22/26,08:00,New Jersey,Norway,,,,Senegal,,,,42,2,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/22/26,08:00,Dallas,Argentina,,,,Austria,,,,43,2,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/22/26,08:00,San Francisco,Jordan,,,,Algeria,,,,44,2,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/23/26,08:00,Boston,England,,,,Ghana,,,,45,2,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/23/26,08:00,,Panama,,,,Croatia,,,,46,2,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/23/26,08:00,Houston,Portugal,,,,Uzbekistan,,,,47,2,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,6/23/26,08:00,Guadalajara,Colombia,,,,FIFA 1: Jamaica/New Caledonia/Congo DR,,,,48,2,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Miami,Scotland,,,,Brazil,,,,49,3,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Atlanta,Morocco,,,,Haiti,,,,50,3,Soccer,Group,C,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Vancouver,Canada,,,,Switzerland,,,,51,3,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Seattle,UEFA A: Wales/Bosnia & Herzegovina/Italy/Northern Ireland,,,,Qatar,,,,52,3,Soccer,Group,B,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Mexico City,Mexico,,,,UEFA D: Czech Republic/Republic of Ireland/Denmark/North Macedonia,,,,53,3,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/24/26,08:00,Monterrey,South Korea,,,,South Africa,,,,54,3,Soccer,Group,A,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,New Jersey,Ecuador,,,,Germany,,,,55,3,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,Philadelphia,Curacao,,,,Ivory Coast,,,,56,3,Soccer,Group,E,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,Kansas City,Tunisia,,,,Netherlands,,,,57,3,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,Dallas,Japan,,,,UEFA B: Ukraine/Sweden/Poland/Albania,,,,58,3,Soccer,Group,F,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,Los Angeles,USA,,,,UEFA C: Slovakia/Kosovo/Turkey/Romania,,,,59,3,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/25/26,08:00,San Francisco,Paraguay,,,,Australia,,,,60,3,Soccer,Group,D,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Boston,Norway,,,,France,,,,61,3,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Toronto,Senegal,,,,FIFA 2: Boliva/Suriname/Iraq,,,,62,3,Soccer,Group,I,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Vancouver,New Zealand,,,,Belgium,,,,63,3,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Seattle,Egypt,,,,Iran,,,,64,3,Soccer,Group,G,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Guadalajara,Uruguay,,,,Spain,,,,65,3,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/26/26,08:00,Houston,Cape Verde,,,,Saudi Arabia,,,,66,3,Soccer,Group,H,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,New Jersey,Panama,,,,England,,,,67,3,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,Philadelphia,Croatia,,,,Ghana,,,,68,3,Soccer,Group,L,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,Dallas,Jordan,,,,Argentina,,,,69,3,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,Kansas City,Algeria,,,,Austria,,,,70,3,Soccer,Group,J,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,Miami,Colombia,,,,Portugal,,,,71,3,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,6/27/26,08:00,Atlanta,FIFA 1: Jamaica/New Caledonia/Congo DR,,,,Uzbekistan,,,,72,3,Soccer,Group,K,,,,,,,
+worldCup2026,FALSE,,,Los Angeles,Runner Up Group A,,,,Runner Up Group B,,,,75,1,Soccer,Playoff,,A,2,,B,2,,73
+worldCup2026,FALSE,,,Boston,Winner Group E,,,,3rd A/B/C/D/F,,,,73,1,Soccer,Playoff,,E,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,74
+worldCup2026,FALSE,,,Guadalupe,Winner Group F,,,,Runner Up Group C,,,,76,1,Soccer,Playoff,,F,1,,C,2,,75
+worldCup2026,FALSE,,,Houston,Winner Group C,,,,Runner Up Group F,,,,81,1,Soccer,Playoff,,C,1,,F,2,,76
+worldCup2026,FALSE,,,New Jersey,Winner Group I,,,,3rd C/D/F/G/H,,,,74,1,Soccer,Playoff,,I,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,77
+worldCup2026,FALSE,,,Dallas,Runner Up Group E,,,,Runner Up Group I,,,,82,1,Soccer,Playoff,,E,2,,I,2,,78
+worldCup2026,FALSE,,,Mexico City,Winner Group A,,,,3rd C/E/F/H/I,,,,83,1,Soccer,Playoff,,A,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,79
+worldCup2026,FALSE,,,Atlanta,Winner Group L,,,,3rd E/H/I/J/K,,,,84,1,Soccer,Playoff,,L,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,80
+worldCup2026,FALSE,,,San Francisco,Winner Group D,,,,3rd B/E/F/I/J,,,,79,1,Soccer,Playoff,,D,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,81
+worldCup2026,FALSE,,,Seattle,Winner Group G,,,,3rd A/E/H/IJ/,,,,80,1,Soccer,Playoff,,G,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,82
+worldCup2026,FALSE,,,Toronto,Runner Up Group K,,,,Runner Up Group L,,,,77,1,Soccer,Playoff,,K,2,,L,2,,83
+worldCup2026,FALSE,,,Los Angeles,Winner Group H,,,,Runner Up Group J,,,,78,1,Soccer,Playoff,,H,1,,J,2,,84
+worldCup2026,FALSE,,,Vancouver,Winner Group B,,,,3rd E/F/G/I/J,,,,87,1,Soccer,Playoff,,B,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,85
+worldCup2026,FALSE,,,Miami,Winner Group J,,,,Runner Up Group H,,,,85,1,Soccer,Playoff,,J,1,,H,2,,86
+worldCup2026,FALSE,,,Kansas City,Winner Group K,,,,3rd D/E/I/J/L,,,,88,1,Soccer,Playoff,,K,1,,groupMatrix.worldCup2026ThirdPlaceMatrix,,,87
+worldCup2026,FALSE,,,Dallas,Runner Up Group D,,,,Runner Up Group G,,,,86,1,Soccer,Playoff,,D,2,,G,2,,88
+worldCup2026,FALSE,,,Philadelphia,Winner 74,,,,Winner 77,,,,89,2,Soccer,Playoff,,,,74,,,77,89
+worldCup2026,FALSE,,,Houston,Winner 73,,,,Winner 75,,,,90,2,Soccer,Playoff,,,,73,,,75,90
+worldCup2026,FALSE,,,New Jersey,Winner 76,,,,Winner 78,,,,93,2,Soccer,Playoff,,,,76,,,78,91
+worldCup2026,FALSE,,,Mexico City,Winner 79,,,,Winner 80,,,,94,2,Soccer,Playoff,,,,79,,,80,92
+worldCup2026,FALSE,,,Dallas,Winner 83,,,,Winner 84,,,,91,2,Soccer,Playoff,,,,83,,,84,93
+worldCup2026,FALSE,,,Seattle,Winner 81,,,,Winner 82,,,,92,2,Soccer,Playoff,,,,81,,,82,94
+worldCup2026,FALSE,,,Atlanta,Winner 86,,,,Winner 88,,,,95,2,Soccer,Playoff,,,,86,,,88,95
+worldCup2026,FALSE,,,Vancouver,Winner 85,,,,Winner 87,,,,96,2,Soccer,Playoff,,,,85,,,87,96
+worldCup2026,FALSE,,,Boston,Winner 89,,,,Winner 90,,,,97,3,Soccer,Playoff,,,,89,,,90,97
+worldCup2026,FALSE,,,Los Angeles,Winner 93,,,,Winner 94,,,,98,3,Soccer,Playoff,,,,93,,,94,98
+worldCup2026,FALSE,,,Miami,Winner 91,,,,Winner 92,,,,99,3,Soccer,Playoff,,,,91,,,92,99
+worldCup2026,FALSE,,,Kansas City,Winner 95,,,,Winner 96,,,,100,3,Soccer,Playoff,,,,95,,,96,100
+worldCup2026,FALSE,,,Dallas,Winner 97,,,,Winner 98,,,,101,4,Soccer,Playoff,,,,97,,,98,101
+worldCup2026,FALSE,7/18/26,08:00,Atlanta,Winner 99,,,,Winner 100,,,,102,4,Soccer,Playoff,,,,99,,,100,102
+worldCup2026,FALSE,7/19/26,08:00,New Jersey,Winner 101,,,,Winner 102,,,,104,5,Soccer,Playoff,,,,101,,,102,104
