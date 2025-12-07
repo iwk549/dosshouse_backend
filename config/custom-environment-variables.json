@@ -1,6 +1,4 @@
 {
   "jwtPrivateKey": "dosshouse_jwtPrivateKey",
-  "db": "dosshouse_db",
-  "resetEmail": "dosshouse_resetEmail",
-  "resetEmailPassword": "dosshouse_resetEmailPassword"
+  "db": "dosshouse_db"
 }

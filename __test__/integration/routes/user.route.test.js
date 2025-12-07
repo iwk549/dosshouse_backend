@@ -26,6 +26,8 @@ jest.mock("google-auth-library", () => {
     })),
   };
 });
+jest.mock("../../../utils/smtp.util");
+const sendSmtpEmail = require("../../../utils/smtp.util");
 
 const endpoint = "/api/v1/users";
 let server;
@@ -219,6 +221,10 @@ describe("usersRoute", () => {
   describe("PUT /resetpassword/:email", () => {
     const exec = async (email) =>
       await request(server).put(endpoint + "/resetpassword/" + email);
+
+    afterEach(() => {
+      sendSmtpEmail.mockReset();
+    });
     it("should return 400 if email is not a valid email", async () => {
       const res = await exec("xxx");
       expect(res.status).toBe(400);
@@ -229,7 +235,15 @@ describe("usersRoute", () => {
       expect(res.status).toBe(200);
       testResponseText(res.text, "an email will be sent");
     });
+    it("should return 400 if email could not be sent", async () => {
+      sendSmtpEmail.mockReturnValue({ accepted: false });
+      const insertedUsers = await insertUsers();
+      const res = await exec(insertedUsers[0].email);
+      testReponse(res, 400, "something went wrong");
+      expect(sendSmtpEmail).toHaveBeenCalledTimes(1);
+    });
     it("should update the user with the token", async () => {
+      sendSmtpEmail.mockReturnValue({ accepted: true });
       const insertedUsers = await insertUsers();
       const res = await exec(insertedUsers[0].email);
       expect(res.status).toBe(200);
@@ -239,6 +253,7 @@ describe("usersRoute", () => {
         token: expect.any(String),
         expiration: expect.any(Date),
       });
+      expect(sendSmtpEmail).toHaveBeenCalledTimes(1);
     });
   });
 

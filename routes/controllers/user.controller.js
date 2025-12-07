@@ -169,18 +169,17 @@ async function requestPasswordReset(req, res, next) {
   const user = await User.findOne({ email });
   if (user) {
     const passwordResetToken = String(mongoose.Types.ObjectId());
-    if (process.env.NODE_ENV !== "test") {
-      const emailSentSuccessfully = await sendPasswordReset(
-        user,
-        passwordResetToken
-      );
-      if (!emailSentSuccessfully)
-        return next({
-          status: 400,
-          message:
-            "Something went wrong. Reset email was not sent. Please try again.",
-        });
-    }
+    const emailSentSuccessfully = await sendPasswordReset(
+      user,
+      passwordResetToken
+    );
+    if (!emailSentSuccessfully)
+      return next({
+        status: 400,
+        message:
+          "Something went wrong. Reset email was not sent. Please try again.",
+      });
+
     await User.updateOne(
       { email },
       {

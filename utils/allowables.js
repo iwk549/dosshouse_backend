@@ -24,6 +24,8 @@ module.exports.max = {
   groupsPerPrediction: 5,
 };
 
+module.exports.smtpEmail = "mail@dosshouse.us";
+
 module.exports.url =
   process.env.NODE_ENV === "production"
     ? "https://dosshouse.us"

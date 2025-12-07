@@ -1,5 +1,4 @@
-const config = require("config");
-const { url } = require("./allowables");
+const { url, smtpEmail } = require("./allowables");
 
 function makeEmailHeader(subject) {
   return `
@@ -23,7 +22,7 @@ function makeEmailTextLinkFooter(link) {
       <hr/>
       <p><b>Some email providers automatically disable links from unknown senders</b></p>
       <p>If your link does not work you can copy the text below and paste it in your browser. 
-      Please add ${config.resetEmail} to your contacts to enable future links.</p>
+      Please add ${smtpEmail} to your contacts to enable future links.</p>
       <p>${link}</p>
       `;
 }
