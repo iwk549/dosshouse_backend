@@ -4,3 +4,4 @@ coverage/
 *.log
 *do_not_commit*
 uploads/
+tmp/

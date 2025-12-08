@@ -5,10 +5,6 @@ $env:NODE_ENV = "dev"
 
 # the following environment variables are only placeholders
 # you will be able to run the app without them and use most features
-# excluded features are:
-#   - emailing
-$env:dosshouse_resetEmail = "accounts@dosshouse.us"
-$env:dosshouse_resetEmailPassword = "xxx"
 
 # start the mongo container as replica set with one node to allow for transactions
 $mongoContainerName = "dosshouseMongo1"

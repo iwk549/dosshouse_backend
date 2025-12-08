@@ -150,6 +150,12 @@
     "maxSubmissions": 1,
     "competitionStart": { "$date": "2026-06-11T00:00:00.000Z" },
     "competitionEnd": { "$date": "2026-07-19T00:00:00.000Z" },
+    "secondChance": {
+      "maxSubmissions": 1,
+      "availableFrom": { "$date": "2026-06-27T18:00:00.000Z" },
+      "submissionDeadline": { "$date": "2026-06-28T00:00:00.000Z" },
+      "competitionStart": { "$date": "2026-06-28T16:00:00.000Z" }
+    },
     "scoring": {
       "group": {
         "perTeam": 1,
@@ -231,7 +237,7 @@
       {
         "key": "worldCup2026ThirdPlaceMatrix",
         "name": "Third Place Ranking",
-        "description": "Rank your third place teams",
+        "description": "The eight third placed teams with the best records will advance to the knockout phase.",
         "positionInGroup": 3,
         "teamsToIncludeInBracket": 8,
         "matrix": {

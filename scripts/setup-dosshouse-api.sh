@@ -7,10 +7,6 @@ export NODE_ENV=dev
 
 # the following environment variables are only placeholders
 # you will be able to run the app without them and use most features
-# excluded features are:
-#   - emailing
-export dosshouse_resetEmail=accounts@dosshouse.us
-export dosshouse_resetEmailPassword=xxx
 
 # start the mongo container as replica set with one node to allow for transactions
 MONGO_CONTAINER_NAME='dosshouseMongo1'
