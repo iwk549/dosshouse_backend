@@ -18,6 +18,7 @@ const transactions = require("../../utils/transactions");
 const { Group } = require("../../models/group.model");
 const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const crypto = require("crypto");
 
 async function createNewAccount(req, res, next) {
   req.body.email = trimEmail(req.body.email);
@@ -65,7 +66,7 @@ async function login(req, res, next) {
   if (!user) return next({ status: 400, message: message });
   const matchingPassword = await comparePasswords(
     req.body.password,
-    user?.password
+    user?.password,
   );
 
   if (!matchingPassword) return next({ status: 400, message: message });
@@ -78,7 +79,7 @@ async function getUserInfo(req, res, next) {
   if (!user) return next({ status: 409, message: "Account not found" });
   await User.updateOne(
     { _id: req.user._id },
-    { $set: { lastActive: new Date() } }
+    { $set: { lastActive: new Date() } },
   );
   const token = user.generateAuthToken();
   res.send(token);
@@ -154,7 +155,7 @@ async function updateUser(req, res, next) {
     {
       $set: update,
     },
-    { returnOriginal: false }
+    { returnOriginal: false },
   );
 
   const token = updatedUser.generateAuthToken();
@@ -168,10 +169,10 @@ async function requestPasswordReset(req, res, next) {
 
   const user = await User.findOne({ email });
   if (user) {
-    const passwordResetToken = String(mongoose.Types.ObjectId());
+    const passwordResetToken = crypto.randomBytes(32).toString("hex");
     const emailSentSuccessfully = await sendPasswordReset(
       user,
-      passwordResetToken
+      passwordResetToken,
     );
     if (!emailSentSuccessfully)
       return next({
@@ -189,11 +190,11 @@ async function requestPasswordReset(req, res, next) {
             expiration: pickADate(7),
           },
         },
-      }
+      },
     );
   }
   res.send(
-    "An email will be sent to the address if an account is registered under it."
+    "An email will be sent to the address if an account is registered under it.",
   );
 }
 
@@ -230,7 +231,7 @@ async function updatePassword(req, res, next) {
         passwordReset: null,
         lastActive: new Date(),
       },
-    }
+    },
   );
 
   const token = updatedUser.generateAuthToken();
