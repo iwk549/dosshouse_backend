@@ -27,7 +27,7 @@ const userMongooseSchema = new mongoose.Schema({
     },
     required: false,
   },
-  googleId: { type: String, required: false },
+  googleId: { type: String, required: false, index: true, sparse: true },
 });
 
 userMongooseSchema.methods.generateAuthToken = function () {

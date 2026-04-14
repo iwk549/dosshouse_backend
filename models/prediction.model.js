@@ -10,14 +10,12 @@ const predictionMongooseSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "User",
-    index: true,
   },
   name: { type: String, required: true },
   competitionID: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "Competition",
-    index: true,
   },
   isSecondChance: { type: Boolean, required: false },
   groupPredictions: [
@@ -102,6 +100,9 @@ const predictionMongooseSchema = new mongoose.Schema({
     },
   ],
 });
+
+predictionMongooseSchema.index({ userID: 1, competitionID: 1 });
+predictionMongooseSchema.index({ competitionID: 1, isSecondChance: 1 });
 
 const Prediction = mongoose.model("Prediction", predictionMongooseSchema);
 
