@@ -169,7 +169,7 @@ describe("usersRoute", () => {
           $set: {
             groups: insertedGroups.map((g) => mongoose.Types.ObjectId(g._id)),
           },
-        }
+        },
       );
 
       const res = await exec(getToken(insertedUsers[0]._id));
