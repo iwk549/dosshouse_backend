@@ -84,7 +84,7 @@ describe("predictionsRoute", () => {
       await insertPredictions(
         competitions[0].maxSubmissions,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), prediction);
       expect(res.status).toBe(400);
@@ -95,7 +95,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       prediction.name = insertedPredictions[0].name;
       const res = await exec(getToken(userID), prediction);
@@ -107,7 +107,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       prediction.name = insertedPredictions[0].name;
       const res = await exec(getToken(), prediction);
@@ -154,7 +154,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
@@ -165,12 +165,12 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(
         getToken(userID),
         insertedPredictions[0]._id,
-        insertedPredictions[0]
+        insertedPredictions[0],
       );
       expect(res.status).toBe(400);
       testResponseText(res.text, "submission deadline");
@@ -180,13 +180,13 @@ describe("predictionsRoute", () => {
       let insertedPredictions = await insertPredictions(
         2,
         userID,
-        competitionID
+        competitionID,
       );
       insertedPredictions[0].name = insertedPredictions[1].name;
       const res = await exec(
         getToken(userID),
         insertedPredictions[0]._id,
-        insertedPredictions[0]
+        insertedPredictions[0],
       );
       expect(res.status).toBe(400);
       testResponseText(res.text, "choose a different name");
@@ -196,7 +196,7 @@ describe("predictionsRoute", () => {
       let insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       let otherPrediction = { ...predictions[1] };
       otherPrediction.competitionID = competitionID;
@@ -213,7 +213,7 @@ describe("predictionsRoute", () => {
       let insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       insertedPredictions[0].points = {
         group: { points: 100, correctPicks: 100 },
@@ -225,7 +225,7 @@ describe("predictionsRoute", () => {
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(thisID);
       expect(updatedPrediction.points.group.points).not.toBe(
-        insertedPredictions[0].points.group.points
+        insertedPredictions[0].points.group.points,
       );
       expect(updatedPrediction.name).toBe("Updated Name");
     });
@@ -247,7 +247,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
@@ -282,7 +282,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       await insertCompetition(competitionID, { ...competitions[0] });
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
@@ -292,12 +292,12 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
       const deletedPrediction = await Prediction.findById(
-        insertedPredictions[0]._id
+        insertedPredictions[0]._id,
       );
       expect(deletedPrediction).toBeNull();
     });
@@ -309,7 +309,7 @@ describe("predictionsRoute", () => {
       pageNumber,
       perPage,
       groupID = "all",
-      query = ""
+      query = "",
     ) =>
       await request(server).get(
         endpoint +
@@ -321,7 +321,7 @@ describe("predictionsRoute", () => {
           pageNumber +
           "/" +
           groupID +
-          query
+          query,
       );
     testObjectID(exec);
     it("should return 404 if competition not found", async () => {
@@ -345,7 +345,7 @@ describe("predictionsRoute", () => {
       const res2 = await exec(competitionID, 2, 25);
       expect(res2.body.predictions.length).toBe(24);
       expect(res2.body.predictions[0].name).not.toBe(
-        res.body.predictions[0].name
+        res.body.predictions[0].name,
       );
     });
     it("should not return the misc field if submission deadline has not passed", async () => {
@@ -372,12 +372,12 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         2,
         userID,
-        competitionID
+        competitionID,
       );
       const groupID = mongoose.Types.ObjectId();
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
-        { $set: { groups: [groupID] } }
+        { $set: { groups: [groupID] } },
       );
       const res = await exec(competitionID, 1, 25, groupID);
       expect(res.status).toBe(200);
@@ -395,7 +395,7 @@ describe("predictionsRoute", () => {
           groupID +
           "/" +
           search +
-          query
+          query,
       );
     testObjectID(exec);
     it("should return 404 if competition not found", async () => {
@@ -421,7 +421,7 @@ describe("predictionsRoute", () => {
         competitionID,
         "all",
         filter,
-        "?secondChance=true"
+        "?secondChance=true",
       );
       expect(res.body.predictions.length).toBe(1);
     });
@@ -432,13 +432,13 @@ describe("predictionsRoute", () => {
         20,
         userID,
         competitionID,
-        true
+        true,
       );
       const filter = "First";
       const res = await exec(competitionID, "all", filter);
       expect(res.status).toBe(200);
       expect(res.body.predictions.length).toBe(
-        predictions.filter((p) => p.userID === userID).length
+        predictions.filter((p) => p.userID === userID).length,
       );
     });
     it("should return predictions matching the search in the group", async () => {
@@ -448,7 +448,7 @@ describe("predictionsRoute", () => {
         20,
         userID,
         competitionID,
-        true
+        true,
       );
 
       const groupID = mongoose.Types.ObjectId();
@@ -458,7 +458,7 @@ describe("predictionsRoute", () => {
             $in: [predictions[0]._id, predictions[1]._id, predictions[2]._id],
           },
         },
-        { $set: { groups: [groupID] } }
+        { $set: { groups: [groupID] } },
       );
       const filter = "First";
       const res = await exec(competitionID, groupID, filter);
@@ -483,7 +483,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
@@ -494,7 +494,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
@@ -507,7 +507,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
@@ -543,7 +543,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
@@ -553,17 +553,17 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
         {
           $set: {
             groups: new Array(max.groupsPerPrediction).fill(
-              mongoose.Types.ObjectId()
+              mongoose.Types.ObjectId(),
             ),
           },
-        }
+        },
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id, {
         name: "group1",
@@ -578,7 +578,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const group = {
         name: "Group1",
@@ -594,11 +594,11 @@ describe("predictionsRoute", () => {
       });
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(
-        insertedPredictions[0]._id
+        insertedPredictions[0]._id,
       );
       expect(updatedPrediction).toHaveProperty("groups");
       expect(updatedPrediction.groups).toEqual(
-        expect.arrayContaining([group._id])
+        expect.arrayContaining([group._id]),
       );
     });
   });
@@ -620,7 +620,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id);
       expect(res.status).toBe(200);
@@ -629,23 +629,23 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const groupID = mongoose.Types.ObjectId();
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
-        { $set: { groups: [groupID, mongoose.Types.ObjectId()] } }
+        { $set: { groups: [groupID, mongoose.Types.ObjectId()] } },
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id, {
         _id: groupID,
       });
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(
-        insertedPredictions[0]._id
+        insertedPredictions[0]._id,
       );
       expect(updatedPrediction.groups.length).toBe(1);
       expect(updatedPrediction.groups).not.toEqual(
-        expect.arrayContaining([groupID])
+        expect.arrayContaining([groupID]),
       );
     });
   });
@@ -667,7 +667,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const res = await exec(getToken(), insertedPredictions[0]._id);
       expect(res.status).toBe(404);
@@ -677,7 +677,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const group = await Group.collection.insertOne({
         name: "aaa",
@@ -694,7 +694,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         1,
         userID,
-        competitionID
+        competitionID,
       );
       const group = await Group.collection.insertOne({
         name: "aaa",
@@ -703,18 +703,18 @@ describe("predictionsRoute", () => {
       });
       await Prediction.updateOne(
         { _id: insertedPredictions[0]._id },
-        { $set: { groups: [group.insertedId, mongoose.Types.ObjectId()] } }
+        { $set: { groups: [group.insertedId, mongoose.Types.ObjectId()] } },
       );
       const res = await exec(getToken(userID), insertedPredictions[0]._id, {
         _id: group.insertedId,
       });
       expect(res.status).toBe(200);
       const updatedPrediction = await Prediction.findById(
-        insertedPredictions[0]._id
+        insertedPredictions[0]._id,
       );
       expect(updatedPrediction.groups.length).toBe(1);
       expect(updatedPrediction.groups).not.toEqual(
-        expect.arrayContaining([group.insertedId])
+        expect.arrayContaining([group.insertedId]),
       );
     });
   });
@@ -731,7 +731,7 @@ describe("predictionsRoute", () => {
       const insertedPredictions = await insertPredictions(
         3,
         userID,
-        competitionID
+        competitionID,
       );
       await insertPredictions(2, userID, mongoose.Types.ObjectId(), null, 3);
 
@@ -772,7 +772,7 @@ describe("predictionsRoute", () => {
         getToken(userID),
         pred.competitionID,
         "testKey",
-        "Team A"
+        "Team A",
       );
       testReponse(res, 200);
       expect(res.body.length).toBe(2);
