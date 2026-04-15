@@ -38,7 +38,7 @@ userMongooseSchema.methods.generateAuthToken = function () {
       email: this.email,
       role: this.role,
     },
-    config.get("jwtPrivateKey")
+    config.get("jwtPrivateKey"),
   );
   return token;
 };
@@ -51,7 +51,7 @@ const userSchema = {
   email: Joi.string().min(5).max(255).required().email(),
   password: Joi.string().min(8).max(1024).required().allow(null),
   lastActive: Joi.date().optional().allow("", null),
-  passwordResetToken: Joi.object()
+  passwordReset: Joi.object()
     .keys({
       token: Joi.objectID().optional().allow(null),
     })

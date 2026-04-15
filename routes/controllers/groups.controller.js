@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Competition } = require("../../models/competition.model");
 const { Group, validateGroup } = require("../../models/group.model");
 const { User } = require("../../models/user.model");
-const { max, reservedGroupNames, url } = require("../../utils/allowables");
+const { max, reservedGroupNames } = require("../../utils/allowables");
 const transactions = require("../../utils/transactions");
 
 const groupNameIsReserved = (groupName) => {
@@ -11,7 +11,6 @@ const groupNameIsReserved = (groupName) => {
 
 function createGroupLink(group, competitionID) {
   return (
-    url +
     "/competitions?type=groupLink&groupID=" +
     group._id +
     "&groupPasscode=" +
@@ -62,7 +61,7 @@ async function createNewGroup(req, res, next) {
 
 async function getUsersGroups(req, res) {
   const groups = await Group.find({ ownerID: req.user._id }).select(
-    "userID name"
+    "userID name",
   );
   res.send(groups);
 }
@@ -118,7 +117,7 @@ async function updateGroup(req, res, next) {
           passcode: req.body.passcode || group.passcode,
           lowercaseName: req.body.lowercaseName || group.lowercaseName,
         },
-      }
+      },
     );
     res.send(response);
   } catch (ex) {
