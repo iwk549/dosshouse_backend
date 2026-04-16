@@ -75,6 +75,7 @@ async function searchLeaderboard(req, res, next) {
     totalPoints: "$totalPoints",
     totalPicks: "$totalPicks",
     ranking: "$ranking",
+    potentialPoints: "$potentialPoints",
   };
   if (deadlineHasPassed(competition, req.query.secondChance === "true"))
     projectedFields.misc = "$misc";

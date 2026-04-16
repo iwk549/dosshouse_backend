@@ -86,8 +86,7 @@
   "potentials": {
     "realisticWinners": {
       "topScorer": ["France", "Argentina"],
-      "discipline": ["Saudi Arabia", "Argentina"],
-      "thirdPlace": ["Croatia", "Argentina", "Morocco", "France"]
+      "discipline": ["Saudi Arabia", "Argentina"]
     }
   }
 }
