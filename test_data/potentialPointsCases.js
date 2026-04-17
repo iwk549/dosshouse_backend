@@ -37,10 +37,7 @@ const defaultMatches = [
     homeTeamName: "Winner 1",
     awayTeamName: "Winner 2",
     round: 2,
-    getTeamsFrom: {
-      home: { matchNumber: 1 },
-      away: { matchNumber: 2 },
-    },
+    getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
   },
 ];
 
@@ -88,6 +85,50 @@ const qfMatches = [
   },
 ];
 
+// Simulates devCupActive: SFs pull from group positions (no matchNumber in getTeamsFrom).
+// buildBracketTree gives SF nodes null children — getTeamsInSubtree must fall back to
+// homeTeamName/awayTeamName to find reachable teams for the final pick.
+const groupFedMatches = [
+  {
+    matchNumber: 1,
+    homeTeamName: "Brazil",
+    awayTeamName: "Spain",
+    round: 1,
+    type: "Playoff",
+    getTeamsFrom: { home: { groupName: "A", position: 1 }, away: { groupName: "B", position: 2 } },
+  },
+  {
+    matchNumber: 2,
+    homeTeamName: "Argentina",
+    awayTeamName: "France",
+    round: 1,
+    type: "Playoff",
+    getTeamsFrom: { home: { groupName: "B", position: 1 }, away: { groupName: "A", position: 2 } },
+  },
+  {
+    matchNumber: 3,
+    homeTeamName: "Winner 1",
+    awayTeamName: "Winner 2",
+    round: 2,
+    type: "Playoff",
+    getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+  },
+];
+const groupFedResult = {
+  playoff: [{ round: 1, teams: ["Brazil", "Spain", "Argentina", "France"] }],
+  misc: { winner: "" },
+};
+const groupFedCompetition = {
+  scoring: {
+    playoff: [
+      { roundNumber: 1, points: 8 },
+      { roundNumber: 2, points: 16 },
+    ],
+    champion: 32,
+  },
+  miscPicks: [],
+};
+
 const potentialPointsTestCases = [
   {
     description: "No Playoff Results, do not calculate potential points",
@@ -96,15 +137,8 @@ const potentialPointsTestCases = [
         groupPredictions: [{ groupName: "A", teamOrder: ["a", "b"] }],
         playoffPredictions: [{ round: 1, homeTeam: "a", awayTeam: "b" }],
       },
-      result: {
-        group: [{ groupName: "A", teamOrder: ["a", "b"] }],
-      },
-      competition: {
-        scoring: {
-          group: { perTeam: 1 },
-          playoff: [{ roundNumber: 1, points: 4 }],
-        },
-      },
+      result: { group: [{ groupName: "A", teamOrder: ["a", "b"] }] },
+      competition: { scoring: { group: { perTeam: 1 }, playoff: [{ roundNumber: 1, points: 4 }] } },
       matches: [],
     },
     expected: {
@@ -115,17 +149,9 @@ const potentialPointsTestCases = [
   {
     description: "Tournament is finished, potential points match total points",
     data: {
-      prediction: {
-        playoffPredictions: [{ round: 1, homeTeam: "a", awayTeam: "b" }],
-      },
-      result: {
-        playoff: [{ round: 1, teams: ["a", "b"] }],
-      },
-      competition: {
-        scoring: {
-          playoff: [{ roundNumber: 1, points: 4 }],
-        },
-      },
+      prediction: { playoffPredictions: [{ round: 1, homeTeam: "a", awayTeam: "b" }] },
+      result: { playoff: [{ round: 1, teams: ["a", "b"] }] },
+      competition: { scoring: { playoff: [{ roundNumber: 1, points: 4 }] } },
       matches: [],
     },
     expected: {
@@ -134,8 +160,7 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "Potential points equal total points when no matches passed and tournament not finished",
+    description: "Potential points equal total points when no matches passed and tournament not finished",
     data: {
       prediction: {
         playoffPredictions: [
@@ -154,8 +179,7 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "Winner pick still in remaining teams adds champion points to both maximum and realistic",
+    description: "Winner pick still in remaining teams adds champion points to both maximum and realistic",
     data: {
       prediction: {
         playoffPredictions: [
@@ -175,8 +199,7 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "MiscPicks in remaining teams add to maximum only; realisticWinners add to realistic too",
+    description: "MiscPicks in remaining teams add to maximum only; realisticWinners add to realistic too",
     data: {
       prediction: {
         playoffPredictions: [
@@ -197,8 +220,7 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "ThirdPlace pick adds to both maximum and realistic if pick is a semi-finalist still remaining",
+    description: "ThirdPlace pick adds to both maximum and realistic if pick is a semi-finalist still remaining",
     data: {
       prediction: {
         playoffPredictions: [
@@ -236,8 +258,7 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "Predicted finalists from the same bracket half subtract one set of points (path collision)",
+    description: "Predicted finalists from the same bracket half subtract one set of points (path collision)",
     data: {
       prediction: {
         playoffPredictions: [
@@ -257,14 +278,11 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "At QF stage: predicting two teams from the same QF match in the SF collides — only one set of points awarded",
+    description: "At QF stage: predicting two teams from the same QF match in the SF collides — only one set of points awarded",
     data: {
       prediction: {
         // A and B both come from QF match 1 (left subtree of SF match 5)
-        playoffPredictions: [
-          { matchNumber: 5, homeTeam: "A", awayTeam: "B", round: 2 },
-        ],
+        playoffPredictions: [{ matchNumber: 5, homeTeam: "A", awayTeam: "B", round: 2 }],
       },
       result: qfResult,
       competition: qfCompetition,
@@ -277,14 +295,11 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "At QF stage: predicting two teams from different QF matches in the SF has no collision — both sets of points awarded",
+    description: "At QF stage: predicting two teams from different QF matches in the SF has no collision — both sets of points awarded",
     data: {
       prediction: {
         // A comes from QF match 1 (left subtree), C comes from QF match 2 (right subtree)
-        playoffPredictions: [
-          { matchNumber: 5, homeTeam: "A", awayTeam: "C", round: 2 },
-        ],
+        playoffPredictions: [{ matchNumber: 5, homeTeam: "A", awayTeam: "C", round: 2 }],
       },
       result: qfResult,
       competition: qfCompetition,
@@ -297,15 +312,12 @@ const potentialPointsTestCases = [
     },
   },
   {
-    description:
-      "At QF stage: predicting A vs C in the final collides even though they don't meet at QF — both are in SF5's subtree so only one can reach the final",
+    description: "At QF stage: predicting A vs C in the final collides even though they don't meet at QF — both are in SF5's subtree so only one can reach the final",
     data: {
       prediction: {
         // A (match 1) and C (match 2) are in different QF matches but both feed into SF5
         // SF5 is the left child of the final — so A and C share the same half of the bracket
-        playoffPredictions: [
-          { matchNumber: 7, homeTeam: "A", awayTeam: "C", round: 3 },
-        ],
+        playoffPredictions: [{ matchNumber: 7, homeTeam: "A", awayTeam: "C", round: 3 }],
       },
       result: qfResult,
       competition: qfCompetition,
@@ -315,6 +327,40 @@ const potentialPointsTestCases = [
       totalPoints: 0,
       // A reachable (+8) + C reachable (+8) - collision (-8) = 8
       potentialPoints: { maximum: 8, realistic: 8 },
+    },
+  },
+  {
+    description: "Group-position-fed SFs: finalist picks from opposite halves each earn final-round potential points",
+    data: {
+      prediction: {
+        playoffPredictions: [{ matchNumber: 3, homeTeam: "Brazil", awayTeam: "Argentina", round: 2 }],
+        misc: { winner: "Brazil" },
+      },
+      result: groupFedResult,
+      competition: groupFedCompetition,
+      matches: groupFedMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // Brazil reachable from left SF (+16) + Argentina reachable from right SF (+16)
+      // + champion pick Brazil still in tournament (+32)
+      potentialPoints: { maximum: 64, realistic: 64 },
+    },
+  },
+  {
+    description: "Group-position-fed SFs: two picks from the same SF half collide — only one set of final-round points awarded",
+    data: {
+      prediction: {
+        playoffPredictions: [{ matchNumber: 3, homeTeam: "Brazil", awayTeam: "Spain", round: 2 }],
+      },
+      result: groupFedResult,
+      competition: groupFedCompetition,
+      matches: groupFedMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // Brazil (+16) + Spain (+16) - collision (both in left SF, -16) = 16
+      potentialPoints: { maximum: 16, realistic: 16 },
     },
   },
 ];

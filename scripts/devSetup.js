@@ -1,37 +1,76 @@
 const { User } = require("../models/user.model");
 const { Competition } = require("../models/competition.model");
+const { Match } = require("../models/match.model");
+const { Result } = require("../models/result.model");
+const { Prediction } = require("../models/prediction.model");
 const { saltAndHashPassword } = require("../utils/users");
-const competitions = require("../data/activeCompetitions.json");
-const { default: mongoose } = require("mongoose");
+const { calculateAndPostSubmissions } = require("../routes/controllers/result.controller");
+
+const devUsers = require("./devData/users");
+const devCompetitions = require("./devData/competitions");
+const devMatches = require("./devData/matches");
+const devResults = require("./devData/results");
+const devPredictions = require("./devData/predictions");
 
 require("../startup/db")(process.env.NODE_ENV);
 
 async function setupDev() {
-  const password = await saltAndHashPassword("Password1");
-  await User.updateOne(
-    {
-      email: "test1@test.com",
-    },
-    {
-      $set: {
-        name: "Test Admin",
-        password,
-        role: "admin",
-      },
-    },
-    { upsert: true }
-  );
+  for (const user of devUsers) {
+    const password = await saltAndHashPassword(user.password);
+    await User.updateOne(
+      { email: user.email },
+      { $set: { name: user.name, password, role: user.role } },
+      { upsert: true },
+    );
+  }
 
-  let comps = [];
-  competitions.forEach((comp) => {
-    let upComp = { ...comp };
-    upComp._id = mongoose.Types.ObjectId(upComp._id.$oid);
-    upComp.submissionDeadline = new Date(upComp.submissionDeadline.$date);
-    upComp.competitionStart = new Date(upComp.competitionStart.$date);
-    upComp.competitionEnd = new Date(upComp.competitionEnd.$date);
-    comps.push(upComp);
-  });
-  await Competition.insertMany(comps);
+  for (const comp of devCompetitions) {
+    await Competition.updateOne(
+      { code: comp.code },
+      { $set: comp },
+      { upsert: true },
+    );
+  }
+
+  for (const match of devMatches) {
+    await Match.updateOne(
+      { bracketCode: match.bracketCode, matchNumber: match.matchNumber },
+      { $set: match },
+      { upsert: true },
+    );
+  }
+
+  for (const result of devResults) {
+    await Result.updateOne(
+      { code: result.code },
+      { $set: result },
+      { upsert: true },
+    );
+  }
+
+  for (const template of devPredictions) {
+    const user = await User.findOne({ email: template.userEmail });
+    const competition = await Competition.findOne({
+      code: template.competitionCode,
+    });
+    if (!user || !competition) continue;
+
+    // eslint-disable-next-line no-unused-vars
+    const { userEmail, competitionCode, ...pred } = template;
+    await Prediction.updateOne(
+      { userID: user._id, competitionID: competition._id, name: pred.name },
+      { $set: { ...pred, userID: user._id, competitionID: competition._id } },
+      { upsert: true },
+    );
+  }
+
+  const competitionCodes = [...new Set(devPredictions.map((p) => p.competitionCode))];
+  for (const code of competitionCodes) {
+    const competition = await Competition.findOne({ code });
+    const result = await Result.findOne({ code });
+    if (!competition || !result) continue;
+    await calculateAndPostSubmissions(competition, result);
+  }
 
   process.exit();
 }
