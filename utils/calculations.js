@@ -166,7 +166,7 @@ function findNodeByMatchNumber(node, matchNumber) {
 
 function getTeamsInSubtree(node, remainingTeams) {
   if (!node) return [];
-  if (!node.match.getTeamsFrom) {
+  if (!node.left && !node.right) {
     return [node.match.homeTeamName, node.match.awayTeamName].filter((t) =>
       remainingTeams.includes(t),
     );

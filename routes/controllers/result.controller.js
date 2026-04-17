@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
-const { calculatePrediction, addRanking, buildBracketTree } = require("../../utils/calculations");
+const {
+  calculatePrediction,
+  addRanking,
+  buildBracketTree,
+} = require("../../utils/calculations");
 
 const { Result, validateResult } = require("../../models/result.model");
 const { Prediction } = require("../../models/prediction.model");
@@ -16,6 +20,7 @@ const calculateAndPostSubmissions = async (competition, result) => {
   let tree = null;
   let final = null;
   matches.forEach((match) => {
+    if (match.type !== "Playoff") return;
     if (!final || match.round > final.round) final = match;
   });
   if (final) tree = buildBracketTree(final.matchNumber, matches);
@@ -59,8 +64,8 @@ const calculateAndPostSubmissions = async (competition, result) => {
             },
           },
         },
-      })
-    )
+      }),
+    ),
   );
 };
 
@@ -111,4 +116,5 @@ module.exports = {
   updateResultsByCompetition,
   getResult,
   calculateCompetition,
+  calculateAndPostSubmissions,
 };
