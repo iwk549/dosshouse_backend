@@ -70,6 +70,8 @@ async function login(req, res, next) {
   );
 
   if (!matchingPassword) return next({ status: 400, message: message });
+  if (user.passwordReset)
+    await User.updateOne({ _id: user._id }, { $set: { passwordReset: null } });
   const token = user.generateAuthToken();
   res.send(token);
 }
@@ -205,7 +207,7 @@ async function updatePassword(req, res, next) {
   });
   if (!user)
     return next({ status: 400, message: "Password reset not requested" });
-  if (user.passwordReset?.expiration < pickADate(-1))
+  if (user.passwordReset?.expiration < new Date())
     return next({
       status: 400,
       message: "Reset token has expired, please request another reset",
