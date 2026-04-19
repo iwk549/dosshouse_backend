@@ -165,7 +165,7 @@ async function updateUser(req, res, next) {
 async function requestPasswordReset(req, res, next) {
   const email = trimEmail(req.params.email);
   const ex = validateEmail(email);
-  if (ex.error) next({ status: 400, message: "Not a valid email" });
+  if (ex.error) return next({ status: 400, message: "Not a valid email" });
 
   const user = await User.findOne({ email });
   if (user) {
