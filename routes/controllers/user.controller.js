@@ -10,12 +10,10 @@ const {
   saltAndHashPassword,
   trimEmail,
   comparePasswords,
+  deleteUserByID,
 } = require("../../utils/users");
-const mongoose = require("mongoose");
 const { sendPasswordReset } = require("../../utils/emailing");
 const { pickADate } = require("../../utils/allowables");
-const transactions = require("../../utils/transactions");
-const { Group } = require("../../models/group.model");
 const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const crypto = require("crypto");
@@ -88,53 +86,14 @@ async function getUserInfo(req, res, next) {
 }
 
 async function deleteUser(req, res, next) {
-  // if the user account is not found we cannot delete anything,
-  // but the mission has been accomplished so this is a success route
   const user = await User.findById(req.user._id);
   if (!user) return res.send("Account Deleted");
 
-  // ! models to delete
-  // * predictions
-  // * user
-  // * groups
-  // * pull deleted groups from all other users predictions
-  const userID = mongoose.Types.ObjectId(req.user._id);
-  const thisUserGroupIDs = await (
-    await Group.find({ ownerID: userID })
-  ).map((g) => g._id);
-
-  const queries = {
-    user: {
-      collection: "users",
-      query: "deleteOne",
-      data: { _id: userID },
-    },
-    predictions: {
-      collection: "predictions",
-      query: "deleteMany",
-      data: { userID },
-    },
-    groups: {
-      collection: "groups",
-      query: "deleteMany",
-      data: { _id: { $in: thisUserGroupIDs } },
-    },
-    groupsFromPredictions: {
-      collection: "predictions",
-      query: "updateMany",
-      data: {
-        filter: { groups: { $in: thisUserGroupIDs } },
-        update: { $pull: { groups: { $in: thisUserGroupIDs } } },
-      },
-    },
-  };
-
-  const results = await transactions.executeTransactionRepSet(queries);
+  const results = await deleteUserByID(req.user._id);
   if (results.name)
     return next({
       status: 400,
-      message:
-        "Something went wrong, account was not deleted. Please try again.",
+      message: "Something went wrong, account was not deleted. Please try again.",
     });
 
   res.send(results);
