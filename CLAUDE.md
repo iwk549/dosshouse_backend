@@ -18,7 +18,7 @@ Node.js/Express REST API backend for the Dosshouse sports prediction app (World 
 
 ```
 index.js              # Entry point — throng worker setup
-startup/              # App initialization (routes, db, logging, prod, config)
+startup/              # App initialization (routes, db, logging, prod, config, competitions)
 routes/
   routers/            # Express routers (one per resource)
   controllers/        # Route handler logic (one per resource)
@@ -26,6 +26,8 @@ models/               # Mongoose models + Joi validation schemas
 middleware/           # auth, admin, errors, rateLimiter, validateObjectID
 utils/                # allowables, calculations, emailing, htmlTemplates, transactions, users
 config/               # Environment config files
+data/                 # Source-of-truth data files (activeCompetitions.json)
+scripts/              # Dev setup and seeding utilities
 __test__/             # Integration tests (Jest + Supertest)
 ```
 
@@ -54,6 +56,16 @@ npm run audit        # Security audit (moderate+ prod deps)
 - `config/default.json` has placeholder values; real secrets set via env vars mapped in `custom-environment-variables.json`
 - Required: `jwtPrivateKey`, `db` connection string
 - JWT tokens include `_id`, `name`, `email`, `role`
+
+## Competition Data
+
+Competitions are read-only for users and have no admin routes. `data/activeCompetitions.json` is the source of truth.
+
+- **Production**: `startup/competitions.js` upserts competitions on every startup (`seedCompetitionsOnStartup: true` in `config/production.json`). To add or update a competition, edit the JSON and deploy.
+- **Dev/Test**: seeding is off by default (`seedCompetitionsOnStartup: false`). To test the seeding path locally, temporarily flip the flag in `config/default.json`.
+- **Dev data**: `scripts/devSetup.js` seeds separate `devCup*` competitions from `scripts/devData/competitions.js` — unrelated to the production data file.
+- Upserts are idempotent (keyed on `code`) and preserve existing MongoDB `_id`s, so predictions and other references are unaffected.
+- `throng` runs multiple workers in production — each will upsert on startup. This is safe but produces duplicate log lines.
 
 ## Key Conventions
 
