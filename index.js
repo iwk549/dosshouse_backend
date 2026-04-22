@@ -18,7 +18,8 @@ async function start() {
   const app = express();
   require("./startup/routes")(app);
   require("./startup/config")();
-  require("./startup/db")(process.env.NODE_ENV);
+  await require("./startup/db")(process.env.NODE_ENV);
+  await require("./startup/competitions")();
   if (process.env.NODE_ENV === "production") {
     require("./startup/prod")(app);
   }
