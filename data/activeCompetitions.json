@@ -146,15 +146,15 @@
     "_id": { "$oid": "6933533400d2c729449b2e0a" },
     "code": "worldCup2026",
     "name": "World Cup 2026",
-    "submissionDeadline": { "$date": "2026-06-11T00:00:00.000Z" },
+    "submissionDeadline": { "$date": "2026-06-11T18:55:00.000Z" },
     "maxSubmissions": 1,
-    "competitionStart": { "$date": "2026-06-11T00:00:00.000Z" },
-    "competitionEnd": { "$date": "2026-07-19T00:00:00.000Z" },
+    "competitionStart": { "$date": "2026-06-11T19:00:00.000Z" },
+    "competitionEnd": { "$date": "2026-07-19T22:00:00.000Z" },
     "secondChance": {
       "maxSubmissions": 1,
-      "availableFrom": { "$date": "2026-06-27T18:00:00.000Z" },
-      "submissionDeadline": { "$date": "2026-06-28T00:00:00.000Z" },
-      "competitionStart": { "$date": "2026-06-28T16:00:00.000Z" }
+      "availableFrom": { "$date": "2026-06-28T04:00:00.000Z" },
+      "submissionDeadline": { "$date": "2026-06-28T18:55:00.000Z" },
+      "competitionStart": { "$date": "2026-06-28T19:00:00.000Z" }
     },
     "scoring": {
       "group": {
@@ -204,7 +204,7 @@
           "matchAccepted": false,
           "homeTeamName": "Loser Match 101",
           "awayTeamName": "Loser Match 102",
-          "dateTime": { "$date": "2022-07-18T00:00:00.000Z" },
+          "dateTime": { "$date": "2022-07-18T22:00:00.000Z" },
           "location": "Miami",
           "matchNumber": 103,
           "round": 1001,
