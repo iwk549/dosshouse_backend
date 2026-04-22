@@ -26,7 +26,7 @@ models/               # Mongoose models + Joi validation schemas
 middleware/           # auth, admin, errors, rateLimiter, validateObjectID
 utils/                # allowables, calculations, emailing, htmlTemplates, transactions, users
 config/               # Environment config files
-data/                 # Source-of-truth data files (activeCompetitions.json)
+data/                 # Source-of-truth data files (activeCompetitions.json) — see README.md
 scripts/              # Dev setup and seeding utilities
 __test__/             # Integration tests (Jest + Supertest)
 ```
@@ -66,6 +66,10 @@ Competitions are read-only for users and have no admin routes. `data/activeCompe
 - **Dev data**: `scripts/devSetup.js` seeds separate `devCup*` competitions from `scripts/devData/competitions.js` — unrelated to the production data file.
 - Upserts are idempotent (keyed on `code`) and preserve existing MongoDB `_id`s, so predictions and other references are unaffected.
 - `throng` runs multiple workers in production — each will upsert on startup. This is safe but produces duplicate log lines.
+
+## Git
+
+Never commit without explicit instruction from the user. Always show the planned commit message and files, then wait for approval.
 
 ## Key Conventions
 
