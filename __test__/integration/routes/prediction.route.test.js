@@ -135,6 +135,23 @@ describe("predictionsRoute", () => {
       const insertedPrediction = await Prediction.findById(res.body);
       expect(insertedPrediction.isSecondChance).toBe(true);
     });
+    it("should strip groupPredictions and non-winner/thirdPlace misc from second chance prediction", async () => {
+      await insertCompetition(competitionID, null, {
+        secondChance: { submissionDeadline: pickADate(1) },
+      });
+      const res = await exec(getToken(), {
+        ...prediction,
+        isSecondChance: true,
+        misc: { winner: "Brazil", thirdPlace: "Argentina", discipline: "France", topScorer: "England" },
+      });
+      expect(res.status).toBe(200);
+      const saved = await Prediction.findById(res.body);
+      expect(saved.groupPredictions).toHaveLength(0);
+      expect(saved.misc.winner).toBe("Brazil");
+      expect(saved.misc.thirdPlace).toBe("Argentina");
+      expect(saved.misc.discipline).toBeUndefined();
+      expect(saved.misc.topScorer).toBeUndefined();
+    });
   });
 
   describe("PUT /:id", () => {
@@ -228,6 +245,27 @@ describe("predictionsRoute", () => {
         insertedPredictions[0].points.group.points,
       );
       expect(updatedPrediction.name).toBe("Updated Name");
+    });
+    it("should strip groupPredictions and non-winner/thirdPlace misc from second chance prediction on update", async () => {
+      await insertCompetition(competitionID, null, {
+        secondChance: { submissionDeadline: pickADate(1) },
+      });
+      const inserted = await insertPrediction({ competitionID, userID, isSecondChance: true });
+      const updateBody = {
+        ...inserted,
+        competitionID,
+        misc: { winner: "Brazil", thirdPlace: "Argentina", discipline: "France", topScorer: "England" },
+        groupPredictions: [{ groupName: "A", teamOrder: ["a", "b", "c", "d"] }],
+      };
+      delete updateBody._id;
+      const res = await exec(getToken(userID), inserted._id, updateBody);
+      expect(res.status).toBe(200);
+      const saved = await Prediction.findById(inserted._id);
+      expect(saved.groupPredictions).toHaveLength(0);
+      expect(saved.misc.winner).toBe("Brazil");
+      expect(saved.misc.thirdPlace).toBe("Argentina");
+      expect(saved.misc.discipline).toBeUndefined();
+      expect(saved.misc.topScorer).toBeUndefined();
     });
   });
 

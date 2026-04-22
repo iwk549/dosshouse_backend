@@ -470,6 +470,39 @@ describe("calculations", () => {
         expect(res.points.champion.points).toBe(32);
         expect(res.points.champion.correctPicks).toBe(1);
       });
+      it("should not include potential points for non-thirdPlace misc picks", () => {
+        const partialResult = {
+          playoff: [{ round: 1, teams: ["a", "b", "c", "d"] }],
+          misc: { winner: "", discipline: "", topScorer: "", thirdPlace: "" },
+        };
+        const twoRoundCompetition = {
+          scoring: {
+            playoff: [
+              { roundNumber: 1, points: 2 },
+              { roundNumber: 2, points: 4 },
+            ],
+            champion: 32,
+          },
+          miscPicks: [
+            { name: "thirdPlace", points: 16 },
+            { name: "discipline", points: 10 },
+            { name: "topScorer", points: 10 },
+          ],
+        };
+        const prediction = setPrediction(["playoff", "misc"], null, [
+          { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
+          { matchNumber: 2, homeTeam: "c", awayTeam: "d", round: 1 },
+          { matchNumber: 3, homeTeam: "a", awayTeam: "c", round: 2 },
+        ], { winner: "a", thirdPlace: "b", discipline: "a", topScorer: "a" });
+        prediction.isSecondChance = true;
+
+        const res = exec(prediction, partialResult, twoRoundCompetition);
+
+        // winner "a" still in remaining teams → champion potential
+        // discipline and topScorer picks should NOT add potential points for second chance
+        expect(res.potentialPoints.maximum).toBe(32);
+        expect(res.potentialPoints.realistic).toBe(32);
+      });
     });
   });
 

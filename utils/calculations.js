@@ -284,7 +284,7 @@ function calculatePotentialPoints(
     // within the result then those points should be added to realistic as well
     if (competition.miscPicks && result.misc && prediction.misc) {
       competition.miscPicks.forEach((miscPick) => {
-        if (miscPick.name !== "thirdPlace") {
+        if (miscPick.name !== "thirdPlace" && !prediction.isSecondChance) {
           const realisticWinners =
             (result.potentials?.realisticWinners &&
               result.potentials?.realisticWinners[miscPick.name]) ||
