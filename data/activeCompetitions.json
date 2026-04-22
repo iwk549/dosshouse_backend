@@ -204,7 +204,7 @@
           "matchAccepted": false,
           "homeTeamName": "Loser Match 101",
           "awayTeamName": "Loser Match 102",
-          "dateTime": { "$date": "2022-07-18T22:00:00.000Z" },
+          "dateTime": { "$date": "2022-07-18T21:00:00.000Z" },
           "location": "Miami",
           "matchNumber": 103,
           "round": 1001,
