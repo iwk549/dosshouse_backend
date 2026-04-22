@@ -8,15 +8,17 @@ const {
   getPrediction,
   getUsersPredictions,
   deletePrediction,
-  getLeaderboardByGroup,
-  searchLeaderboard,
-  getNonUserPrediction,
   addPredictionToGroup,
   removePredictionFromGroup,
   removePredictionFromGroupByGroupOwner,
   getUsersPredictionsByCompetition,
-  getPredictionsByMisc,
 } = require("../controllers/prediction.controller");
+const {
+  getLeaderboardByGroup,
+  searchLeaderboard,
+  getNonUserPrediction,
+  getPredictionsByMisc,
+} = require("../controllers/leaderboard.controller");
 
 router.post("/", [auth], createNewPrediction);
 router.put("/:id", [auth, validateObjectID], updatePrediction);
@@ -26,34 +28,34 @@ router.delete("/:id", [auth, validateObjectID], deletePrediction);
 router.get(
   "/leaderboard/:id/:resultsPerPage/:pageNumber/:groupID",
   [validateObjectID],
-  getLeaderboardByGroup
+  getLeaderboardByGroup,
 );
 router.get(
   "/leaderboard/:id/:groupID/:search",
   [validateObjectID],
-  searchLeaderboard
+  searchLeaderboard,
 );
 router.get(
   "/bonus/:id/:key/:team",
   [auth, validateObjectID],
-  getPredictionsByMisc
+  getPredictionsByMisc,
 );
 router.get("/unowned/:id", [auth, validateObjectID], getNonUserPrediction);
 router.put("/addtogroup/:id", [auth, validateObjectID], addPredictionToGroup);
 router.put(
   "/removefromgroup/:id",
   [auth, validateObjectID],
-  removePredictionFromGroup
+  removePredictionFromGroup,
 );
 router.put(
   "/forceremovefromgroup/:id",
   [auth, validateObjectID],
-  removePredictionFromGroupByGroupOwner
+  removePredictionFromGroupByGroupOwner,
 );
 router.get(
   "/competitions/:id",
   [auth, validateObjectID],
-  getUsersPredictionsByCompetition
+  getUsersPredictionsByCompetition,
 );
 
 module.exports = router;

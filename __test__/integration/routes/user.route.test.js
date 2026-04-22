@@ -128,6 +128,19 @@ describe("usersRoute", () => {
       expect(decoded).toHaveProperty("name", insertedUsers[0].name);
       expect(decoded).toHaveProperty("email", user.email);
     });
+    it("should clear passwordReset on successful login", async () => {
+      const insertedUsers = await insertUsers();
+      await updateUser(insertedUsers[0]._id, {
+        passwordReset: { token: "sometoken", expiration: pickADate(7) },
+      });
+      let user = { ...insertedUsers[0] };
+      delete user.name;
+      user.password = users[0].password;
+      const res = await exec(user);
+      expect(res.status).toBe(200);
+      const updatedUser = await User.findById(insertedUsers[0]._id);
+      expect(updatedUser.passwordReset).toBeNull();
+    });
   });
 
   describe("GET /", () => {
@@ -169,7 +182,7 @@ describe("usersRoute", () => {
           $set: {
             groups: insertedGroups.map((g) => mongoose.Types.ObjectId(g._id)),
           },
-        }
+        },
       );
 
       const res = await exec(getToken(insertedUsers[0]._id));
@@ -274,7 +287,7 @@ describe("usersRoute", () => {
       await updateUser(insertedUsers[0]._id, {
         passwordReset: {
           token,
-          expiration: pickADate(-1),
+          expiration: new Date(Date.now() - 1000),
         },
       });
       const res = await exec(token, insertedUsers[0].email);

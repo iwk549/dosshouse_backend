@@ -3,7 +3,7 @@ Joi.objectID = require("joi-objectid")(Joi);
 const mongoose = require("mongoose");
 
 const groupMongooseSchema = new mongoose.Schema({
-  ownerID: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  ownerID: { type: mongoose.Types.ObjectId, required: true, ref: "User", index: true },
   name: { type: String, required: true },
   lowercaseName: { type: String, required: true, unique: true },
   passcode: { type: String, required: true },
@@ -16,7 +16,6 @@ const groupSchema = {
   name: Joi.string().required().min(3).max(50),
   lowercaseName: Joi.string().required().min(3).max(50),
   passcode: Joi.string().required().min(8).max(50),
-  // competitionID: Joi.objectID().required(),
 };
 
 function validateGroup(group) {

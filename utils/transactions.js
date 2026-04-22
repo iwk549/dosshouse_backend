@@ -5,7 +5,7 @@ const dbConnect = async () => {
   const client = new mongodb.MongoClient(
     process.env.NODE_ENV !== "test"
       ? config.get("db")
-      : "mongodb://localhost/dosshouse_tests"
+      : "mongodb://localhost/dosshouse_tests",
   );
   return await client.connect();
 };
@@ -22,10 +22,7 @@ transactions.executeTransactionRepSet = async (queries) => {
   });
 
   try {
-    const options =
-      process.env.NODE_ENV === "production"
-        ? { session, returnOriginal: false }
-        : {};
+    const options = { session, returnOriginal: false };
     let results = {};
 
     for (let property in queries) {

@@ -8,31 +8,12 @@
     "competitionStart": { "$date": "2022-11-20T16:00:00.000Z" },
     "competitionEnd": { "$date": "2022-12-18T18:00:00.000Z" },
     "scoring": {
-      "group": {
-        "perTeam": 1,
-        "bonus": 1
-      },
+      "group": { "perTeam": 1, "bonus": 1 },
       "playoff": [
-        {
-          "roundName": "Round of 16",
-          "roundNumber": 1,
-          "points": 2
-        },
-        {
-          "roundName": "Quarter Final",
-          "roundNumber": 2,
-          "points": 4
-        },
-        {
-          "roundName": "Semi Final",
-          "roundNumber": 3,
-          "points": 8
-        },
-        {
-          "roundName": "Final",
-          "roundNumber": 4,
-          "points": 16
-        }
+        { "roundName": "Round of 16", "roundNumber": 1, "points": 2 },
+        { "roundName": "Quarter Final", "roundNumber": 2, "points": 4 },
+        { "roundName": "Semi Final", "roundNumber": 3, "points": 8 },
+        { "roundName": "Final", "roundNumber": 4, "points": 16 }
       ],
       "champion": 32
     },
@@ -43,27 +24,12 @@
         "description": "Winner of the third place playoff",
         "points": 16,
         "info": {
-          "homeTeamGoals": 0,
-          "homeTeamPKs": 0,
-          "awayTeamGoals": 0,
-          "awayTeamPKs": 0,
-          "matchAccepted": false,
-          "homeTeamName": "Croatia",
-          "awayTeamName": "Morocco",
+          "homeTeamGoals": 0, "homeTeamPKs": 0, "awayTeamGoals": 0, "awayTeamPKs": 0, "matchAccepted": false,
+          "homeTeamName": "Croatia", "awayTeamName": "Morocco",
           "dateTime": { "$date": "2022-12-17T15:00:00.000Z" },
+          "matchNumber": 63, "round": 1001, "sport": "Soccer", "type": "Playoff",
           "location": "Khalifa International Stadium",
-          "matchNumber": 63,
-          "round": 1001,
-          "sport": "Soccer",
-          "type": "Playoff",
-          "getTeamsFrom": {
-            "home": {
-              "matchNumber": 61
-            },
-            "away": {
-              "matchNumber": 62
-            }
-          }
+          "getTeamsFrom": { "home": { "matchNumber": 61 }, "away": { "matchNumber": 62 } }
         }
       },
       {
@@ -93,31 +59,12 @@
     "competitionStart": { "$date": "2030-06-15T00:00:00.000Z" },
     "competitionEnd": { "$date": "2030-07-13T21:00:00.000Z" },
     "scoring": {
-      "group": {
-        "perTeam": 1,
-        "bonus": 1
-      },
+      "group": { "perTeam": 1, "bonus": 1 },
       "playoff": [
-        {
-          "roundName": "Round of 16",
-          "roundNumber": 1,
-          "points": 2
-        },
-        {
-          "roundName": "Quarter Final",
-          "roundNumber": 2,
-          "points": 4
-        },
-        {
-          "roundName": "Semi Final",
-          "roundNumber": 3,
-          "points": 8
-        },
-        {
-          "roundName": "Final",
-          "roundNumber": 4,
-          "points": 16
-        }
+        { "roundName": "Round of 16", "roundNumber": 1, "points": 2 },
+        { "roundName": "Quarter Final", "roundNumber": 2, "points": 4 },
+        { "roundName": "Semi Final", "roundNumber": 3, "points": 8 },
+        { "roundName": "Final", "roundNumber": 4, "points": 16 }
       ],
       "champion": 32
     },

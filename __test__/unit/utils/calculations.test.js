@@ -1,6 +1,8 @@
+const potentialPointsTestCases = require("../../../test_data/potentialPointsCases");
 const {
   calculatePrediction,
   addRanking,
+  buildBracketTree,
 } = require("../../../utils/calculations");
 const {
   predictions,
@@ -28,7 +30,15 @@ describe("calculations", () => {
       },
     };
     const exec = (prediction, result, competition, matches) => {
-      return calculatePrediction(prediction, result, competition, matches);
+      let tree = null;
+      let final = null;
+      if (matches && matches.length > 0) {
+        matches.forEach((match) => {
+          if (!final || match.round > final.round) final = match;
+        });
+        if (final) tree = buildBracketTree(final.matchNumber, matches);
+      }
+      return calculatePrediction(prediction, result, competition, tree, final);
     };
 
     const setPrediction = (
@@ -36,7 +46,7 @@ describe("calculations", () => {
       groupResult,
       playoffResult,
       miscResult,
-      groupMatrixResult
+      groupMatrixResult,
     ) => {
       let prediction = { ...predictions[0] };
       if (matchLevel.includes("group") || matchLevel.includes("groupMatrix")) {
@@ -142,10 +152,10 @@ describe("calculations", () => {
         // should get 16 for third place pick, 10 each for discipline and topScorer
         expect(res.points.misc.points).toBe(36);
         expect(res.totalPoints).toBe(
-          res.points.champion.points + res.points.misc.points
+          res.points.champion.points + res.points.misc.points,
         );
         expect(res.totalPicks).toBe(
-          res.points.champion.correctPicks + res.points.misc.correctPicks
+          res.points.champion.correctPicks + res.points.misc.correctPicks,
         );
       });
       it("should calculate the entire prediction correctly", () => {
@@ -168,13 +178,13 @@ describe("calculations", () => {
           res.points.group.points +
             res.points.playoff.points +
             res.points.champion.points +
-            res.points.misc.points
+            res.points.misc.points,
         );
         expect(res.totalPicks).toBe(
           res.points.group.correctPicks +
             res.points.playoff.correctPicks +
             res.points.champion.correctPicks +
-            res.points.misc.correctPicks
+            res.points.misc.correctPicks,
         );
       });
     });
@@ -186,7 +196,7 @@ describe("calculations", () => {
           [
             { groupName: "a", teamOrder: ["b", "a", "c", "d"] },
             { groupName: "b", teamOrder: ["f", "g", "f", "g"] },
-          ]
+          ],
         );
         const res = exec(prediction, result, competitions[0]);
 
@@ -255,7 +265,7 @@ describe("calculations", () => {
             thirdPlace: "c",
             discipline: "a",
             topScorer: "a",
-          }
+          },
         );
         const res = exec(prediction, result, competitions[0]);
 
@@ -307,7 +317,7 @@ describe("calculations", () => {
         const res = exec(prediction, result, competition);
 
         const matrixPrediction = prediction.groupPredictions.find(
-          (g) => g.groupName === competition.groupMatrix[0].key
+          (g) => g.groupName === competition.groupMatrix[0].key,
         );
 
         const regularGroupPoints =
@@ -323,7 +333,7 @@ describe("calculations", () => {
           competition.groupMatrix[0].scoring.bonus;
 
         expect(res.points.group.points).toBe(
-          regularGroupPoints + matrixGroupPoints
+          regularGroupPoints + matrixGroupPoints,
         );
         expect(res.points.group.correctPicks).toBe(11);
         expect(res.points.playoff.points).toBe(
@@ -331,24 +341,24 @@ describe("calculations", () => {
             4 +
             competition.scoring.playoff.find((p) => p.roundNumber === 2)
               .points *
-              2
+              2,
         );
         expect(res.points.playoff.correctPicks).toBe(6);
         expect(res.points.champion.points).toBe(competition.scoring.champion);
         expect(res.points.misc.points).toBe(
-          competition.miscPicks.reduce((prev, cur) => prev + cur.points, 0)
+          competition.miscPicks.reduce((prev, cur) => prev + cur.points, 0),
         );
         expect(res.totalPoints).toBe(
           res.points.group.points +
             res.points.playoff.points +
             res.points.champion.points +
-            res.points.misc.points
+            res.points.misc.points,
         );
         expect(res.totalPicks).toBe(
           res.points.group.correctPicks +
             res.points.playoff.correctPicks +
             res.points.champion.correctPicks +
-            res.points.misc.correctPicks
+            res.points.misc.correctPicks,
         );
       });
     });
@@ -362,7 +372,7 @@ describe("calculations", () => {
           [
             { groupName: "a", teamOrder: ["a", "a", "a", "a"] },
             { groupName: "b", teamOrder: ["e", "e", "e", "e"] },
-          ]
+          ],
         );
         const res = exec(prediction, result, competitions[0]);
 
@@ -386,132 +396,22 @@ describe("calculations", () => {
       });
     });
     describe("adding potential points", () => {
-      const resultForPotentialPoints = {
-        code: "worldCup2022",
-        group: [
-          {
-            groupName: "A",
-            teamOrder: ["a", "b", "c", "d"],
-          },
-        ],
-        playoff: [
-          {
-            round: 1,
-            teams: ["a", "b", "c", "d"],
-            points: 2,
-          },
-        ],
-        misc: {
-          winner: "",
-          thirdPlace: "",
-          discipline: "",
-          topScorer: "",
-        },
-        potentials: {
-          realisticWinners: {
-            topScorer: ["a", "c"],
-            discipline: ["d"],
-            thirdPlace: ["a", "b"],
-          },
-        },
-      };
-      test("potential points possible should match the total points when the tournament is finished", () => {
-        const prediction = setPrediction(["playoff"], null, [
-          { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
-          { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
-          { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 4 },
-        ]);
-        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
-        expect(res.totalPoints).toBe(res.potentialPoints.maximum);
-      });
-      test("potential points should be able to calculate if the winner is possible and assign those points to realistic and maximum", () => {
-        const prediction = setPrediction(
-          ["playoff", "misc"],
-          null,
-          [
-            { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
-            { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
-            { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 2 },
-          ],
-          {
-            winner: "a",
-          }
-        );
-        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
-        expect(res.potentialPoints.maximum).toBe(res.potentialPoints.realistic);
-        expect(res.potentialPoints.maximum).toBe(
-          res.totalPoints + competitions[0].scoring.champion
-        );
-      });
-      test("potential points should calculate the difference between realistic and maximum points for miscPicks", () => {
-        const prediction = setPrediction(
-          ["playoff", "misc"],
-          null,
-          [
-            { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
-            { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
-            { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 2 },
-          ],
-          {
-            topScorer: "b",
-            discipline: "b",
-            thirdPlace: "c",
-          }
-        );
-        const res = exec(prediction, resultForPotentialPoints, competitions[0]);
-        expect(res.potentialPoints.maximum).not.toBe(
-          res.potentialPoints.realistic
-        );
-        expect(res.potentialPoints.realistic).toBe(res.totalPoints);
-        expect(res.potentialPoints.maximum).toBe(
-          res.totalPoints +
-            competitions[0].miscPicks.find((mp) => mp.name === "topScorer")
-              .points +
-            competitions[0].miscPicks.find((mp) => mp.name === "discipline")
-              .points
-        );
-      });
-      test("potential points should calculate the rounds in reverse to accurately represent available points when teams picked in next round paly against each other", () => {
-        const prediction = setPrediction(["playoff"], null, [
-          { matchNumber: 1, homeTeam: "a", awayTeam: "b", round: 1 },
-          { matchNumber: 2, homeTeam: "c", awayTeam: "d", round: 1 },
-          { matchNumber: 3, homeTeam: "c", awayTeam: "d", round: 2 },
-        ]);
-        const matches = [
-          {
-            matchNumber: 1,
-            homeTeamName: "a",
-            awayTeamName: "b",
-            round: 1,
-          },
-          {
-            matchNumber: 2,
-            homeTeamName: "c",
-            awayTeamName: "d",
-            round: 1,
-          },
-          {
-            matchNumber: 3,
-            homeTeamName: "Winner 1",
-            awayTeamName: "Winner 2",
-            round: 2,
-            getTeamsFrom: {
-              home: { matchNumber: 1 },
-              away: { matchNumber: 2 },
-            },
-          },
-        ];
-        const res = exec(
-          prediction,
-          resultForPotentialPoints,
-          competitions[0],
-          matches
-        );
-        expect(res.potentialPoints.maximum).toBe(
-          res.totalPoints +
-            competitions[0].scoring.playoff.find((s) => s.roundNumber === 2)
-              .points
-        );
+      potentialPointsTestCases.forEach((testCase) => {
+        test(testCase.description, () => {
+          const res = exec(
+            testCase.data.prediction,
+            testCase.data.result,
+            testCase.data.competition,
+            testCase.data.matches,
+          );
+          expect(res.totalPoints).toBe(testCase.expected.totalPoints);
+          expect(res.potentialPoints.maximum).toBe(
+            testCase.expected.potentialPoints.maximum,
+          );
+          expect(res.potentialPoints.realistic).toBe(
+            testCase.expected.potentialPoints.realistic,
+          );
+        });
       });
     });
 
@@ -522,7 +422,7 @@ describe("calculations", () => {
           [
             { groupName: "a", teamOrder: ["b", "a", "c", "d"] },
             { groupName: "b", teamOrder: ["f", "g", "f", "g"] },
-          ]
+          ],
         );
         prediction.isSecondChance = true;
         const res = exec(prediction, result, competitions[0]);
@@ -570,6 +470,67 @@ describe("calculations", () => {
         expect(res.points.champion.points).toBe(32);
         expect(res.points.champion.correctPicks).toBe(1);
       });
+    });
+  });
+
+  describe("buildBracketTree", () => {
+    const matches = [
+      { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1 },
+      { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1 },
+      {
+        matchNumber: 3,
+        homeTeamName: "Winner 1",
+        awayTeamName: "Winner 2",
+        round: 2,
+        getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+      },
+    ];
+
+    it("should return null for an unknown match number", () => {
+      expect(buildBracketTree(99, matches)).toBeNull();
+    });
+    it("should return a leaf node with no children for a match without getTeamsFrom", () => {
+      const tree = buildBracketTree(1, matches);
+      expect(tree.match.matchNumber).toBe(1);
+      expect(tree.left).toBeUndefined();
+      expect(tree.right).toBeUndefined();
+    });
+    it("should set left and right children from getTeamsFrom", () => {
+      const tree = buildBracketTree(3, matches);
+      expect(tree.match.matchNumber).toBe(3);
+      expect(tree.left.match.matchNumber).toBe(1);
+      expect(tree.right.match.matchNumber).toBe(2);
+    });
+    it("should recursively build a multi-level tree", () => {
+      const deepMatches = [
+        { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1 },
+        { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1 },
+        { matchNumber: 3, homeTeamName: "E", awayTeamName: "F", round: 1 },
+        { matchNumber: 4, homeTeamName: "G", awayTeamName: "H", round: 1 },
+        {
+          matchNumber: 5,
+          round: 2,
+          getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+        },
+        {
+          matchNumber: 6,
+          round: 2,
+          getTeamsFrom: { home: { matchNumber: 3 }, away: { matchNumber: 4 } },
+        },
+        {
+          matchNumber: 7,
+          round: 3,
+          getTeamsFrom: { home: { matchNumber: 5 }, away: { matchNumber: 6 } },
+        },
+      ];
+      const tree = buildBracketTree(7, deepMatches);
+      expect(tree.match.matchNumber).toBe(7);
+      expect(tree.left.match.matchNumber).toBe(5);
+      expect(tree.right.match.matchNumber).toBe(6);
+      expect(tree.left.left.match.matchNumber).toBe(1);
+      expect(tree.left.right.match.matchNumber).toBe(2);
+      expect(tree.right.left.match.matchNumber).toBe(3);
+      expect(tree.right.right.match.matchNumber).toBe(4);
     });
   });
 
@@ -815,7 +776,7 @@ describe("calculations", () => {
             res.forEach((r) => {
               expect(r.ranking).toBe(r.expectedRanking);
             });
-          }
+          },
         );
       });
     });

@@ -1,38 +1,15 @@
-const mongoose = require("mongoose");
 const {
   Prediction,
   validatePrediction,
 } = require("../../models/prediction.model");
 const { Competition } = require("../../models/competition.model");
 const { Group } = require("../../models/group.model");
+const { max } = require("../../utils/allowables");
 const {
-  max,
-  removeFieldsFromPopulatedUser,
-} = require("../../utils/allowables");
-
-function addPoints(req) {
-  req.body.points = {
-    group: { points: 0, correctPicks: 0, bonus: 0 },
-    playoff: { points: 0, correctPicks: 0 },
-    champion: { points: 0, correctPicks: 0 },
-    misc: { points: 0, correctPicks: 0 },
-  };
-  req.body.totalPoints = 0;
-  req.body.totalPicks = 0;
-  req.body.ranking = null;
-  req.body.potentialPoints = {
-    maximum: 0,
-    realistic: 0,
-  };
-}
-
-function removePoints(req) {
-  delete req.body.points;
-  delete req.body.totalPoints;
-  delete req.body.totalPicks;
-  delete req.body.ranking;
-  delete req.body.potentialPoints;
-}
+  deadlineHasPassed,
+  addPoints,
+  removePoints,
+} = require("../../utils/predictions");
 
 async function nameIsUnique(name, userID, competitionID) {
   const predictionWithSameName = await Prediction.findOne({
@@ -43,26 +20,6 @@ async function nameIsUnique(name, userID, competitionID) {
   if (predictionWithSameName)
     return "Prediction names must be unique. This name has been taken by another user. Please try a different name.";
   return null;
-}
-
-function deadlineHasPassed(competition, isSecondChance) {
-  return (
-    (isSecondChance
-      ? competition?.secondChance?.submissionDeadline
-      : competition?.submissionDeadline) < new Date()
-  );
-}
-
-function leaderboardFilters(req) {
-  const groupsQuery =
-    req.params.groupID.toLowerCase() === "all"
-      ? {}
-      : { groups: mongoose.Types.ObjectId(req.params.groupID) };
-  const secondChanceQuery = {
-    isSecondChance: req.query.secondChance === "true" || { $ne: true },
-  };
-
-  return { groupsQuery, secondChanceQuery };
 }
 
 async function createNewPrediction(req, res, next) {
@@ -96,7 +53,7 @@ async function createNewPrediction(req, res, next) {
   }).select("name isSecondChance");
   if (
     predictions.filter((p) =>
-      req.body.isSecondChance ? p.isSecondChance : !p.isSecondChance
+      req.body.isSecondChance ? p.isSecondChance : !p.isSecondChance,
     ).length >= competition.maxSubmissions
   )
     return next({
@@ -114,7 +71,7 @@ async function createNewPrediction(req, res, next) {
   const nameInUse = await nameIsUnique(
     req.body.name,
     req.user._id,
-    req.body.competitionID
+    req.body.competitionID,
   );
   if (nameInUse) return next({ status: 400, message: nameInUse });
 
@@ -149,7 +106,7 @@ async function updatePrediction(req, res, next) {
   if (
     predictions.some(
       (p) =>
-        p.name === req.body.name && String(prediction._id) !== String(p._id)
+        p.name === req.body.name && String(prediction._id) !== String(p._id),
     )
   )
     return next({
@@ -161,7 +118,7 @@ async function updatePrediction(req, res, next) {
   const nameInUse = await nameIsUnique(
     req.body.name,
     req.user._id,
-    req.body.competitionID
+    req.body.competitionID,
   );
   if (nameInUse) return next({ status: 400, message: nameInUse });
 
@@ -190,7 +147,7 @@ async function getPrediction(req, res, next) {
 async function getUsersPredictions(req, res) {
   const predictions = await Prediction.find({ userID: req.user._id })
     .select(
-      "competitionID name points totalPoints misc potentialPoints isSecondChance"
+      "competitionID name points totalPoints misc potentialPoints isSecondChance",
     )
     .populate("competitionID")
     .populate({
@@ -221,160 +178,6 @@ async function deletePrediction(req, res, next) {
     _id: req.params.id,
   });
   res.send(result);
-}
-
-async function getLeaderboardByGroup(req, res, next) {
-  const competition = await Competition.findById(req.params.id);
-  if (!competition) next({ status: 404, message: "Competition not found" });
-
-  let selectedFields =
-    "name points totalPoints totalPicks ranking userID potentialPoints";
-  if (deadlineHasPassed(competition, req.query.secondChance === "true"))
-    selectedFields += " misc";
-
-  if (
-    req.params.groupID !== "all" &&
-    !mongoose.Types.ObjectId.isValid(req.params.groupID)
-  )
-    return next({
-      status: 400,
-      message: `Group ID parameter must be "all" or a valid objectID`,
-    });
-
-  const { groupsQuery, secondChanceQuery } = leaderboardFilters(req);
-
-  const limit = !isNaN(Number(req.params.resultsPerPage))
-    ? Number(req.params.resultsPerPage)
-    : 25;
-  const pageNumber = !isNaN(Number(req.params.pageNumber))
-    ? Number(req.params.pageNumber)
-    : 1;
-  const skip = limit * (pageNumber - 1);
-
-  const predictions = await Prediction.find({
-    competitionID: req.params.id,
-    ...secondChanceQuery,
-    ...groupsQuery,
-  })
-    .select(selectedFields)
-    .populate("userID", removeFieldsFromPopulatedUser)
-    .sort({ ranking: 1, name: 1 })
-    .skip(skip)
-    .limit(limit);
-  const count = await Prediction.count({
-    competitionID: req.params.id,
-    ...groupsQuery,
-    ...secondChanceQuery,
-  });
-
-  // do not remove _id from groupInfo ownerID, this is used client side to display remove button
-  const groupInfo =
-    req.params.groupID !== "all"
-      ? await Group.findById(req.params.groupID)
-          .select("name ownerID")
-          .populate("ownerID", "name")
-      : null;
-  res.send({ predictions, count, groupInfo });
-}
-
-async function searchLeaderboard(req, res, next) {
-  const competition = await Competition.findById(req.params.id);
-  if (!competition)
-    return next({ status: 404, message: "Competition not found" });
-
-  let projectedFields = {
-    userID: { name: "$user.name" },
-    _id: "$_id",
-    name: "$name",
-    points: "$points",
-    totalPoints: "$totalPoints",
-    totalPicks: "$totalPicks",
-    ranking: "$ranking",
-  };
-  if (deadlineHasPassed(competition, req.query.secondChance === "true"))
-    projectedFields.misc = "$misc";
-
-  if (
-    req.params.groupID !== "all" &&
-    !mongoose.Types.ObjectId.isValid(req.params.groupID)
-  )
-    return next({
-      status: 400,
-      message: `Group ID parameter must be "all" or a valid objectID`,
-    });
-
-  const { groupsQuery, secondChanceQuery } = leaderboardFilters(req);
-  const searchParamRegex = new RegExp(req.params.search, "i");
-
-  // this pipeline will:
-  // 1. search by competitionID and groupID
-  // 2. populate the userID field (only with name)
-  // 3. search by case insensitive search param in bracket name and user name
-  const predictions = await Prediction.aggregate([
-    {
-      $match: {
-        competitionID: mongoose.Types.ObjectId(req.params.id),
-        ...secondChanceQuery,
-        ...groupsQuery,
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "userID",
-        foreignField: "_id",
-        as: "user",
-      },
-    },
-    {
-      $unwind: "$user",
-    },
-    {
-      $project: projectedFields,
-    },
-    {
-      $match: {
-        $or: [
-          { name: { $regex: searchParamRegex } },
-          { "userID.name": { $regex: searchParamRegex } },
-        ],
-      },
-    },
-  ]);
-
-  const groupInfo =
-    req.params.groupID !== "all"
-      ? await Group.findById(req.params.groupID)
-          .select("name ownerID")
-          .populate("ownerID", removeFieldsFromPopulatedUser)
-      : null;
-
-  res.send({ predictions, count: predictions.length, groupInfo });
-}
-
-async function getNonUserPrediction(req, res, next) {
-  const prediction = await Prediction.findById(req.params.id).select(
-    "competitionID isSecondChance"
-  );
-  if (!prediction)
-    return next({ status: 404, message: "Prediction not found" });
-
-  const competition = await Competition.findById(prediction.competitionID);
-  if (!competition)
-    return next({ status: 404, message: "Competition not found" });
-
-  let selectedFields;
-  if (!deadlineHasPassed(competition, prediction.isSecondChance))
-    selectedFields = "name points totalPoints userID";
-
-  let predictionToSend;
-  if (selectedFields)
-    predictionToSend = await Prediction.findById(req.params.id).select(
-      selectedFields
-    );
-  else predictionToSend = await Prediction.findById(req.params.id);
-
-  res.send(predictionToSend);
 }
 
 async function addPredictionToGroup(req, res, next) {
@@ -418,7 +221,7 @@ async function addPredictionToGroup(req, res, next) {
     });
   await Prediction.updateOne(
     { _id: req.params.id },
-    { $push: { groups: group._id } }
+    { $push: { groups: group._id } },
   );
   res.send(group._id);
 }
@@ -433,7 +236,7 @@ async function removePredictionFromGroup(req, res, next) {
 
   const result = await Prediction.updateOne(
     { _id: req.params.id },
-    { $pull: { groups: req.body._id } }
+    { $pull: { groups: req.body._id } },
   );
   res.send(result);
 }
@@ -455,7 +258,7 @@ async function removePredictionFromGroupByGroupOwner(req, res, next) {
     {
       _id: req.params.id,
     },
-    { $pull: { groups: req.body._id } }
+    { $pull: { groups: req.body._id } },
   );
   res.send(result);
 }
@@ -468,35 +271,14 @@ async function getUsersPredictionsByCompetition(req, res) {
   res.send(predictions);
 }
 
-async function getPredictionsByMisc(req, res, next) {
-  const predictions = await Prediction.find({
-    competitionID: req.params.id,
-    ["misc." + req.params.key]: req.params.team,
-  })
-    .populate("competitionID")
-    .populate({ path: "userID", select: "name" });
-
-  if (predictions[0] && !deadlineHasPassed(predictions[0].competitionID)) {
-    return next({
-      status: 400,
-      message: "Pick information hidden until submission deadline has passed",
-    });
-  }
-  res.send(predictions);
-}
-
 module.exports = {
   createNewPrediction,
   updatePrediction,
   getPrediction,
   getUsersPredictions,
   deletePrediction,
-  getLeaderboardByGroup,
-  searchLeaderboard,
-  getNonUserPrediction,
   addPredictionToGroup,
   removePredictionFromGroup,
   removePredictionFromGroupByGroupOwner,
   getUsersPredictionsByCompetition,
-  getPredictionsByMisc,
 };

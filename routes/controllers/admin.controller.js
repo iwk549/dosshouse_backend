@@ -3,6 +3,8 @@ const { Competition } = require("../../models/competition.model");
 const { Prediction } = require("../../models/prediction.model");
 const transactions = require("../../utils/transactions");
 const { Result } = require("../../models/result.model");
+const { User } = require("../../models/user.model");
+const { deleteUserByID } = require("../../utils/users");
 
 async function updateTeamName(req, res, next) {
   const competition = await Competition.findOne({ code: req.body.bracketCode });
@@ -131,6 +133,65 @@ async function updateTeamName(req, res, next) {
   res.send(results);
 }
 
+async function getUsers(req, res) {
+  const limit = !isNaN(Number(req.query.limit)) ? Number(req.query.limit) : 100;
+  const page = !isNaN(Number(req.query.page)) ? Number(req.query.page) : 1;
+  const skip = limit * (page - 1);
+
+  const searchQuery = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const googleQuery =
+    req.query.hasGoogleAccount !== undefined
+      ? req.query.hasGoogleAccount === "true"
+        ? { googleId: { $exists: true, $ne: null } }
+        : { $or: [{ googleId: { $exists: false } }, { googleId: null }] }
+      : {};
+
+  const validSortFields = ["name", "email", "lastActive"];
+  const sortField = validSortFields.includes(req.query.sort) ? req.query.sort : "name";
+  const sortOrder = req.query.order === "desc" ? -1 : 1;
+
+  const rawUsers = await User.find({ ...searchQuery, ...googleQuery })
+    .select("name email lastActive googleId role")
+    .sort({ [sortField]: sortOrder })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+  const users = rawUsers.map(({ googleId, ...u }) => ({
+    ...u,
+    hasGoogleAccount: !!googleId,
+  }));
+  const count = await User.countDocuments({ ...searchQuery, ...googleQuery });
+
+  res.send({ users, count });
+}
+
+async function deleteUser(req, res, next) {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.send("Account Deleted");
+  if (user.role === "admin")
+    return next({ status: 403, message: "Cannot delete an admin account" });
+
+  const results = await deleteUserByID(req.params.id);
+  if (results.name)
+    return next({
+      status: 400,
+      message:
+        "Something went wrong, account was not deleted. Please try again.",
+    });
+
+  res.send(results);
+}
+
 module.exports = {
   updateTeamName,
+  getUsers,
+  deleteUser,
 };

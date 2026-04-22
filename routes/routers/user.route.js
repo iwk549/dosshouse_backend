@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { loginLimiter, lowLimiter } = require("../../middleware/rateLimiter");
+const { loginLimiter } = require("../../middleware/rateLimiter");
 const auth = require("../../middleware/auth");
 const {
   createNewAccount,
@@ -22,7 +22,7 @@ router.post("/login", nonTestingRatelimiter, login);
 router.get("/", [auth], getUserInfo);
 router.delete("/", [auth], deleteUser);
 router.put("/", [auth], updateUser);
-router.put("/resetpassword/:email", [lowLimiter], requestPasswordReset);
+router.put("/resetpassword/:email", nonTestingRatelimiter, requestPasswordReset);
 router.put("/updatepassword", nonTestingRatelimiter, updatePassword);
 router.post("/loginwithgoogle", nonTestingRatelimiter, loginWithGoogle);
 

@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
-const { calculatePrediction, addRanking } = require("../../utils/calculations");
+const {
+  calculatePrediction,
+  addRanking,
+  buildBracketTree,
+} = require("../../utils/calculations");
 
 const { Result, validateResult } = require("../../models/result.model");
 const { Prediction } = require("../../models/prediction.model");
@@ -11,10 +15,20 @@ const calculateAndPostSubmissions = async (competition, result) => {
     competitionID: competition._id,
   });
   const matches = await Match.find({ bracketCode: competition.code });
+
+  // Build tree and find final once — matches are the same for all predictions
+  let tree = null;
+  let final = null;
+  matches.forEach((match) => {
+    if (match.type !== "Playoff") return;
+    if (!final || match.round > final.round) final = match;
+  });
+  if (final) tree = buildBracketTree(final.matchNumber, matches);
+
   let updatedPoints = [];
   allPredictions.forEach((p) => {
     const { points, totalPoints, totalPicks, potentialPoints } =
-      calculatePrediction(p, result, competition, matches);
+      calculatePrediction(p, result, competition, tree, final);
     updatedPoints.push({
       _id: p._id,
       isSecondChance: p.isSecondChance,
@@ -50,8 +64,8 @@ const calculateAndPostSubmissions = async (competition, result) => {
             },
           },
         },
-      })
-    )
+      }),
+    ),
   );
 };
 
@@ -102,4 +116,5 @@ module.exports = {
   updateResultsByCompetition,
   getResult,
   calculateCompetition,
+  calculateAndPostSubmissions,
 };
