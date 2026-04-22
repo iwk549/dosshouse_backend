@@ -11,6 +11,16 @@ const {
   removePoints,
 } = require("../../utils/predictions");
 
+function sanitizeSecondChancePrediction(body) {
+  body.groupPredictions = [];
+  if (body.misc) {
+    const { winner, thirdPlace } = body.misc;
+    body.misc = {};
+    if (winner !== undefined) body.misc.winner = winner;
+    if (thirdPlace !== undefined) body.misc.thirdPlace = thirdPlace;
+  }
+}
+
 async function nameIsUnique(name, userID, competitionID) {
   const predictionWithSameName = await Prediction.findOne({
     name: name,
@@ -75,6 +85,8 @@ async function createNewPrediction(req, res, next) {
   );
   if (nameInUse) return next({ status: 400, message: nameInUse });
 
+  if (req.body.isSecondChance) sanitizeSecondChancePrediction(req.body);
+
   const newPrediction = new Prediction(req.body);
   await newPrediction.save();
 
@@ -128,6 +140,8 @@ async function updatePrediction(req, res, next) {
   if (ex.error)
     return next({ status: 400, message: ex.error.details[0].message });
   removePoints(req);
+
+  if (prediction.isSecondChance) sanitizeSecondChancePrediction(req.body);
 
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 

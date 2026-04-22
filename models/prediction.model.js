@@ -123,8 +123,7 @@ const predictionSchema = {
           groupName: Joi.string().required(),
           teamOrder: Joi.array().items(Joi.string()).required(),
         })
-        .required()
-        .allow(null)
+        .allow(null),
     )
     .required(),
   playoffPredictions: Joi.array()
@@ -134,7 +133,7 @@ const predictionSchema = {
         homeTeam: Joi.string().required(),
         awayTeam: Joi.string().required(),
         round: Joi.number().required(),
-      })
+      }),
     )
     .required()
     .allow(null),
