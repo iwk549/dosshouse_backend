@@ -10,7 +10,8 @@ const { Prediction } = require("../../models/prediction.model");
 
 async function getLeaderboardByGroup(req, res, next) {
   const competition = await Competition.findById(req.params.id);
-  if (!competition) return next({ status: 404, message: "Competition not found" });
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
 
   let selectedFields =
     "name points totalPoints totalPicks ranking userID potentialPoints";
@@ -163,6 +164,51 @@ async function getNonUserPrediction(req, res, next) {
   res.send(predictionToSend);
 }
 
+async function getTeamEliminations(req, res, next) {
+  const competition = await Competition.findById(req.params.id);
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
+
+  if (!deadlineHasPassed(competition, req.query.secondChance === "true"))
+    return next({
+      status: 400,
+      message: "Pick information hidden until submission deadline has passed",
+    });
+
+  const secondChanceQuery = {
+    isSecondChance: req.query.secondChance === "true" || { $ne: true },
+  };
+
+  const team = req.params.team;
+
+  const predictions = await Prediction.aggregate([
+    {
+      $match: {
+        competitionID: mongoose.Types.ObjectId(req.params.id),
+        ...secondChanceQuery,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "userID",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        name: 1,
+        userID: { name: "$user.name" },
+        eliminationRound: { $ifNull: [`$teamEliminations.${team}`, null] },
+      },
+    },
+  ]);
+
+  res.send(predictions);
+}
+
 async function getPredictionsByMisc(req, res, next) {
   const predictions = await Prediction.find({
     competitionID: req.params.id,
@@ -185,4 +231,5 @@ module.exports = {
   searchLeaderboard,
   getNonUserPrediction,
   getPredictionsByMisc,
+  getTeamEliminations,
 };

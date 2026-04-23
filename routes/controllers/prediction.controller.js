@@ -9,6 +9,7 @@ const {
   deadlineHasPassed,
   addPoints,
   removePoints,
+  computeTeamEliminations,
 } = require("../../utils/predictions");
 
 function sanitizeSecondChancePrediction(body) {
@@ -87,6 +88,8 @@ async function createNewPrediction(req, res, next) {
 
   if (req.body.isSecondChance) sanitizeSecondChancePrediction(req.body);
 
+  req.body.teamEliminations = computeTeamEliminations(req.body, competition);
+
   const newPrediction = new Prediction(req.body);
   await newPrediction.save();
 
@@ -142,6 +145,8 @@ async function updatePrediction(req, res, next) {
   removePoints(req);
 
   if (prediction.isSecondChance) sanitizeSecondChancePrediction(req.body);
+
+  req.body.teamEliminations = computeTeamEliminations(req.body, competition);
 
   await Prediction.updateOne({ _id: req.params.id }, { $set: req.body });
 

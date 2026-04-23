@@ -99,6 +99,7 @@ const predictionMongooseSchema = new mongoose.Schema({
       ],
     },
   ],
+  teamEliminations: { type: Object, required: false },
 });
 
 predictionMongooseSchema.index({ userID: 1, competitionID: 1 });
