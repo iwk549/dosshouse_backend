@@ -84,6 +84,7 @@ async function updateResultsByCompetition(req, res, next) {
 
   if (req.query.calculate) {
     await calculateAndPostSubmissions(competition, req.body);
+    await Competition.updateOne({ code: req.params.code }, { lastCalculated: new Date() });
   }
 
   res.send(update);
@@ -108,6 +109,7 @@ async function calculateCompetition(req, res, next) {
     return next({ status: 404, message: "Competition not found" });
 
   await calculateAndPostSubmissions(competition, result);
+  await Competition.updateOne({ code: req.params.code }, { lastCalculated: new Date() });
 
   res.send("ok");
 }
