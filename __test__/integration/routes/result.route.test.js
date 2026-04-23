@@ -130,6 +130,31 @@ describe("resultsRoute", () => {
       const updatedResult = await Result.findOne({ code: competition.code });
       expect(updatedResult.playoff).toMatchObject(updateResult.playoff);
     });
+    it("should set lastCalculated on the competition when ?calculate is passed", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      const before = new Date();
+      await exec(
+        getToken(admin._id, admin, "admin"),
+        competition.code,
+        results[0],
+        "calculate=true"
+      );
+      const updated = await Competition.findOne({ code: competition.code });
+      expect(updated.lastCalculated).toBeDefined();
+      expect(new Date(updated.lastCalculated).getTime()).toBeGreaterThanOrEqual(before.getTime());
+    });
+    it("should not set lastCalculated if ?calculate is not passed", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      await exec(
+        getToken(admin._id, admin, "admin"),
+        competition.code,
+        results[0]
+      );
+      const updated = await Competition.findOne({ code: competition.code });
+      expect(updated.lastCalculated).toBeUndefined();
+    });
   });
 
   describe("GET /:id", () => {
@@ -197,6 +222,16 @@ describe("resultsRoute", () => {
         expect(up.totalPoints).toBe(updatedPredictions[0].totalPoints);
         expect(up.totalPicks).toBe(updatedPredictions[0].totalPicks);
       });
+    });
+    it("should set lastCalculated on the competition", async () => {
+      const admin = await insertUser();
+      const competition = await insertCompetition(competitionID);
+      const result = await insertResult(competition);
+      const before = new Date();
+      await exec(getToken(admin._id, admin, "admin"), result.code);
+      const updated = await Competition.findOne({ code: competition.code });
+      expect(updated.lastCalculated).toBeDefined();
+      expect(new Date(updated.lastCalculated).getTime()).toBeGreaterThanOrEqual(before.getTime());
     });
     it("should add rankings separately for second chance competitions", async () => {
       const admin = await insertUser();

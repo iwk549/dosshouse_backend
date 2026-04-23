@@ -87,6 +87,7 @@ const competitionMongooseSchema = new mongoose.Schema({
     required: false,
     keys: { text: { type: String }, link: { type: String } },
   },
+  lastCalculated: { type: Date, required: false },
 });
 
 const Competition = mongoose.model("Competition", competitionMongooseSchema);
