@@ -27,8 +27,8 @@ router.get("/:id", [auth, validateObjectID], getPrediction);
 router.get("/", [auth], getUsersPredictions);
 router.delete("/:id", [auth, validateObjectID], deletePrediction);
 router.get(
-  "/leaderboard/:id/eliminations/:team",
-  [validateObjectID],
+  "/leaderboard/:id/eliminations/:groupID/:team",
+  [auth, validateObjectID],
   getTeamEliminations,
 );
 router.get(

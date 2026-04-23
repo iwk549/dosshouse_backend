@@ -175,10 +175,16 @@ async function getTeamEliminations(req, res, next) {
       message: "Pick information hidden until submission deadline has passed",
     });
 
-  const secondChanceQuery = {
-    isSecondChance: req.query.secondChance === "true" || { $ne: true },
-  };
+  if (
+    req.params.groupID !== "all" &&
+    !mongoose.Types.ObjectId.isValid(req.params.groupID)
+  )
+    return next({
+      status: 400,
+      message: `Group ID parameter must be "all" or a valid objectID`,
+    });
 
+  const { groupsQuery, secondChanceQuery } = leaderboardFilters(req);
   const team = req.params.team;
 
   const predictions = await Prediction.aggregate([
@@ -186,6 +192,7 @@ async function getTeamEliminations(req, res, next) {
       $match: {
         competitionID: mongoose.Types.ObjectId(req.params.id),
         ...secondChanceQuery,
+        ...groupsQuery,
       },
     },
     {
@@ -201,9 +208,11 @@ async function getTeamEliminations(req, res, next) {
       $project: {
         name: 1,
         userID: { name: "$user.name" },
+        totalPoints: 1,
         eliminationRound: { $ifNull: [`$teamEliminations.${team}`, null] },
       },
     },
+    { $sort: { totalPoints: -1 } },
   ]);
 
   res.send(predictions);
