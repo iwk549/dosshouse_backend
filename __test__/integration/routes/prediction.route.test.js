@@ -827,21 +827,27 @@ describe("predictionsRoute", () => {
     });
   });
 
-  describe("GET /leaderboard/:id/eliminations/:team", () => {
-    const exec = async (competitionID, team = "Denmark", query = "") =>
-      await request(server).get(
-        `${endpoint}/leaderboard/${competitionID}/eliminations/${team}${query}`,
-      );
-    testObjectID(exec);
+  describe("GET /leaderboard/:id/eliminations/:groupID/:team", () => {
+    const exec = async (token, competitionID, groupID = "all", team = "Denmark", query = "") =>
+      await request(server)
+        .get(`${endpoint}/leaderboard/${competitionID}/eliminations/${groupID}/${team}${query}`)
+        .set(header, token);
+    testAuth(exec);
+    testObjectID(exec, true);
     it("should return 404 if competition not found", async () => {
-      const res = await exec(mongoose.Types.ObjectId());
+      const res = await exec(getToken(userID), mongoose.Types.ObjectId());
       expect(res.status).toBe(404);
       testResponseText(res.text, "competition not found");
     });
     it("should return 400 if submission deadline has not passed", async () => {
       await raiseInsertCompetition(1);
-      const res = await exec(competitionID);
+      const res = await exec(getToken(userID), competitionID);
       testReponse(res, 400, "hidden until submission deadline");
+    });
+    it('should return 400 if group id is not "all" or valid object id', async () => {
+      await raiseInsertCompetition(-1);
+      const res = await exec(getToken(userID), competitionID, "xxx");
+      testReponse(res, 400, "valid objectid");
     });
     it("should return eliminationRound for each submission", async () => {
       await raiseInsertCompetition(-1);
@@ -852,7 +858,7 @@ describe("predictionsRoute", () => {
         userID,
         teamEliminations: { Denmark: "Winner", Argentina: "Runner-Up" },
       });
-      const res = await exec(competitionID, "Denmark");
+      const res = await exec(getToken(userID), competitionID, "all", "Denmark");
       expect(res.status).toBe(200);
       expect(res.body).toHaveLength(1);
       expect(res.body[0].eliminationRound).toBe("Winner");
@@ -865,7 +871,7 @@ describe("predictionsRoute", () => {
         _id: mongoose.Types.ObjectId(),
         competitionID,
       });
-      const res = await exec(competitionID, "Denmark");
+      const res = await exec(getToken(userID), competitionID, "all", "Denmark");
       expect(res.status).toBe(200);
       expect(res.body[0].eliminationRound).toBeNull();
     });
@@ -877,7 +883,7 @@ describe("predictionsRoute", () => {
         competitionID,
         teamEliminations: { Denmark: "Winner" },
       });
-      const res = await exec(competitionID, "Brazil");
+      const res = await exec(getToken(userID), competitionID, "all", "Brazil");
       expect(res.status).toBe(200);
       expect(res.body[0].eliminationRound).toBeNull();
     });
@@ -901,7 +907,29 @@ describe("predictionsRoute", () => {
         isSecondChance: false,
         teamEliminations: { Denmark: "Semi Final" },
       });
-      const res = await exec(competitionID, "Denmark", "?secondChance=true");
+      const res = await exec(getToken(userID), competitionID, "all", "Denmark", "?secondChance=true");
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].eliminationRound).toBe("Winner");
+    });
+    it("should only return predictions that are part of the group", async () => {
+      await raiseInsertCompetition(-1);
+      const groupID = mongoose.Types.ObjectId();
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        groups: [groupID],
+        teamEliminations: { Denmark: "Winner" },
+      });
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        groups: [],
+        teamEliminations: { Denmark: "Semi Final" },
+      });
+      const res = await exec(getToken(userID), competitionID, groupID, "Denmark");
       expect(res.status).toBe(200);
       expect(res.body).toHaveLength(1);
       expect(res.body[0].eliminationRound).toBe("Winner");
