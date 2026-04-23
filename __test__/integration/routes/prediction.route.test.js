@@ -121,6 +121,23 @@ describe("predictionsRoute", () => {
       const insertedPrediction = await Prediction.findById(res.body);
       expect(insertedPrediction).not.toBeNull();
     });
+    it("should compute teamEliminations on create", async () => {
+      await raiseInsertCompetition(1);
+      const body = {
+        ...predictions[1],
+        competitionID,
+        userID,
+        name: "Eliminations Test",
+      };
+      const res = await exec(getToken(userID), body);
+      expect(res.status).toBe(200);
+      const saved = await Prediction.findById(res.body);
+      expect(saved.teamEliminations).toBeDefined();
+      expect(saved.teamEliminations["Denmark"]).toBe("Winner");
+      expect(saved.teamEliminations["Argentina"]).toBe("Runner-Up");
+      expect(saved.teamEliminations["Germany"]).toBe("Semi Final");
+      expect(saved.teamEliminations["Brazil"]).toBe("Group Stage");
+    });
     it("should include the second chance flag", async () => {
       await insertCompetition(competitionID, null, {
         secondChance: {
@@ -142,7 +159,12 @@ describe("predictionsRoute", () => {
       const res = await exec(getToken(), {
         ...prediction,
         isSecondChance: true,
-        misc: { winner: "Brazil", thirdPlace: "Argentina", discipline: "France", topScorer: "England" },
+        misc: {
+          winner: "Brazil",
+          thirdPlace: "Argentina",
+          discipline: "France",
+          topScorer: "England",
+        },
       });
       expect(res.status).toBe(200);
       const saved = await Prediction.findById(res.body);
@@ -246,15 +268,41 @@ describe("predictionsRoute", () => {
       );
       expect(updatedPrediction.name).toBe("Updated Name");
     });
+    it("should recompute teamEliminations on update", async () => {
+      await raiseInsertCompetition(1);
+      const inserted = await insertPrediction({ competitionID, userID });
+      const updateBody = {
+        ...predictions[1],
+        competitionID,
+        userID,
+        name: inserted.name,
+      };
+      const res = await exec(getToken(userID), inserted._id, updateBody);
+      expect(res.status).toBe(200);
+      const saved = await Prediction.findById(inserted._id);
+      expect(saved.teamEliminations).toBeDefined();
+      expect(saved.teamEliminations["Denmark"]).toBe("Winner");
+      expect(saved.teamEliminations["Argentina"]).toBe("Runner-Up");
+      expect(saved.teamEliminations["Brazil"]).toBe("Group Stage");
+    });
     it("should strip groupPredictions and non-winner/thirdPlace misc from second chance prediction on update", async () => {
       await insertCompetition(competitionID, null, {
         secondChance: { submissionDeadline: pickADate(1) },
       });
-      const inserted = await insertPrediction({ competitionID, userID, isSecondChance: true });
+      const inserted = await insertPrediction({
+        competitionID,
+        userID,
+        isSecondChance: true,
+      });
       const updateBody = {
         ...inserted,
         competitionID,
-        misc: { winner: "Brazil", thirdPlace: "Argentina", discipline: "France", topScorer: "England" },
+        misc: {
+          winner: "Brazil",
+          thirdPlace: "Argentina",
+          discipline: "France",
+          topScorer: "England",
+        },
         groupPredictions: [{ groupName: "A", teamOrder: ["a", "b", "c", "d"] }],
       };
       delete updateBody._id;
@@ -776,6 +824,87 @@ describe("predictionsRoute", () => {
       const res = await exec(getToken(userID), competitionID);
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(insertedPredictions.length);
+    });
+  });
+
+  describe("GET /leaderboard/:id/eliminations/:team", () => {
+    const exec = async (competitionID, team = "Denmark", query = "") =>
+      await request(server).get(
+        `${endpoint}/leaderboard/${competitionID}/eliminations/${team}${query}`,
+      );
+    testObjectID(exec);
+    it("should return 404 if competition not found", async () => {
+      const res = await exec(mongoose.Types.ObjectId());
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition not found");
+    });
+    it("should return 400 if submission deadline has not passed", async () => {
+      await raiseInsertCompetition(1);
+      const res = await exec(competitionID);
+      testReponse(res, 400, "hidden until submission deadline");
+    });
+    it("should return eliminationRound for each submission", async () => {
+      await raiseInsertCompetition(-1);
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        userID,
+        teamEliminations: { Denmark: "Winner", Argentina: "Runner-Up" },
+      });
+      const res = await exec(competitionID, "Denmark");
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].eliminationRound).toBe("Winner");
+      expect(res.body[0].name).toBeDefined();
+    });
+    it("should return null eliminationRound for predictions without teamEliminations", async () => {
+      await raiseInsertCompetition(-1);
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+      });
+      const res = await exec(competitionID, "Denmark");
+      expect(res.status).toBe(200);
+      expect(res.body[0].eliminationRound).toBeNull();
+    });
+    it("should return null eliminationRound for a team not in a submission's teamEliminations", async () => {
+      await raiseInsertCompetition(-1);
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        teamEliminations: { Denmark: "Winner" },
+      });
+      const res = await exec(competitionID, "Brazil");
+      expect(res.status).toBe(200);
+      expect(res.body[0].eliminationRound).toBeNull();
+    });
+    it("should return only second chance entries when queried", async () => {
+      await insertCompetition(competitionID, {
+        ...competitions[0],
+        submissionDeadline: pickADate(-1),
+        secondChance: { submissionDeadline: pickADate(-1) },
+      });
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        isSecondChance: true,
+        teamEliminations: { Denmark: "Winner" },
+      });
+      await Prediction.collection.insertOne({
+        ...predictions[1],
+        _id: mongoose.Types.ObjectId(),
+        competitionID,
+        isSecondChance: false,
+        teamEliminations: { Denmark: "Semi Final" },
+      });
+      const res = await exec(competitionID, "Denmark", "?secondChance=true");
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].eliminationRound).toBe("Winner");
     });
   });
 

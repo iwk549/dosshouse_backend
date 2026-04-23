@@ -44,9 +44,57 @@ function removePoints(req) {
   delete req.body.potentialPoints;
 }
 
+function computeTeamEliminations(prediction, competition) {
+  const { groupPredictions, playoffPredictions, misc } = prediction;
+  const { scoring } = competition;
+
+  const roundMap = {};
+  let finalRound = 0;
+  for (const r of scoring.playoff) {
+    roundMap[r.roundNumber] = r.roundName;
+    if (r.roundNumber > finalRound) finalRound = r.roundNumber;
+  }
+
+  const teamHighestRound = {};
+  for (const match of playoffPredictions || []) {
+    for (const team of [match.homeTeam, match.awayTeam]) {
+      if (!team || team.startsWith("Winner")) continue;
+      if (!teamHighestRound[team] || match.round > teamHighestRound[team]) {
+        teamHighestRound[team] = match.round;
+      }
+    }
+  }
+
+  const eliminations = {};
+  const playoffTeams = new Set(Object.keys(teamHighestRound));
+
+  for (const [team, highestRound] of Object.entries(teamHighestRound)) {
+    if (highestRound === finalRound) {
+      eliminations[team] = misc?.winner === team ? "Winner" : "Runner-Up";
+    } else {
+      eliminations[team] = roundMap[highestRound] || `Round ${highestRound}`;
+    }
+  }
+
+  if (misc?.thirdPlace && eliminations[misc.thirdPlace] !== undefined) {
+    eliminations[misc.thirdPlace] = "Third Place";
+  }
+
+  for (const group of groupPredictions || []) {
+    for (const team of group.teamOrder || []) {
+      if (!playoffTeams.has(team)) {
+        eliminations[team] = "Group Stage";
+      }
+    }
+  }
+
+  return eliminations;
+}
+
 module.exports = {
   deadlineHasPassed,
   leaderboardFilters,
   addPoints,
   removePoints,
+  computeTeamEliminations,
 };

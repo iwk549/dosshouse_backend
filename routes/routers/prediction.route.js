@@ -18,6 +18,7 @@ const {
   searchLeaderboard,
   getNonUserPrediction,
   getPredictionsByMisc,
+  getTeamEliminations,
 } = require("../controllers/leaderboard.controller");
 
 router.post("/", [auth], createNewPrediction);
@@ -25,6 +26,11 @@ router.put("/:id", [auth, validateObjectID], updatePrediction);
 router.get("/:id", [auth, validateObjectID], getPrediction);
 router.get("/", [auth], getUsersPredictions);
 router.delete("/:id", [auth, validateObjectID], deletePrediction);
+router.get(
+  "/leaderboard/:id/eliminations/:team",
+  [validateObjectID],
+  getTeamEliminations,
+);
 router.get(
   "/leaderboard/:id/:resultsPerPage/:pageNumber/:groupID",
   [validateObjectID],
