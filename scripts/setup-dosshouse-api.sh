@@ -27,6 +27,7 @@ else
 fi
 
 node ./scripts/devSetup.js
+node ./scripts/migrations/backfillTeamEliminations.js
 
 echo "----------"
 echo "Dosshouse API is ready for use"

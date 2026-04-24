@@ -23,7 +23,30 @@ module.exports = [
       ],
       champion: 32,
     },
-    miscPicks: [],
+    miscPicks: [
+      {
+        name: "thirdPlace",
+        label: "Third Place",
+        description: "Winner of the third place playoff",
+        points: 16,
+        info: {
+          homeTeamGoals: 0,
+          homeTeamPKs: 0,
+          awayTeamGoals: 0,
+          awayTeamPKs: 0,
+          matchAccepted: false,
+          homeTeamName: "Loser 207",
+          awayTeamName: "Loser 208",
+          dateTime: new Date("2026-12-24T15:00:00.000Z"),
+          location: "Estadio Monumental, Buenos Aires",
+          matchNumber: 210,
+          round: 1001,
+          sport: "Soccer",
+          type: "Playoff",
+          getTeamsFrom: { home: { matchNumber: 207 }, away: { matchNumber: 208 } },
+        },
+      },
+    ],
   },
   {
     // Finished competition — useful for browsing results, leaderboards, scoring
