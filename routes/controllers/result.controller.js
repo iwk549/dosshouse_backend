@@ -4,8 +4,10 @@ const {
   addRanking,
   buildBracketTree,
 } = require("../../utils/calculations");
+const { calculateWhatIfPaths } = require("../../utils/whatIf");
 
 const { Result, validateResult } = require("../../models/result.model");
+const { WhatIfResult } = require("../../models/whatIfResult.model");
 const { Prediction } = require("../../models/prediction.model");
 const { Competition } = require("../../models/competition.model");
 const { Match } = require("../../models/match.model");
@@ -67,7 +69,41 @@ const calculateAndPostSubmissions = async (competition, result) => {
       }),
     ),
   );
+
+  await calculateAndSaveWhatIf(
+    competition,
+    result,
+    allPredictions,
+    matches,
+    tree,
+  );
 };
+
+async function calculateAndSaveWhatIf(
+  competition,
+  result,
+  predictions,
+  matches,
+  tree,
+) {
+  const paths = calculateWhatIfPaths(
+    competition,
+    result,
+    predictions,
+    matches,
+    tree,
+  );
+
+  if (paths === null) {
+    await WhatIfResult.deleteOne({ competitionCode: competition.code });
+  } else {
+    await WhatIfResult.updateOne(
+      { competitionCode: competition.code },
+      { competitionCode: competition.code, calculatedAt: new Date(), paths },
+      { upsert: true },
+    );
+  }
+}
 
 async function updateResultsByCompetition(req, res, next) {
   const competition = await Competition.findOne({ code: req.params.code });
@@ -84,7 +120,10 @@ async function updateResultsByCompetition(req, res, next) {
 
   if (req.query.calculate) {
     await calculateAndPostSubmissions(competition, req.body);
-    await Competition.updateOne({ code: req.params.code }, { lastCalculated: new Date() });
+    await Competition.updateOne(
+      { code: req.params.code },
+      { lastCalculated: new Date() },
+    );
   }
 
   res.send(update);
@@ -109,9 +148,25 @@ async function calculateCompetition(req, res, next) {
     return next({ status: 404, message: "Competition not found" });
 
   await calculateAndPostSubmissions(competition, result);
-  await Competition.updateOne({ code: req.params.code }, { lastCalculated: new Date() });
+  await Competition.updateOne(
+    { code: req.params.code },
+    { lastCalculated: new Date() },
+  );
 
   res.send("ok");
+}
+
+async function getWhatIfResult(req, res, next) {
+  const whatIf = await WhatIfResult.findOne({
+    competitionCode: req.params.code,
+  })
+    .populate("paths.topThree.predictionID", "name")
+    .populate("paths.topThree.userID", "name")
+    .populate("paths.secondChanceTopThree.predictionID", "name")
+    .populate("paths.secondChanceTopThree.userID", "name");
+  if (!whatIf)
+    return next({ status: 404, message: "What-if result not found" });
+  res.send(whatIf);
 }
 
 module.exports = {
@@ -119,4 +174,5 @@ module.exports = {
   getResult,
   calculateCompetition,
   calculateAndPostSubmissions,
+  getWhatIfResult,
 };
