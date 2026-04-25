@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const csvParser = require("csv-parser");
 
-const { Match, validateMatch } = require("../../models/match.model");
+const {
+  Match,
+  validateMatch,
+  validateMatchUpdate,
+} = require("../../models/match.model");
 const { Competition } = require("../../models/competition.model");
 const { mapCsvFields } = require("../../utils/allowables");
 
@@ -12,7 +16,7 @@ async function getMatches(req, res, next) {
     return next({ status: 404, message: "Competition not found" });
   const matches = await Match.find({
     bracketCode: competition.code,
-  }).sort({ groupName: 1, dateTime: 1, matchNumber: 1 });
+  }).sort({ dateTime: 1, matchNumber: 1 });
   res.send(matches);
 }
 
@@ -40,7 +44,7 @@ async function updateJsonMatches(req, res) {
           },
         },
       },
-    }))
+    })),
   );
 
   res.send(`${results.nModified} matches updated`);
@@ -61,7 +65,7 @@ async function upsertCsvMatches(req, res, next) {
           const [month, day, year] = row.date.split("/").map(Number);
           const [hours, minutes] = row.time.split(":").map(Number);
           doc.dateTime = new Date(
-            Date.UTC(year, month - 1, day, hours, minutes)
+            Date.UTC(year, month - 1, day, hours, minutes),
           );
           delete doc.date;
           delete doc.time;
@@ -94,7 +98,7 @@ async function upsertCsvMatches(req, res, next) {
                 },
                 upsert: true,
               },
-            }))
+            })),
           );
 
           res.send(result);
@@ -109,8 +113,54 @@ async function upsertCsvMatches(req, res, next) {
   }
 }
 
+async function updateSingleMatch(req, res, next) {
+  const ex = validateMatchUpdate(req.body);
+  if (ex.error)
+    return next({ status: 400, message: ex.error.details[0].message });
+
+  const {
+    homeTeamName,
+    homeTeamGoals,
+    homeTeamPKs,
+    awayTeamName,
+    awayTeamGoals,
+    awayTeamPKs,
+    dateTime,
+    location,
+    matchAccepted,
+  } = req.body;
+
+  const match = await Match.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      bracketCode: req.body.bracketCode,
+      matchNumber: req.body.matchNumber,
+      round: req.body.round,
+    },
+    {
+      $set: {
+        homeTeamName,
+        homeTeamGoals,
+        homeTeamPKs,
+        awayTeamName,
+        awayTeamGoals,
+        awayTeamPKs,
+        dateTime,
+        location,
+        matchAccepted,
+      },
+    },
+    { new: true },
+  );
+
+  if (!match) return next({ status: 404, message: "Match not found" });
+
+  res.send(match);
+}
+
 module.exports = {
   getMatches,
   updateJsonMatches,
   upsertCsvMatches,
+  updateSingleMatch,
 };

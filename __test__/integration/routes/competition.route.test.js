@@ -5,6 +5,9 @@ const {
   testObjectID,
   deleteAllData,
   cleanup,
+  getToken,
+  testAuth,
+  insertUser,
 } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competition.model");
 const mongoose = require("mongoose");
@@ -21,7 +24,7 @@ describe("competitionsRoute", () => {
       competition.competitionEnd = new Date(
         idx < activeCount
           ? new Date().setDate(new Date().getDate() + 1)
-          : new Date().setDate(new Date().getDate() - 1)
+          : new Date().setDate(new Date().getDate() - 1),
       );
       newCompetitions.push(competition);
     });
@@ -91,6 +94,88 @@ describe("competitionsRoute", () => {
       const res = await exec(competitions[0]._id);
       expect(res.status).toBe(200);
       expect(res.body.name).toBe(competitions[0].name);
+    });
+  });
+
+  describe("PUT /:code/misc-pick/:name", () => {
+    let adminToken;
+    const validBody = {
+      homeTeamName: "Croatia",
+      awayTeamName: "Morocco",
+      homeTeamGoals: 2,
+      awayTeamGoals: 1,
+      homeTeamPKs: null,
+      awayTeamPKs: null,
+      matchAccepted: true,
+      location: "Stadium",
+      dateTime: "2022-12-17T15:00:00.000Z",
+    };
+
+    const exec = async (token, code, name, body) => {
+      return await request(server)
+        .put(`${endpoint}/${code}/misc-pick/${name}`)
+        .set("x-auth-token", token)
+        .send(body || validBody);
+    };
+
+    beforeEach(async () => {
+      const user = await insertUser(null, { role: "admin" });
+      adminToken = getToken(user._id, user, "admin");
+      await insertCompetitions(1);
+    });
+
+    testAuth((token) => exec(token, competitions[0].code, "thirdPlace"));
+
+    it("should return 403 if user is not admin", async () => {
+      const res = await exec(getToken(), competitions[0].code, "thirdPlace");
+      expect(res.status).toBe(403);
+      testResponseText(res.text, "access denied");
+    });
+
+    it("should return 400 if required fields are missing", async () => {
+      const res = await exec(adminToken, competitions[0].code, "thirdPlace", {
+        homeTeamName: "Croatia",
+      });
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 404 if competition is not found", async () => {
+      const res = await exec(adminToken, "NOTEXIST", "thirdPlace");
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "competition not found");
+    });
+
+    it("should return 404 if misc pick name does not exist", async () => {
+      const res = await exec(adminToken, competitions[0].code, "nonExistent");
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "misc pick not found");
+    });
+
+    it("should update the misc pick info and return it", async () => {
+      const res = await exec(adminToken, competitions[0].code, "thirdPlace");
+      expect(res.status).toBe(200);
+      expect(res.body.homeTeamName).toBe("Croatia");
+      expect(res.body.awayTeamName).toBe("Morocco");
+      expect(res.body.matchAccepted).toBe(true);
+    });
+
+    it("should persist the update to the database", async () => {
+      await exec(adminToken, competitions[0].code, "thirdPlace");
+      const updated = await Competition.findOne({ code: competitions[0].code });
+      const pick = updated.miscPicks.find((p) => p.name === "thirdPlace");
+      expect(pick.info.homeTeamName).toBe("Croatia");
+      expect(pick.info.matchAccepted).toBe(true);
+    });
+
+    it("should merge with existing info rather than replacing it", async () => {
+      await exec(adminToken, competitions[0].code, "thirdPlace", {
+        ...validBody,
+        homeTeamGoals: 3,
+      });
+      const updated = await Competition.findOne({ code: competitions[0].code });
+      const pick = updated.miscPicks.find((p) => p.name === "thirdPlace");
+      expect(pick.info.homeTeamGoals).toBe(3);
+      expect(pick.info.homeTeamName).toBe("Croatia");
     });
   });
 });

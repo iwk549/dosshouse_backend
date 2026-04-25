@@ -14,6 +14,7 @@ const {
   testObjectID,
   cleanup,
   insertUser,
+  insertMatch,
   testReponse,
 } = require("../../helperFunctions");
 const { Competition } = require("../../../models/competition.model");
@@ -99,6 +100,108 @@ describe("matchesRoute", () => {
     });
   });
 
+  describe("PUT /:id", () => {
+    const validBody = (match) => ({
+      bracketCode: match.bracketCode,
+      matchNumber: match.matchNumber,
+      round: match.round,
+      homeTeamName: match.homeTeamName,
+      awayTeamName: match.awayTeamName,
+      matchAccepted: true,
+      homeTeamGoals: 2,
+      awayTeamGoals: 1,
+    });
+
+    const exec = async (token, id, body) => {
+      return await request(server)
+        .put(`${endpoint}/${id}`)
+        .send(body)
+        .set(header, token);
+    };
+
+    testAuth(exec, "admin");
+    testObjectID(exec, true, "admin");
+
+    it("should return 400 if required body fields are missing", async () => {
+      await insertUser(userId, { role: "admin" });
+      const match = await insertMatch();
+      const res = await exec(getToken(userId, null, "admin"), match._id, {
+        bracketCode: match.bracketCode,
+        matchNumber: match.matchNumber,
+        round: match.round,
+      });
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if identification fields are missing", async () => {
+      await insertUser(userId, { role: "admin" });
+      const match = await insertMatch();
+      const res = await exec(getToken(userId, null, "admin"), match._id, {
+        homeTeamName: "A",
+        awayTeamName: "B",
+        matchAccepted: true,
+      });
+      expect(res.status).toBe(400);
+    });
+
+    it("should return 404 if no match exists with the given id", async () => {
+      await insertUser(userId, { role: "admin" });
+      const res = await exec(
+        getToken(userId, null, "admin"),
+        mongoose.Types.ObjectId(),
+        {
+          bracketCode: "worldCup2022",
+          matchNumber: 1,
+          round: 1,
+          homeTeamName: "A",
+          awayTeamName: "B",
+          matchAccepted: true,
+        },
+      );
+      expect(res.status).toBe(404);
+    });
+
+    it("should return 404 if _id matches but identification fields do not", async () => {
+      await insertUser(userId, { role: "admin" });
+      const match = await insertMatch();
+      const res = await exec(getToken(userId, null, "admin"), match._id, {
+        ...validBody(match),
+        bracketCode: "wrongCode",
+      });
+      expect(res.status).toBe(404);
+    });
+
+    it("should update only allowed fields and return the updated match", async () => {
+      await insertUser(userId, { role: "admin" });
+      const match = await insertMatch();
+      const res = await exec(getToken(userId, null, "admin"), match._id, {
+        ...validBody(match),
+        homeTeamGoals: 3,
+        awayTeamGoals: 1,
+        location: "New Stadium",
+      });
+      expect(res.status).toBe(200);
+      expect(res.body.homeTeamGoals).toBe(3);
+      expect(res.body.awayTeamGoals).toBe(1);
+      expect(res.body.matchAccepted).toBe(true);
+      expect(res.body.location).toBe("New Stadium");
+    });
+
+    it("should not modify structural fields", async () => {
+      await insertUser(userId, { role: "admin" });
+      const match = await insertMatch({
+        type: "Group",
+        groupName: "A",
+        sport: "Soccer",
+      });
+      await exec(getToken(userId, null, "admin"), match._id, validBody(match));
+      const updated = await Match.findById(match._id);
+      expect(updated.type).toBe("Group");
+      expect(updated.groupName).toBe("A");
+      expect(updated.sport).toBe("Soccer");
+    });
+  });
+
   describe("PUT /csv", () => {
     afterEach(() => {
       try {
@@ -131,7 +234,7 @@ describe("matchesRoute", () => {
       const user = await insertUser(userId, { role: "admin" });
       const res = await exec(
         getToken(null, user, "admin"),
-        "__test__/testMatches_invalid.csv"
+        "__test__/testMatches_invalid.csv",
       );
       testReponse(res, 400);
       expect(res.body.length).toBe(5);
@@ -140,7 +243,7 @@ describe("matchesRoute", () => {
       const user = await insertUser(userId, { role: "admin" });
       const res = await exec(
         getToken(null, user, "admin"),
-        "__test__/testMatches.csv"
+        "__test__/testMatches.csv",
       );
       testReponse(res, 200);
       expect(res.body.nUpserted).toBe(7);
@@ -153,12 +256,12 @@ describe("matchesRoute", () => {
       await exec(getToken(null, user, "admin"), "__test__/testMatches.csv");
       await Match.updateOne(
         { matchNumber: 1 },
-        { $set: { homeTeamName: "a different name" } }
+        { $set: { homeTeamName: "a different name" } },
       );
 
       const res = await exec(
         getToken(null, user, "admin"),
-        "__test__/testMatches.csv"
+        "__test__/testMatches.csv",
       );
       testReponse(res, 200);
       expect(res.body.nModified).toBe(1);
@@ -172,7 +275,7 @@ describe("matchesRoute", () => {
 
       const res = await exec(
         getToken(null, user, "admin"),
-        "__test__/testMatches_updated.csv"
+        "__test__/testMatches_updated.csv",
       );
       testReponse(res, 200);
       expect(res.body.nModified).toBe(7);

@@ -20,12 +20,10 @@ const defaultResult = {
   group: [{ groupName: "A", teamOrder: ["a", "b", "c", "d"] }],
   playoff: [{ round: 1, teams: ["a", "b", "c", "d"], points: 2 }],
   misc: { winner: "", thirdPlace: "", discipline: "", topScorer: "" },
-  potentials: {
-    realisticWinners: {
-      topScorer: ["a", "c"],
-      discipline: ["d"],
-    },
-  },
+  leaders: [
+    { key: "topScorer", label: "Top Scorer", leaders: [{ team: "a", value: "" }, { team: "c", value: "" }] },
+    { key: "discipline", label: "Discipline", leaders: [{ team: "d", value: "" }] },
+  ],
 };
 
 // Two-match bracket feeding into a final at round 2

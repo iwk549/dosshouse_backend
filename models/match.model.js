@@ -69,7 +69,25 @@ function validateMatch(match) {
   return Joi.object(matchSchema).validate(match);
 }
 
+function validateMatchUpdate(match) {
+  return Joi.object({
+    bracketCode: Joi.string().required(),
+    matchNumber: Joi.number().required(),
+    round: Joi.number().required(),
+    homeTeamName: Joi.string().required(),
+    homeTeamGoals: Joi.number().optional(),
+    homeTeamPKs: Joi.number().optional(),
+    awayTeamName: Joi.string().required(),
+    awayTeamGoals: Joi.number().optional(),
+    awayTeamPKs: Joi.number().optional(),
+    dateTime: Joi.date().optional(),
+    location: Joi.string().optional(),
+    matchAccepted: Joi.boolean().required(),
+  }).validate(match);
+}
+
 const Match = mongoose.model("Match", matchMongooseSchema);
 
 exports.Match = Match;
 exports.validateMatch = validateMatch;
+exports.validateMatchUpdate = validateMatchUpdate;

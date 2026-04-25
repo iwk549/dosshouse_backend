@@ -155,6 +155,69 @@ describe("resultsRoute", () => {
       const updated = await Competition.findOne({ code: competition.code });
       expect(updated.lastCalculated).toBeUndefined();
     });
+
+    describe("leaders field", () => {
+      const validLeaders = [
+        {
+          key: "topScorer",
+          label: "Top Scorer",
+          leaders: [
+            { team: "France", player: "Mbappe", value: "8" },
+            { team: "England", player: "Kane", value: "6", eliminated: false },
+          ],
+        },
+      ];
+
+      it("should accept and return a result with a leaders array", async () => {
+        const admin = await insertUser();
+        const competition = await insertCompetition(competitionID);
+        const res = await exec(
+          getToken(admin._id, admin, "admin"),
+          competition.code,
+          { ...results[0], leaders: validLeaders }
+        );
+        expect(res.status).toBe(200);
+      });
+
+      it("should persist the leaders array to the database", async () => {
+        const admin = await insertUser();
+        const competition = await insertCompetition(competitionID);
+        await exec(
+          getToken(admin._id, admin, "admin"),
+          competition.code,
+          { ...results[0], leaders: validLeaders }
+        );
+        const saved = await Result.findOne({ code: competition.code });
+        expect(saved.leaders).toHaveLength(1);
+        expect(saved.leaders[0].key).toBe("topScorer");
+        expect(saved.leaders[0].leaders).toHaveLength(2);
+        expect(saved.leaders[0].leaders[0].player).toBe("Mbappe");
+      });
+
+      it("should update the leaders array when result is updated", async () => {
+        const admin = await insertUser();
+        const competition = await insertCompetition(competitionID);
+        await exec(
+          getToken(admin._id, admin, "admin"),
+          competition.code,
+          { ...results[0], leaders: validLeaders }
+        );
+        const updatedLeaders = [
+          {
+            key: "topScorer",
+            label: "Top Scorer",
+            leaders: [{ team: "Germany", player: "Muller", value: "5" }],
+          },
+        ];
+        await exec(
+          getToken(admin._id, admin, "admin"),
+          competition.code,
+          { ...results[0], leaders: updatedLeaders }
+        );
+        const saved = await Result.findOne({ code: competition.code });
+        expect(saved.leaders[0].leaders[0].player).toBe("Muller");
+      });
+    });
   });
 
   describe("GET /:id", () => {
@@ -182,6 +245,22 @@ describe("resultsRoute", () => {
       const res = await exec(getToken(), competitionID);
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject(result);
+    });
+    it("should return the leaders array when present", async () => {
+      const competition = await insertCompetition(competitionID);
+      const leaders = [
+        {
+          key: "topScorer",
+          label: "Top Scorer",
+          leaders: [{ team: "France", player: "Mbappe", value: "8" }],
+        },
+      ];
+      await insertResult(competition, { leaders });
+      const res = await exec(getToken(), competitionID);
+      expect(res.status).toBe(200);
+      expect(res.body.leaders).toHaveLength(1);
+      expect(res.body.leaders[0].key).toBe("topScorer");
+      expect(res.body.leaders[0].leaders[0].player).toBe("Mbappe");
     });
   });
 
