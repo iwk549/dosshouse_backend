@@ -33,7 +33,7 @@ async function deleteAllData() {
 
 function testResponseText(responseText, expectedToContain) {
   expect(responseText.toLowerCase()).toEqual(
-    expect.stringContaining(expectedToContain)
+    expect.stringContaining(expectedToContain),
   );
 }
 
@@ -95,7 +95,7 @@ async function insertPredictions(
   userID,
   competitionID,
   differentUsers,
-  startNameOffset = 0
+  startNameOffset = 0,
 ) {
   let predictionsToInsert = [];
   for (let i = 0 + startNameOffset; i < count + startNameOffset; i++) {
@@ -161,15 +161,24 @@ function testAuth(executionFunction, role) {
   }
 }
 
-function testObjectID(executionFunction, needsToken, tokenRole, user) {
+function testObjectID(
+  executionFunction,
+  needsToken,
+  tokenRole,
+  removeUsersFirst,
+) {
   it("should return 400 if invalid object id sent", async () => {
-    let res;
-    if (needsToken)
+    let res, user;
+    if (removeUsersFirst) await User.collection.deleteMany();
+    if (needsToken) {
+      if (tokenRole?.includes("admin")) {
+        user = await insertUser(null, { role: tokenRole });
+      }
       res = await executionFunction(
         getToken(null, user || null, tokenRole),
-        "xxx"
+        "xxx",
       );
-    else res = await executionFunction("xxx");
+    } else res = await executionFunction("xxx");
 
     expect(res.status).toBe(400);
     testResponseText(res.text, "invalid id");

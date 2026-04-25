@@ -21,7 +21,7 @@ const resultMongooseSchema = new mongoose.Schema({
       keys: {
         round: { type: Number, required: true },
         teams: [{ type: String, required: true }],
-        points: { type: Number, required: true },
+        points: { type: Number, required: false },
       },
     },
   ],
@@ -48,7 +48,7 @@ const resultSchema = {
       Joi.object().keys({
         round: Joi.number().integer().required(),
         teams: Joi.array().required().items(Joi.string()),
-        points: Joi.number().integer().required(),
+        points: Joi.number().integer().optional().allow(null, ""),
       })
     ),
   misc: Joi.object(),

@@ -10,10 +10,12 @@ const {
   getMatches,
   updateJsonMatches,
   upsertCsvMatches,
+  updateSingleMatch,
 } = require("../controllers/match.controller");
 
 router.get("/:id", [validateObjectID], getMatches);
 router.put("/", [auth, adminCheck], updateJsonMatches);
 router.put("/csv", [auth, adminCheck, upload.single("file")], upsertCsvMatches);
+router.put("/:id", [auth, adminCheck, validateObjectID], updateSingleMatch);
 
 module.exports = router;

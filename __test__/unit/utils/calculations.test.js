@@ -413,6 +413,99 @@ describe("calculations", () => {
           );
         });
       });
+
+      describe("leaders-based realistic potential points", () => {
+        const competition = {
+          scoring: {
+            playoff: [
+              { roundNumber: 1, points: 2 },
+              { roundNumber: 2, points: 4 },
+            ],
+            champion: 32,
+          },
+          miscPicks: [
+            { name: "topScorer", points: 10 },
+            { name: "discipline", points: 10 },
+          ],
+        };
+        const partialResult = {
+          playoff: [{ round: 1, teams: ["a", "b", "c", "d"] }],
+          misc: { topScorer: "", discipline: "" },
+        };
+
+        // Use non-matching teams so totalPoints = 0, making expected values predictable
+        const playoffPreds = [
+          { matchNumber: 1, homeTeam: "x", awayTeam: "y", round: 1 },
+          { matchNumber: 2, homeTeam: "x", awayTeam: "y", round: 1 },
+          { matchNumber: 3, homeTeam: "x", awayTeam: "y", round: 2 },
+        ];
+
+        it("should add realistic points when prediction pick is in leaders", () => {
+          const result = {
+            ...partialResult,
+            leaders: [
+              { key: "topScorer", label: "Top Scorer", leaders: [{ team: "a", value: "5" }] },
+            ],
+          };
+          const prediction = setPrediction(["playoff", "misc"], null, playoffPreds, {
+            topScorer: "a",
+            discipline: "b",
+          });
+          const res = exec(prediction, result, competition);
+          expect(res.potentialPoints.realistic).toBe(10);
+        });
+
+        it("should not add realistic points when prediction pick is not in leaders", () => {
+          const result = {
+            ...partialResult,
+            leaders: [
+              { key: "topScorer", label: "Top Scorer", leaders: [{ team: "c", value: "5" }] },
+            ],
+          };
+          const prediction = setPrediction(["playoff", "misc"], null, playoffPreds, {
+            topScorer: "a",
+            discipline: "b",
+          });
+          const res = exec(prediction, result, competition);
+          expect(res.potentialPoints.realistic).toBe(0);
+        });
+
+        it("should add realistic points for multiple misc picks when both are in leaders", () => {
+          const result = {
+            ...partialResult,
+            leaders: [
+              { key: "topScorer", label: "Top Scorer", leaders: [{ team: "a", value: "5" }] },
+              { key: "discipline", label: "Discipline", leaders: [{ team: "b", value: "" }] },
+            ],
+          };
+          const prediction = setPrediction(["playoff", "misc"], null, playoffPreds, {
+            topScorer: "a",
+            discipline: "b",
+          });
+          const res = exec(prediction, result, competition);
+          expect(res.potentialPoints.realistic).toBe(20);
+        });
+
+        it("should treat missing leaders array as no realistic winners", () => {
+          const result = { ...partialResult };
+          const prediction = setPrediction(["playoff", "misc"], null, playoffPreds, {
+            topScorer: "a",
+            discipline: "b",
+          });
+          const res = exec(prediction, result, competition);
+          expect(res.potentialPoints.realistic).toBe(0);
+        });
+
+        it("should treat empty leaders array as no realistic winners", () => {
+          const result = { ...partialResult, leaders: [] };
+          const prediction = setPrediction(["playoff", "misc"], null, playoffPreds, {
+            topScorer: "a",
+            discipline: "b",
+          });
+          const res = exec(prediction, result, competition);
+          expect(res.potentialPoints.realistic).toBe(0);
+        });
+      });
     });
 
     describe("Second Chance Competitions", () => {

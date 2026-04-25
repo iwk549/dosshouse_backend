@@ -45,6 +45,28 @@ module.exports = [
     },
     miscPicks: [
       {
+        name: "thirdPlace",
+        label: "Third Place",
+        description: "Winner of the third place playoff",
+        points: 16,
+        info: {
+          homeTeamGoals: 0,
+          homeTeamPKs: 0,
+          awayTeamGoals: 0,
+          awayTeamPKs: 0,
+          matchAccepted: false,
+          homeTeamName: "Southfield (GER)",
+          awayTeamName: "Ironport (USA)",
+          dateTime: new Date("2025-07-12T15:00:00.000Z"),
+          location: "South Arena",
+          matchNumber: 32,
+          round: 1001,
+          sport: "Soccer",
+          type: "Playoff",
+          getTeamsFrom: { home: { matchNumber: 29 }, away: { matchNumber: 30 } },
+        },
+      },
+      {
         name: "topScorer",
         label: "Top Goalscorer",
         description: "Player who scores the most goals in the tournament",

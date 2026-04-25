@@ -104,7 +104,7 @@ function calculatePrediction(prediction, result, competition, tree, final) {
       const predictionPick = prediction.misc[miscPick.name];
       if (
         predictionPick &&
-        result.misc[miscPick.name].includes(predictionPick)
+        result.misc[miscPick.name]?.includes(predictionPick)
       ) {
         if (prediction.isSecondChance && miscPick.name !== "thirdPlace") {
           // do not add points for non third place picks
@@ -194,6 +194,7 @@ function calculatePotentialPoints(
   */
   const latestResultRound = result.playoff?.length;
   const finalCompetitionRound = competition.scoring.playoff?.length;
+
   if (!latestResultRound) {
     maximum = 0;
     realistic = 0;
@@ -286,9 +287,9 @@ function calculatePotentialPoints(
       competition.miscPicks.forEach((miscPick) => {
         if (miscPick.name !== "thirdPlace" && !prediction.isSecondChance) {
           const realisticWinners =
-            (result.potentials?.realisticWinners &&
-              result.potentials?.realisticWinners[miscPick.name]) ||
-            [];
+            result.leaders
+              ?.find((l) => l.key === miscPick.name)
+              ?.leaders?.map((l) => l.team) || [];
           const predictionPick = prediction.misc[miscPick.name];
 
           if (remainingTeams.includes(predictionPick))

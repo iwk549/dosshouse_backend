@@ -14,6 +14,7 @@ const {
   insertResult,
   insertPredictions,
   insertGroups,
+  testObjectID,
 } = require("../../helperFunctions");
 const { start } = require("../../..");
 const { User } = require("../../../models/user.model");
@@ -83,8 +84,14 @@ describe("groupsRoute", () => {
       expect(res.body.users[0].password).toBeUndefined();
     });
     it("should filter by name case insensitively when search is provided", async () => {
-      await insertUser(null, { name: "Alpha User", email: "alpha@dosshouse.test.us" });
-      await insertUser(null, { name: "Beta User", email: "beta@dosshouse.test.us" });
+      await insertUser(null, {
+        name: "Alpha User",
+        email: "alpha@dosshouse.test.us",
+      });
+      await insertUser(null, {
+        name: "Beta User",
+        email: "beta@dosshouse.test.us",
+      });
       const res = await request(server)
         .get(`${endpoint}/users`)
         .query({ search: "alpha" })
@@ -94,7 +101,10 @@ describe("groupsRoute", () => {
       expect(res.body.users[0].name).toBe("Alpha User");
     });
     it("should filter to only google accounts when hasGoogleAccount is true", async () => {
-      await insertUser(null, { email: "google@dosshouse.test.us", googleId: "abc123" });
+      await insertUser(null, {
+        email: "google@dosshouse.test.us",
+        googleId: "abc123",
+      });
       await insertUser(null, { email: "nongoogle@dosshouse.test.us" });
       const res = await request(server)
         .get(`${endpoint}/users`)
@@ -105,7 +115,10 @@ describe("groupsRoute", () => {
       expect(res.body.users[0].email).toBe("google@dosshouse.test.us");
     });
     it("should filter to only non-google accounts when hasGoogleAccount is false", async () => {
-      await insertUser(null, { email: "google@dosshouse.test.us", googleId: "abc123" });
+      await insertUser(null, {
+        email: "google@dosshouse.test.us",
+        googleId: "abc123",
+      });
       await insertUser(null, { email: "nongoogle@dosshouse.test.us" });
       const res = await request(server)
         .get(`${endpoint}/users`)
@@ -113,11 +126,19 @@ describe("groupsRoute", () => {
         .set(header, getToken(null, user));
       testReponse(res, 200);
       expect(res.body.count).toBe(2);
-      expect(res.body.users.find((u) => u.email === "google@dosshouse.test.us")).toBeUndefined();
+      expect(
+        res.body.users.find((u) => u.email === "google@dosshouse.test.us"),
+      ).toBeUndefined();
     });
     it("should filter by email case insensitively when search is provided", async () => {
-      await insertUser(null, { name: "Alpha User", email: "alpha@dosshouse.test.us" });
-      await insertUser(null, { name: "Beta User", email: "beta@dosshouse.test.us" });
+      await insertUser(null, {
+        name: "Alpha User",
+        email: "alpha@dosshouse.test.us",
+      });
+      await insertUser(null, {
+        name: "Beta User",
+        email: "beta@dosshouse.test.us",
+      });
       const res = await request(server)
         .get(`${endpoint}/users`)
         .query({ search: "BETA@" })
@@ -127,8 +148,14 @@ describe("groupsRoute", () => {
       expect(res.body.users[0].name).toBe("Beta User");
     });
     it("should sort by name ascending by default", async () => {
-      await insertUser(null, { name: "Charlie", email: "charlie@dosshouse.test.us" });
-      await insertUser(null, { name: "Alpha", email: "alpha@dosshouse.test.us" });
+      await insertUser(null, {
+        name: "Charlie",
+        email: "charlie@dosshouse.test.us",
+      });
+      await insertUser(null, {
+        name: "Alpha",
+        email: "alpha@dosshouse.test.us",
+      });
       await insertUser(null, { name: "Beta", email: "beta@dosshouse.test.us" });
       const res = await exec(getToken(null, user));
       testReponse(res, 200);
@@ -136,8 +163,14 @@ describe("groupsRoute", () => {
       expect(names).toEqual([...names].sort());
     });
     it("should sort by name descending when sort=name&order=desc", async () => {
-      await insertUser(null, { name: "Charlie", email: "charlie@dosshouse.test.us" });
-      await insertUser(null, { name: "Alpha", email: "alpha@dosshouse.test.us" });
+      await insertUser(null, {
+        name: "Charlie",
+        email: "charlie@dosshouse.test.us",
+      });
+      await insertUser(null, {
+        name: "Alpha",
+        email: "alpha@dosshouse.test.us",
+      });
       const res = await request(server)
         .get(`${endpoint}/users`)
         .query({ sort: "name", order: "desc" })
@@ -158,8 +191,14 @@ describe("groupsRoute", () => {
       expect(emails).toEqual([...emails].sort());
     });
     it("should fall back to name sort for an invalid sort field", async () => {
-      await insertUser(null, { name: "Charlie", email: "charlie@dosshouse.test.us" });
-      await insertUser(null, { name: "Alpha", email: "alpha@dosshouse.test.us" });
+      await insertUser(null, {
+        name: "Charlie",
+        email: "charlie@dosshouse.test.us",
+      });
+      await insertUser(null, {
+        name: "Alpha",
+        email: "alpha@dosshouse.test.us",
+      });
       const res = await request(server)
         .get(`${endpoint}/users`)
         .query({ sort: "invalidField" })
@@ -175,11 +214,7 @@ describe("groupsRoute", () => {
       request(server).delete(`${endpoint}/users/${id}`).set(header, token);
 
     testAuth(exec, "admin");
-
-    it("should return 400 if invalid object id sent", async () => {
-      const res = await exec(getToken(null, user), "xxx");
-      testReponse(res, 400, "invalid id");
-    });
+    testObjectID(exec, true, "admin", true);
 
     it("should return 403 if the target user is an admin", async () => {
       const adminTarget = await insertUser(null, {

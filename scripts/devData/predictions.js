@@ -198,6 +198,7 @@ module.exports = [
       { groupName: "D", teamOrder: ["Japan",     "Morocco",     "Australia",   "South Korea"] },
       { groupName: "E", teamOrder: ["Uruguay",   "Colombia",    "Sweden",      "Senegal"] },
       { groupName: "F", teamOrder: ["Poland",    "Switzerland", "Serbia",      "Scotland"] },
+      { groupName: "devCup3rdPlace", teamOrder: ["A: Spain", "B: Netherlands", "C: Denmark", "D: Australia", "E: Sweden", "F: Serbia"] },
     ],
     playoffPredictions: [
       { matchNumber: 137, homeTeam: "England",     awayTeam: "Spain",        round: 1 },
@@ -232,6 +233,7 @@ module.exports = [
       { groupName: "D", teamOrder: ["Morocco",     "Japan",     "South Korea", "Australia"] },
       { groupName: "E", teamOrder: ["Colombia",    "Uruguay",   "Senegal",     "Sweden"] },
       { groupName: "F", teamOrder: ["Switzerland", "Poland",    "Serbia",      "Scotland"] },
+      { groupName: "devCup3rdPlace", teamOrder: ["A: Germany", "B: Italy", "C: Croatia", "D: South Korea", "E: Senegal", "F: Serbia"] },
     ],
     playoffPredictions: [
       { matchNumber: 137, homeTeam: "France",      awayTeam: "Germany",      round: 1 },
