@@ -4,6 +4,7 @@ const { Competition } = require("../models/competition.model");
 const { Group } = require("../models/group.model");
 const { Match } = require("../models/match.model");
 const { Result } = require("../models/result.model");
+const { WhatIfResult } = require("../models/whatIfResult.model");
 const {
   users,
   competitions,
@@ -29,6 +30,7 @@ async function deleteAllData() {
   await Group.collection.deleteMany();
   await Match.collection.deleteMany();
   await Result.collection.deleteMany();
+  await WhatIfResult.collection.deleteMany();
 }
 
 function testResponseText(responseText, expectedToContain) {
