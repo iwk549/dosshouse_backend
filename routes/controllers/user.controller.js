@@ -162,11 +162,11 @@ async function requestPasswordReset(req, res, next) {
 async function updatePassword(req, res, next) {
   const user = await User.findOne({
     email: req.body.email,
-    "passwordResetToken.token": req.body.token,
+    "passwordReset.token": req.body.token,
   });
   if (!user)
     return next({ status: 400, message: "Password reset not requested" });
-  if (user.passwordReset?.expiration < new Date())
+  if (!user.passwordReset || user.passwordReset.expiration < new Date())
     return next({
       status: 400,
       message: "Reset token has expired, please request another reset",

@@ -4,11 +4,11 @@ const sendSmtpEmail = require("./smtp.util");
 const sendPasswordReset = async (user, token) => {
   const html = makeResetEmailHTML(user, token);
   const emailSent = await sendSmtpEmail(
-    "Dosshouse Password Reset",
+    "Ultimate Scoreboard Picker Password Reset",
     html,
-    user.email
+    user.email,
   );
-  return emailSent.accepted;
+  return emailSent?.accepted;
 };
 
 module.exports.sendPasswordReset = sendPasswordReset;

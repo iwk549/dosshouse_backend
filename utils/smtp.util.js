@@ -17,7 +17,7 @@ async function sendSmtpEmail(
   to,
   replyTo,
   bcc,
-  overrideEnvironment
+  overrideEnvironment,
 ) {
   if (process.env.NODE_ENV !== "production" && !overrideEnvironment) {
     if (!process.env.ALLOW_EMAILING || process.env.ALLOW_EMAILING !== "true") {
@@ -30,7 +30,7 @@ async function sendSmtpEmail(
       fs.writeFileSync(
         `${dir}/${bcc ? "bccs" : to}.email.html`,
         html || "no html created",
-        () => {}
+        () => {},
       );
 
       return { accepted: true };
@@ -39,7 +39,7 @@ async function sendSmtpEmail(
 
   if (!replyTo) replyTo = smtpEmail;
   const params = {
-    Source: `'Dosshouse' <${smtpEmail}>`,
+    Source: `'Ultimate Scoreboard Picker' <${smtpEmail}>`,
     ReplyToAddresses: [replyTo],
     Destination: {
       ToAddresses: [to],
@@ -56,7 +56,7 @@ async function sendSmtpEmail(
 
   try {
     const result = await sesClient.send(new SendEmailCommand(params));
-    return { ...result, accepted: result.$metadata?.httpStatusCode === 200 };
+    return { ...result, accepted: true };
   } catch (error) {
     logger.log("error", error.message);
     return { accepted: false };
