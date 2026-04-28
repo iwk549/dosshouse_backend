@@ -28,7 +28,7 @@ module.exports.smtpEmail = "mail@dosshouse.us";
 
 module.exports.url =
   process.env.NODE_ENV === "production"
-    ? "https://dosshouse.us"
+    ? "https://picker.ultimatescoreboard.com"
     : "http://localhost:3000";
 
 module.exports.pickADate = function pickADate(daysAhead) {
@@ -63,10 +63,10 @@ module.exports.mapCsvFields = (flatRow) => {
           current[key] = !isNaN(Number(value))
             ? Number(value)
             : value === "FALSE"
-            ? false
-            : value === "TRUE"
-            ? true
-            : value;
+              ? false
+              : value === "TRUE"
+                ? true
+                : value;
       } else {
         // If the key doesn't exist or isn't an object, create it
         if (!current[key] || typeof current[key] !== "object") {

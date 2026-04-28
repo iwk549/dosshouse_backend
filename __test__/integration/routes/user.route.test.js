@@ -283,7 +283,7 @@ describe("usersRoute", () => {
     });
     it("should return 400 if date on token has expired", async () => {
       const insertedUsers = await insertUsers();
-      const token = mongoose.Types.ObjectId();
+      const token = "expiredtesttoken123abc";
       await updateUser(insertedUsers[0]._id, {
         passwordReset: {
           token,
@@ -296,7 +296,7 @@ describe("usersRoute", () => {
     });
     it("should return 400 if new password does not meet requirements", async () => {
       const insertedUsers = await insertUsers();
-      const token = mongoose.Types.ObjectId();
+      const token = "badpwtesttoken123abc";
       await updateUser(insertedUsers[0]._id, {
         passwordReset: {
           token,
@@ -309,7 +309,7 @@ describe("usersRoute", () => {
     });
     it("should update the user with new password and remove token", async () => {
       const insertedUsers = await insertUsers();
-      const token = mongoose.Types.ObjectId();
+      const token = "validtesttoken123abc";
       await updateUser(insertedUsers[0]._id, {
         passwordReset: {
           token,
