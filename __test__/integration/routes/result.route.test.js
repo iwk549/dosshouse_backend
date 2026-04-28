@@ -12,6 +12,7 @@ const {
 } = require("../../helperFunctions");
 const mongoose = require("mongoose");
 const { Result } = require("../../../models/result.model");
+const { WhatIfResult } = require("../../../models/whatIfResult.model");
 const { User } = require("../../../models/user.model");
 const { Competition } = require("../../../models/competition.model");
 const { Prediction } = require("../../../models/prediction.model");
@@ -261,6 +262,40 @@ describe("resultsRoute", () => {
       expect(res.body.leaders).toHaveLength(1);
       expect(res.body.leaders[0].key).toBe("topScorer");
       expect(res.body.leaders[0].leaders[0].player).toBe("Mbappe");
+    });
+  });
+
+  describe("GET /whatif/:code", () => {
+    const exec = async (code) => {
+      return await request(server).get(endpoint + "/whatif/" + code);
+    };
+
+    it("should return 404 if no what-if result exists for the code", async () => {
+      const res = await exec("nonexistent");
+      expect(res.status).toBe(404);
+      testResponseText(res.text, "what-if result not found");
+    });
+
+    it("should return the what-if result when it exists", async () => {
+      const competition = await insertCompetition(competitionID);
+      const whatIf = {
+        competitionCode: competition.code,
+        calculatedAt: new Date(),
+        paths: [
+          {
+            champion: "TeamA",
+            topSubmissions: [],
+            secondChanceTopSubmissions: [],
+          },
+        ],
+      };
+      await WhatIfResult.collection.insertOne(whatIf);
+
+      const res = await exec(competition.code);
+      expect(res.status).toBe(200);
+      expect(res.body.competitionCode).toBe(competition.code);
+      expect(res.body.paths).toHaveLength(1);
+      expect(res.body.paths[0].champion).toBe("TeamA");
     });
   });
 
