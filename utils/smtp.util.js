@@ -58,6 +58,9 @@ async function sendSmtpEmail(
     const result = await sesClient.send(new SendEmailCommand(params));
     return { ...result, accepted: true };
   } catch (error) {
+    if (error.$metadata?.httpStatusCode === 200) {
+      return { accepted: true };
+    }
     logger.log("error", error.message);
     return { accepted: false };
   }

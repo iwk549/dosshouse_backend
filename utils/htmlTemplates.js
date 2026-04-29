@@ -5,8 +5,8 @@ function makeEmailHeader(subject) {
       <!DOCTYPE html>
       <head>
       <title>${subject}</title>
-      <meta http–equiv=“Content-Type” content=“text/html; charset=UTF-8” />
-      <meta http–equiv=“X-UA-Compatible” content=“IE=edge” />
+      <meta http-equiv=”Content-Type” content=”text/html; charset=UTF-8” />
+      <meta http-equiv=”X-UA-Compatible” content=”IE=edge” />
       <meta name=“viewport” content=“width=device-width, initial-scale=1.0 “ />
       </head>`;
 }
@@ -33,7 +33,7 @@ function makeResetEmailHTML(user, token) {
     <body ${bodyStyle()}>
     <p>Hello ${user.name},</p>
       
-  <p>A request was made to reset your Dosshouse password. Please click the link below to reset your password.</p>
+  <p>A request was made to reset your Ultimate Scoreboard Picker password. Please click the link below to reset your password.</p>
   <a href="${link}" style="font-size: 25px;">Click here to reset your password</a>
     <br/>
     <br/>
