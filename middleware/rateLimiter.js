@@ -3,7 +3,7 @@ const rateLimit = require("express-rate-limit");
 const isDev = process.env.NODE_ENV === "development";
 
 const exceededMessage = `Request limit exceeded. This limit is in place to prevent the server being overloaded by unauthorized users.
-  If you believe you have received this message in error please contact accounts@dosshouse.us`;
+  If you believe you have received this message in error please contact accounts@ultimatescoreboard.com`;
 
 // this limiter is to prevent the database from being overloaded
 // 50 requests in 15 minutes (3.33 per minute)
