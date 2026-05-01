@@ -61,6 +61,16 @@ describe("competitionsRoute", () => {
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(activeCount);
     });
+    it("should not include groupMatrix on returned competitions", async () => {
+      await insertCompetitions(competitions.length);
+      const res = await exec();
+      expect(res.status).toBe(200);
+      const seeded = competitions.find((c) => c.groupMatrix?.length);
+      expect(seeded).toBeDefined();
+      const returned = res.body.find((c) => c.code === seeded.code);
+      expect(returned).toBeDefined();
+      expect(returned.groupMatrix).toBeUndefined();
+    });
   });
   describe("GET /expired", () => {
     const exec = async () => {
@@ -78,6 +88,16 @@ describe("competitionsRoute", () => {
       expect(res.status).toBe(200);
       expect(res.body.length).toBe(competitions.length - activeCount);
     });
+    it("should not include groupMatrix on returned competitions", async () => {
+      await insertCompetitions(0);
+      const res = await exec();
+      expect(res.status).toBe(200);
+      const seeded = competitions.find((c) => c.groupMatrix?.length);
+      expect(seeded).toBeDefined();
+      const returned = res.body.find((c) => c.code === seeded.code);
+      expect(returned).toBeDefined();
+      expect(returned.groupMatrix).toBeUndefined();
+    });
   });
   describe("GET /single/:id", () => {
     const exec = async (id) => {
@@ -94,6 +114,15 @@ describe("competitionsRoute", () => {
       const res = await exec(competitions[0]._id);
       expect(res.status).toBe(200);
       expect(res.body.name).toBe(competitions[0].name);
+    });
+    it("should include groupMatrix on the returned competition", async () => {
+      await insertCompetitions(competitions.length);
+      const seeded = competitions.find((c) => c.groupMatrix?.length);
+      expect(seeded).toBeDefined();
+      const res = await exec(seeded._id);
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body.groupMatrix)).toBe(true);
+      expect(res.body.groupMatrix.length).toBe(seeded.groupMatrix.length);
     });
   });
 

@@ -9,9 +9,11 @@ function getCompetitions(active) {
 
     const competitions = await Competition.find({
       competitionEnd: competitionEndMatcher,
-    }).sort({
-      submissionDeadline: active ? 1 : -1,
-    });
+    })
+      .sort({
+        submissionDeadline: active ? 1 : -1,
+      })
+      .select("-groupMatrix");
     res.send(competitions);
   };
 }
@@ -39,10 +41,14 @@ async function updateMiscPickInfo(req, res, next) {
   if (error) return next({ status: 400, message: error.details[0].message });
 
   const competition = await Competition.findOne({ code: req.params.code });
-  if (!competition) return next({ status: 404, message: "Competition not found" });
+  if (!competition)
+    return next({ status: 404, message: "Competition not found" });
 
-  const pickIndex = competition.miscPicks.findIndex((p) => p.name === req.params.name);
-  if (pickIndex === -1) return next({ status: 404, message: "Misc pick not found" });
+  const pickIndex = competition.miscPicks.findIndex(
+    (p) => p.name === req.params.name,
+  );
+  if (pickIndex === -1)
+    return next({ status: 404, message: "Misc pick not found" });
 
   const existing = competition.miscPicks[pickIndex].info || {};
   competition.miscPicks[pickIndex].info = { ...existing, ...req.body };
