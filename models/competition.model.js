@@ -16,6 +16,16 @@ const competitionMongooseSchema = new mongoose.Schema({
   submissionDeadline: { type: Date, required: true },
   competitionStart: { type: Date, required: true },
   competitionEnd: { type: Date, required: true },
+  links: [
+    {
+      type: Object,
+      required: false,
+      keys: {
+        label: { type: String, required: true },
+        url: { type: String, required: true },
+      },
+    },
+  ],
   secondChance: {
     type: Object,
     required: false,

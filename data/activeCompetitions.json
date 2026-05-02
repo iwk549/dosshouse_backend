@@ -156,6 +156,20 @@
       "submissionDeadline": { "$date": "2026-06-28T18:55:00.000Z" },
       "competitionStart": { "$date": "2026-06-28T19:00:00.000Z" }
     },
+    "links": [
+      {
+        "label": "Insights from the Picker Blog",
+        "url": "https://blog.picker.ultimatescoreboard.com/posts/world-cup-2026/index.html"
+      },
+      {
+        "label": "Official Tournament Site",
+        "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026"
+      },
+      {
+        "label": "Wiki",
+        "url": "https://en.wikipedia.org/wiki/2026_FIFA_World_Cup"
+      }
+    ],
     "scoring": {
       "group": {
         "perTeam": 1,

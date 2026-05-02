@@ -1,6 +1,10 @@
 # dosshouse_backend
 
-Node.js/Express REST API backend for the Dosshouse sports prediction app (World Cup picks, etc.).
+Node.js/Express REST API backend for the sports prediction app (World Cup picks, etc.).
+
+## Branding
+
+The site is called **Ultimate Scoreboard Picker** (full name) or **Picker** (short name). The "Dosshouse" name is legacy — it persists in the repo name, internal paths, DB names, and code identifiers, but **must not appear in any user-facing surface** (UI copy, emails, page titles, meta tags, error messages, etc.). When adding or editing user-visible strings, use "Ultimate Scoreboard Picker" or "Picker".
 
 ## Stack
 
