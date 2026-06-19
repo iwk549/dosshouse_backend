@@ -206,6 +206,31 @@ describe("calculations", () => {
         expect(res.totalPoints).toBe(4);
         expect(res.totalPicks).toBe(4);
       });
+      it("should not award a bonus for a group result with an empty teamOrder", () => {
+        // simulates an in-progress competition where a group result exists
+        // but its teamOrder has not been entered yet — must not award a bonus
+        const inProgressResult = {
+          ...result,
+          group: [
+            { groupName: "a", teamOrder: [] },
+            { groupName: "b", teamOrder: [] },
+          ],
+        };
+        const prediction = setPrediction(
+          ["group"],
+          [
+            { groupName: "a", teamOrder: ["a", "b", "c", "d"] },
+            { groupName: "b", teamOrder: ["d", "e", "f", "g"] },
+          ],
+        );
+        const res = exec(prediction, inProgressResult, competitions[0]);
+
+        // no teams placed yet → no points, no correct picks, and crucially no bonus
+        expect(res.points.group.bonus).toBe(0);
+        expect(res.points.group.points).toBe(0);
+        expect(res.points.group.correctPicks).toBe(0);
+        expect(res.totalPoints).toBe(0);
+      });
       it("should calculate partial groupMatrix picks correctly", () => {
         const prediction = setPrediction(["groupMatrix"], null, null, null, [
           {
