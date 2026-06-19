@@ -41,8 +41,8 @@ function calculatePrediction(prediction, result, competition, tree, final) {
         // if max points were acheived for this group
         // meaning all teams were in the correct place, add the bonus points
         if (
-          thisGroupPoints ===
-          groupResult.teamOrder.length * scoring.perTeam
+          groupResult.teamOrder.length > 0 &&
+          thisGroupCorrectPicks === groupResult.teamOrder.length
         ) {
           thisGroupBonus += 1;
           thisGroupPoints += scoring.bonus || 0;
