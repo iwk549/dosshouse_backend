@@ -145,7 +145,10 @@ function calculatePrediction(prediction, result, competition, tree, final) {
 }
 
 function buildBracketTree(matchNumber, matches) {
-  const match = matches.find((m) => m.matchNumber === matchNumber);
+  // The metadata contains the true match number if it is not the same as base matchNumber
+  const match = matches.find(
+    (m) => (m.metadata?.matchNumber ?? m.matchNumber) === matchNumber,
+  );
   if (!match) return null;
   const node = { match };
   if (match.getTeamsFrom) {
