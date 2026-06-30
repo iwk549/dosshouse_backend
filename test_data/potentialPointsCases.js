@@ -28,13 +28,14 @@ const defaultResult = {
 
 // Two-match bracket feeding into a final at round 2
 const defaultMatches = [
-  { matchNumber: 1, homeTeamName: "a", awayTeamName: "b", round: 1 },
-  { matchNumber: 2, homeTeamName: "c", awayTeamName: "d", round: 1 },
+  { matchNumber: 1, homeTeamName: "a", awayTeamName: "b", round: 1, matchAccepted: false },
+  { matchNumber: 2, homeTeamName: "c", awayTeamName: "d", round: 1, matchAccepted: false },
   {
     matchNumber: 3,
     homeTeamName: "Winner 1",
     awayTeamName: "Winner 2",
     round: 2,
+    matchAccepted: false,
     getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
   },
 ];
@@ -56,15 +57,16 @@ const qfCompetition = {
   },
 };
 const qfMatches = [
-  { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1 },
-  { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1 },
-  { matchNumber: 3, homeTeamName: "E", awayTeamName: "F", round: 1 },
-  { matchNumber: 4, homeTeamName: "G", awayTeamName: "H", round: 1 },
+  { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1, matchAccepted: false },
+  { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1, matchAccepted: false },
+  { matchNumber: 3, homeTeamName: "E", awayTeamName: "F", round: 1, matchAccepted: false },
+  { matchNumber: 4, homeTeamName: "G", awayTeamName: "H", round: 1, matchAccepted: false },
   {
     matchNumber: 5,
     homeTeamName: "Winner 1",
     awayTeamName: "Winner 2",
     round: 2,
+    matchAccepted: false,
     getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
   },
   {
@@ -72,6 +74,7 @@ const qfMatches = [
     homeTeamName: "Winner 3",
     awayTeamName: "Winner 4",
     round: 2,
+    matchAccepted: false,
     getTeamsFrom: { home: { matchNumber: 3 }, away: { matchNumber: 4 } },
   },
   {
@@ -79,6 +82,7 @@ const qfMatches = [
     homeTeamName: "Winner 5",
     awayTeamName: "Winner 6",
     round: 3,
+    matchAccepted: false,
     getTeamsFrom: { home: { matchNumber: 5 }, away: { matchNumber: 6 } },
   },
 ];
@@ -92,6 +96,7 @@ const groupFedMatches = [
     homeTeamName: "Brazil",
     awayTeamName: "Spain",
     round: 1,
+    matchAccepted: false,
     type: "Playoff",
     getTeamsFrom: { home: { groupName: "A", position: 1 }, away: { groupName: "B", position: 2 } },
   },
@@ -100,6 +105,7 @@ const groupFedMatches = [
     homeTeamName: "Argentina",
     awayTeamName: "France",
     round: 1,
+    matchAccepted: false,
     type: "Playoff",
     getTeamsFrom: { home: { groupName: "B", position: 1 }, away: { groupName: "A", position: 2 } },
   },
@@ -108,6 +114,7 @@ const groupFedMatches = [
     homeTeamName: "Winner 1",
     awayTeamName: "Winner 2",
     round: 2,
+    matchAccepted: false,
     type: "Playoff",
     getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
   },
@@ -189,7 +196,7 @@ const potentialPointsTestCases = [
       },
       result: defaultResult,
       competition: defaultCompetition,
-      matches: [],
+      matches: defaultMatches,
     },
     expected: {
       totalPoints: 8,
@@ -205,11 +212,11 @@ const potentialPointsTestCases = [
           { matchNumber: 1, homeTeam: "c", awayTeam: "d", round: 1 },
           { matchNumber: 1, homeTeam: "a", awayTeam: "c", round: 2 },
         ],
-        misc: { topScorer: "b", discipline: "c", thirdPlace: "c" },
+        misc: { topScorer: "b", discipline: "c" },
       },
       result: defaultResult,
       competition: defaultCompetition,
-      matches: [],
+      matches: defaultMatches,
     },
     expected: {
       totalPoints: 8,
@@ -363,4 +370,240 @@ const potentialPointsTestCases = [
   },
 ];
 
-module.exports = potentialPointsTestCases;
+// 4-QF partial round: QF1 (A/B) and QF2 (C/D) accepted, QF3 (E/F) and QF4 (G/H) not.
+// SF1 team names updated to real winners (A, C); SF2 still has placeholders.
+const partialQfMatches = [
+  { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1, matchAccepted: true },
+  { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1, matchAccepted: true },
+  { matchNumber: 3, homeTeamName: "E", awayTeamName: "F", round: 1, matchAccepted: false },
+  { matchNumber: 4, homeTeamName: "G", awayTeamName: "H", round: 1, matchAccepted: false },
+  {
+    matchNumber: 5,
+    homeTeamName: "A",
+    awayTeamName: "C",
+    round: 2,
+    matchAccepted: false,
+    getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+  },
+  {
+    matchNumber: 6,
+    homeTeamName: "Winner 3",
+    awayTeamName: "Winner 4",
+    round: 2,
+    matchAccepted: false,
+    getTeamsFrom: { home: { matchNumber: 3 }, away: { matchNumber: 4 } },
+  },
+  {
+    matchNumber: 7,
+    homeTeamName: "Winner 5",
+    awayTeamName: "Winner 6",
+    round: 3,
+    matchAccepted: false,
+    getTeamsFrom: { home: { matchNumber: 5 }, away: { matchNumber: 6 } },
+  },
+];
+const partialQfResult = {
+  playoff: [{ round: 1, teams: ["A", "C"] }],
+  misc: {},
+};
+const partialQfCompetition = {
+  scoring: {
+    playoff: [
+      { roundNumber: 1, points: 2 },
+      { roundNumber: 2, points: 4 },
+      { roundNumber: 3, points: 8 },
+    ],
+    champion: 16,
+  },
+  miscPicks: [],
+};
+
+// Partial-round test fixtures
+// SF1 (match 1) is complete — A won. SF2 (match 2) is not yet played.
+// The final (match 3) has homeTeamName updated to "A" (the known winner).
+const partialRoundMatches = [
+  { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1, matchAccepted: true },
+  { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1, matchAccepted: false },
+  {
+    matchNumber: 3,
+    homeTeamName: "A",
+    awayTeamName: "Winner 2",
+    round: 2,
+    matchAccepted: false,
+    getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+  },
+];
+const partialRoundResult = {
+  playoff: [{ round: 1, teams: ["A"] }],
+  misc: {},
+};
+const partialRoundCompetition = {
+  scoring: {
+    playoff: [
+      { roundNumber: 1, points: 4 },
+      { roundNumber: 2, points: 8 },
+    ],
+    champion: 16,
+  },
+  miscPicks: [],
+};
+
+const partialRoundWithThirdPlaceCompetition = {
+  scoring: {
+    playoff: [
+      { roundNumber: 1, points: 4 },
+      { roundNumber: 2, points: 8 },
+    ],
+    champion: 16,
+  },
+  miscPicks: [{ name: "thirdPlace", points: 16 }],
+};
+
+const partialRoundTestCases = [
+  {
+    description:
+      "ThirdPlace pick adds no points if the pick already won their semi (finalist cannot finish third)",
+    data: {
+      prediction: {
+        playoffPredictions: [
+          { matchNumber: 1, homeTeam: "A", awayTeam: "B", round: 1 },
+          { matchNumber: 3, homeTeam: "A", awayTeam: "C", round: 2 },
+        ],
+        misc: { thirdPlace: "A" },
+      },
+      result: partialRoundResult,
+      competition: partialRoundWithThirdPlaceCompetition,
+      matches: partialRoundMatches,
+    },
+    expected: {
+      totalPoints: 4,
+      // A won SF1 → match 1 accepted → skipped for potential
+      // A is in remainingTeams (via unaccepted final) but their SF match is accepted → not a thirdPlace candidate
+      // match 3: A reachable from left (+8), C reachable from right (+8), no collision → +16
+      potentialPoints: { maximum: 20, realistic: 20 },
+    },
+  },
+  {
+    description: "Partial QF round — SF prediction earns points for both known winners from opposite accepted QFs",
+    data: {
+      prediction: {
+        playoffPredictions: [{ matchNumber: 5, homeTeam: "A", awayTeam: "C", round: 2 }],
+      },
+      result: partialQfResult,
+      competition: partialQfCompetition,
+      matches: partialQfMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // A reachable from left subtree (QF1 leaf, A in remaining), C from right (QF2 leaf, C in remaining)
+      // no collision (opposite subtrees) → +4 each
+      potentialPoints: { maximum: 8, realistic: 8 },
+    },
+  },
+  {
+    description: "Partial QF round — final prediction with teams from opposite bracket halves earns full points",
+    data: {
+      prediction: {
+        playoffPredictions: [{ matchNumber: 7, homeTeam: "A", awayTeam: "E", round: 3 }],
+      },
+      result: partialQfResult,
+      competition: partialQfCompetition,
+      matches: partialQfMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // A reachable from SF1 subtree (left half), E reachable from SF2 subtree (right half)
+      // no collision → +8 each
+      potentialPoints: { maximum: 16, realistic: 16 },
+    },
+  },
+  {
+    description: "Partial QF round — final prediction with both teams from accepted QF half collides",
+    data: {
+      prediction: {
+        playoffPredictions: [{ matchNumber: 7, homeTeam: "A", awayTeam: "C", round: 3 }],
+      },
+      result: partialQfResult,
+      competition: partialQfCompetition,
+      matches: partialQfMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // A and C both feed into SF1 (left half of final) → collision → +8 +8 -8 = 8
+      potentialPoints: { maximum: 8, realistic: 8 },
+    },
+  },
+
+  {
+    description: "Partial round — prediction for accepted match is skipped, unplayed match earns potential",
+    data: {
+      prediction: {
+        playoffPredictions: [
+          { matchNumber: 1, homeTeam: "A", awayTeam: "B", round: 1 },
+          { matchNumber: 2, homeTeam: "C", awayTeam: "D", round: 1 },
+          { matchNumber: 3, homeTeam: "A", awayTeam: "C", round: 2 },
+        ],
+      },
+      result: partialRoundResult,
+      competition: partialRoundCompetition,
+      matches: partialRoundMatches,
+    },
+    expected: {
+      totalPoints: 4,
+      // match 1 accepted → skipped; match 2 is a leaf → skipped by !left||!right guard
+      // match 3: A is reachable from left subtree (match 1 leaf, A in remainingTeams);
+      //          C is reachable from right subtree (match 2 leaf) → +8 each, no collision
+      potentialPoints: { maximum: 20, realistic: 20 },
+    },
+  },
+  {
+    description: "Partial round — winner pick on a remaining team still earns champion potential",
+    data: {
+      prediction: {
+        playoffPredictions: [
+          { matchNumber: 3, homeTeam: "A", awayTeam: "C", round: 2 },
+        ],
+        misc: { winner: "C" },
+      },
+      result: partialRoundResult,
+      competition: partialRoundCompetition,
+      matches: partialRoundMatches,
+    },
+    expected: {
+      totalPoints: 0,
+      // C is remaining → champion +16; final pick A+C both reachable from opposite sides → +8 each
+      potentialPoints: { maximum: 32, realistic: 32 },
+    },
+  },
+  {
+    description: "All matches accepted — remainingTeams is empty, no potential added",
+    data: {
+      prediction: {
+        playoffPredictions: [
+          { matchNumber: 3, homeTeam: "A", awayTeam: "C", round: 2 },
+        ],
+        misc: { winner: "A" },
+      },
+      result: { playoff: [{ round: 1, teams: ["A"] }, { round: 2, teams: ["A"] }], misc: {} },
+      competition: partialRoundCompetition,
+      matches: [
+        { matchNumber: 1, homeTeamName: "A", awayTeamName: "B", round: 1, matchAccepted: true },
+        { matchNumber: 2, homeTeamName: "C", awayTeamName: "D", round: 1, matchAccepted: true },
+        {
+          matchNumber: 3,
+          homeTeamName: "A",
+          awayTeamName: "C",
+          round: 2,
+          matchAccepted: true,
+          getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+        },
+      ],
+    },
+    expected: {
+      totalPoints: 8,
+      potentialPoints: { maximum: 8, realistic: 8 },
+    },
+  },
+];
+
+module.exports = [...potentialPointsTestCases, ...partialRoundTestCases];
