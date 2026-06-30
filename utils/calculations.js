@@ -1,4 +1,4 @@
-function calculatePrediction(prediction, result, competition, tree, final) {
+function calculatePrediction(prediction, result, competition, tree, final, remainingTeams) {
   let points = {
     group: { points: 0, correctPicks: 0, bonus: 0 },
     playoff: { points: 0, correctPicks: 0 },
@@ -138,6 +138,7 @@ function calculatePrediction(prediction, result, competition, tree, final) {
     tree,
     final,
     totalPoints,
+    remainingTeams,
   );
 
   // return {points, totalPoints, totalPicks} for bulkwrite
@@ -171,13 +172,29 @@ function getTeamsInSubtree(node, remainingTeams) {
   if (!node) return [];
   if (!node.left && !node.right) {
     return [node.match.homeTeamName, node.match.awayTeamName].filter((t) =>
-      remainingTeams.includes(t),
+      remainingTeams.has(t),
     );
   }
   return [
     ...getTeamsInSubtree(node.left, remainingTeams),
     ...getTeamsInSubtree(node.right, remainingTeams),
   ];
+}
+
+function getRemainingTeamsFromTree(node) {
+  const teams = new Set();
+  const stack = [node];
+  while (stack.length) {
+    const n = stack.pop();
+    if (!n) continue;
+    if (!n.match.matchAccepted) {
+      teams.add(n.match.homeTeamName);
+      teams.add(n.match.awayTeamName);
+    }
+    if (n.left) stack.push(n.left);
+    if (n.right) stack.push(n.right);
+  }
+  return teams;
 }
 
 function calculatePotentialPoints(
@@ -187,51 +204,39 @@ function calculatePotentialPoints(
   tree,
   final,
   totalPoints,
+  remainingTeams,
 ) {
   let maximum = totalPoints;
   let realistic = totalPoints;
-  /* 
-  if the final round has been entered in the results document
-  then there are no more potential points to calculate,
-  set them to equal total points
-  */
+
   const latestResultRound = result.playoff?.length;
-  const finalCompetitionRound = competition.scoring.playoff?.length;
 
   if (!latestResultRound) {
     maximum = 0;
     realistic = 0;
   } else if (
-    latestResultRound < finalCompetitionRound &&
+    remainingTeams?.size > 0 &&
     competition.scoring.playoff &&
     result.playoff &&
     prediction.playoffPredictions
   ) {
-    /*
-    get the remaining teams from the result
-    (latest playoff stage entered)
-    if the prediction picked a winner that is in the remaining teams
-    then those points are possible (realistic)
-    */
-    const remainingTeams = result.playoff[result.playoff.length - 1]?.teams;
-    if (remainingTeams.includes(prediction.misc?.winner)) {
+    if (remainingTeams.has(prediction.misc?.winner)) {
       maximum += competition.scoring.champion;
       realistic += competition.scoring.champion;
     }
 
     if (tree && final) {
-      const completedRounds = new Set(result.playoff.map((r) => r.round));
       let potentialPlayoffPoints = 0;
 
       prediction.playoffPredictions.forEach((pred) => {
-        if (completedRounds.has(pred.round)) return;
+        const node = findNodeByMatchNumber(tree, pred.matchNumber);
+        if (!node) return;
+        if (node.match.matchAccepted) return;
+        if (!node.left || !node.right) return;
 
         const thisRoundPoints =
           competition.scoring.playoff.find((c) => c.roundNumber === pred.round)
             ?.points || 0;
-
-        const node = findNodeByMatchNumber(tree, pred.matchNumber);
-        if (!node || !node.left || !node.right) return;
 
         const leftTeams = getTeamsInSubtree(node.left, remainingTeams);
         const rightTeams = getTeamsInSubtree(node.right, remainingTeams);
@@ -271,17 +276,20 @@ function calculatePotentialPoints(
           (m) => m.round === final.round - 1,
         );
         const isThirdPlaceCandidate =
-          remainingTeams.includes(thirdPlacePick) &&
-          semiFinalPredictions.some(
-            (m) =>
-              m.homeTeam === thirdPlacePick || m.awayTeam === thirdPlacePick,
-          );
+          remainingTeams.has(thirdPlacePick) &&
+          semiFinalPredictions.some((m) => {
+            if (m.homeTeam !== thirdPlacePick && m.awayTeam !== thirdPlacePick)
+              return false;
+            const sfNode = findNodeByMatchNumber(tree, m.matchNumber);
+            return sfNode && !sfNode.match.matchAccepted;
+          });
         if (isThirdPlaceCandidate) {
           maximum += thirdPlaceMiscPick.points;
           realistic += thirdPlaceMiscPick.points;
         }
       }
     }
+
     // if the prediction picked a miscPick that is in the remaining teams
     // then those points are available but not yet realistic
     // if the miscPick is contained in the "realisticWinners" entry
@@ -295,8 +303,7 @@ function calculatePotentialPoints(
               ?.leaders?.map((l) => l.team) || [];
           const predictionPick = prediction.misc[miscPick.name];
 
-          if (remainingTeams.includes(predictionPick))
-            maximum += miscPick.points;
+          if (remainingTeams.has(predictionPick)) maximum += miscPick.points;
           if (realisticWinners.includes(predictionPick))
             realistic += miscPick.points;
         }
@@ -360,3 +367,4 @@ function addRanking(predictions) {
 module.exports.calculatePrediction = calculatePrediction;
 module.exports.addRanking = addRanking;
 module.exports.buildBracketTree = buildBracketTree;
+module.exports.getRemainingTeamsFromTree = getRemainingTeamsFromTree;

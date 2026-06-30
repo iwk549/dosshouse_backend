@@ -3,6 +3,7 @@ const {
   calculatePrediction,
   addRanking,
   buildBracketTree,
+  getRemainingTeamsFromTree,
 } = require("../../utils/calculations");
 const { calculateWhatIfPaths } = require("../../utils/whatIf");
 
@@ -26,11 +27,12 @@ const calculateAndPostSubmissions = async (competition, result) => {
     if (!final || match.round > final.round) final = match;
   });
   if (final) tree = buildBracketTree(final.matchNumber, matches);
+  const remainingTeams = tree ? getRemainingTeamsFromTree(tree) : null;
 
   let updatedPoints = [];
   allPredictions.forEach((p) => {
     const { points, totalPoints, totalPicks, potentialPoints } =
-      calculatePrediction(p, result, competition, tree, final);
+      calculatePrediction(p, result, competition, tree, final, remainingTeams);
     updatedPoints.push({
       _id: p._id,
       isSecondChance: p.isSecondChance,

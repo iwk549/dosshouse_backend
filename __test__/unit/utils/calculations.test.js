@@ -3,6 +3,7 @@ const {
   calculatePrediction,
   addRanking,
   buildBracketTree,
+  getRemainingTeamsFromTree,
 } = require("../../../utils/calculations");
 const {
   predictions,
@@ -32,13 +33,17 @@ describe("calculations", () => {
     const exec = (prediction, result, competition, matches) => {
       let tree = null;
       let final = null;
+      let remainingTeams = null;
       if (matches && matches.length > 0) {
         matches.forEach((match) => {
           if (!final || match.round > final.round) final = match;
         });
-        if (final) tree = buildBracketTree(final.matchNumber, matches);
+        if (final) {
+          tree = buildBracketTree(final.matchNumber, matches);
+          remainingTeams = getRemainingTeamsFromTree(tree);
+        }
       }
-      return calculatePrediction(prediction, result, competition, tree, final);
+      return calculatePrediction(prediction, result, competition, tree, final, remainingTeams);
     };
 
     const setPrediction = (
@@ -457,6 +462,13 @@ describe("calculations", () => {
           playoff: [{ round: 1, teams: ["a", "b", "c", "d"] }],
           misc: { topScorer: "", discipline: "" },
         };
+        // All matches unaccepted so a, b, c, d are all in remainingTeams.
+        // Playoff predictions use non-matching teams (x/y) so totalPoints = 0.
+        const matches = [
+          { matchNumber: 1, homeTeamName: "a", awayTeamName: "b", round: 1, matchAccepted: false },
+          { matchNumber: 2, homeTeamName: "c", awayTeamName: "d", round: 1, matchAccepted: false },
+          { matchNumber: 3, homeTeamName: "Winner 1", awayTeamName: "Winner 2", round: 2, matchAccepted: false, getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } } },
+        ];
 
         // Use non-matching teams so totalPoints = 0, making expected values predictable
         const playoffPreds = [
@@ -476,7 +488,7 @@ describe("calculations", () => {
             topScorer: "a",
             discipline: "b",
           });
-          const res = exec(prediction, result, competition);
+          const res = exec(prediction, result, competition, matches);
           expect(res.potentialPoints.realistic).toBe(10);
         });
 
@@ -491,7 +503,7 @@ describe("calculations", () => {
             topScorer: "a",
             discipline: "b",
           });
-          const res = exec(prediction, result, competition);
+          const res = exec(prediction, result, competition, matches);
           expect(res.potentialPoints.realistic).toBe(0);
         });
 
@@ -507,7 +519,7 @@ describe("calculations", () => {
             topScorer: "a",
             discipline: "b",
           });
-          const res = exec(prediction, result, competition);
+          const res = exec(prediction, result, competition, matches);
           expect(res.potentialPoints.realistic).toBe(20);
         });
 
@@ -517,7 +529,7 @@ describe("calculations", () => {
             topScorer: "a",
             discipline: "b",
           });
-          const res = exec(prediction, result, competition);
+          const res = exec(prediction, result, competition, matches);
           expect(res.potentialPoints.realistic).toBe(0);
         });
 
@@ -527,7 +539,7 @@ describe("calculations", () => {
             topScorer: "a",
             discipline: "b",
           });
-          const res = exec(prediction, result, competition);
+          const res = exec(prediction, result, competition, matches);
           expect(res.potentialPoints.realistic).toBe(0);
         });
       });
@@ -614,12 +626,20 @@ describe("calculations", () => {
         ], { winner: "a", thirdPlace: "b", discipline: "a", topScorer: "a" });
         prediction.isSecondChance = true;
 
-        const res = exec(prediction, partialResult, twoRoundCompetition);
+        // Round 1 accepted — "b" (thirdPlace pick) is eliminated and not in remainingTeams.
+        // Round 2 unaccepted with real winners — "a" is remaining for champion potential.
+        const res = exec(prediction, partialResult, twoRoundCompetition, [
+          { matchNumber: 1, homeTeamName: "a", awayTeamName: "b", round: 1, matchAccepted: true },
+          { matchNumber: 2, homeTeamName: "c", awayTeamName: "d", round: 1, matchAccepted: true },
+          { matchNumber: 3, homeTeamName: "a", awayTeamName: "c", round: 2, matchAccepted: false, getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } } },
+        ]);
 
-        // winner "a" still in remaining teams → champion potential
+        // winner "a" still in remaining teams → champion +32
+        // "a" and "c" both reachable to the final (opposite subtrees, no collision) → playoff +8
+        // thirdPlace "b" was eliminated in round 1 → not in remaining → no thirdPlace potential
         // discipline and topScorer picks should NOT add potential points for second chance
-        expect(res.potentialPoints.maximum).toBe(32);
-        expect(res.potentialPoints.realistic).toBe(32);
+        expect(res.potentialPoints.maximum).toBe(40);
+        expect(res.potentialPoints.realistic).toBe(40);
       });
     });
   });
@@ -682,6 +702,24 @@ describe("calculations", () => {
       expect(tree.left.right.match.matchNumber).toBe(2);
       expect(tree.right.left.match.matchNumber).toBe(3);
       expect(tree.right.right.match.matchNumber).toBe(4);
+    });
+    it("should use metadata.matchNumber for lookup when present", () => {
+      const metadataMatches = [
+        { matchNumber: 101, metadata: { matchNumber: 1 }, homeTeamName: "A", awayTeamName: "B", round: 1 },
+        { matchNumber: 102, metadata: { matchNumber: 2 }, homeTeamName: "C", awayTeamName: "D", round: 1 },
+        {
+          matchNumber: 103,
+          metadata: { matchNumber: 3 },
+          homeTeamName: "Winner 1",
+          awayTeamName: "Winner 2",
+          round: 2,
+          getTeamsFrom: { home: { matchNumber: 1 }, away: { matchNumber: 2 } },
+        },
+      ];
+      const tree = buildBracketTree(3, metadataMatches);
+      expect(tree.match.matchNumber).toBe(103);
+      expect(tree.left.match.matchNumber).toBe(101);
+      expect(tree.right.match.matchNumber).toBe(102);
     });
   });
 
